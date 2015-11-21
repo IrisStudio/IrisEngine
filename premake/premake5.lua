@@ -16,12 +16,14 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math"}
-   includedirs { "../Engine/Math/" }
+   links {"RenderSystem", "Math", "glfw3", "opengl32", "glew32s" }
+   includedirs { "../Engine/RenderSystem/" }
+   libdirs { os.findlib("opengl32"), "../3rdParty/glfw_WIN32/lib-vc2015/", "../3rdParty/glew_WIN32/lib/Release/Win32" }
 
 project "RenderSystem"
     kind "StaticLib"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
+	includedirs { "../3rdParty/glfw_WIN32/include/", "../3rdParty/glew_WIN32/include" }
     
 project "Math"
     kind "StaticLib"

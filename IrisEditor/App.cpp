@@ -1,9 +1,17 @@
 /* hello.c */
 #include <stdio.h>
-#include "Vector2.h"
-#include "Types.h"
+#include "RenderSystem.h"
 
 int main(void)
 {
-   return 0;
+  printf("Hello World\n");
+  renderer::CRenderer mRenderer;
+  if (mRenderer.Create())
+  {
+    while (mRenderer.Execute() )
+    {
+    }
+  }
+  mRenderer.Terminate();
+  return 0;
 }
