@@ -6,7 +6,7 @@ int main(void)
 {
   printf("Hello World\n");
   renderer::CRenderer mRenderer;
-  if (mRenderer.Create())
+  if (mRenderer.Create( 1600, 800 ))
   {
     while (mRenderer.Execute() )
     {
