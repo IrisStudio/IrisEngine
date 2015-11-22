@@ -1,6 +1,8 @@
 #ifndef _TYPES_H_
 #define _TYPES_H_
 
+#include <memory>
+
 typedef signed char         int8;
 typedef short               int16;
 typedef int                 int32;

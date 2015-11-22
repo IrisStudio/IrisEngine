@@ -3,4 +3,7 @@
 
 #include "ogl/Renderer.h"
 
+class CEffect;
+typedef std::shared_ptr<CEffect> CEffectSPtr;
+
 #endif
