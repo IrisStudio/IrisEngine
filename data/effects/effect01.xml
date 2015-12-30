@@ -1,4 +1,4 @@
 <effect>
-	<vertex_shader file="../data/shaders/VertexShader01.vs"/>
+	<vertex_shader file="../data/shaders/VertexShader01.vs" vec3="1,0,2" />
 	<pixel_shader file="../data/shaders/ps.px"/>
 </effect>

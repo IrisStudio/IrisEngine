@@ -18,6 +18,7 @@ project "IrisEditor"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
    links {"RenderSystem", "Math", "Common", "glfw3", "opengl32", "glew32s" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/" }
+   includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32"), "../3rdParty/glfw_WIN32/lib-vc2015/", "../3rdParty/glew_WIN32/lib/Release/Win32" }
 
 project "RenderSystem"
@@ -25,11 +26,14 @@ project "RenderSystem"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/glfw_WIN32/include/", "../3rdParty/glew_WIN32/include" }
+	includedirs { "../3rdParty/" }
     
 project "Math"
     kind "StaticLib"
     files { "../Engine/Math/**.h", "../Engine/Math/**.cpp", "../Engine/Math/**.inl" }
+	includedirs { "../3rdParty/" }
 	
 project "Common"
     kind "StaticLib"
     files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Math/**.inl", "../Engine/Common/**.hpp" }
+	includedirs { "../3rdParty/" }

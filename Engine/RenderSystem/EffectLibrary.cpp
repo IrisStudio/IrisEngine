@@ -1,6 +1,7 @@
 #include "EffectLibrary.h"
 
-#include "XML/pugixml.hpp"
+#include "XML/XML.h"
+#include <glm/vec3.hpp>
 
 CEffectLibrary::CEffectLibrary()
 {
@@ -13,14 +14,15 @@ CEffectLibrary::~CEffectLibrary()
 CEffectSPtr CEffectLibrary::CreateEffect(const char* aEffectFile)
 {
   CEffectSPtr lEffect;
-  pugi::xml_document lDocument;
+  xml::CDocument lDocument;
   if (lDocument.load_file(aEffectFile))
   {
-    pugi::xml_node lEffectNode = lDocument.child("effect");
-    for (pugi::xml_node lShader = lEffectNode.first_child(); lShader; lShader = lShader.next_sibling() )
+    xml::CNode lEffectNode = lDocument.child("effect");
+    for (xml::CNode lShader = lEffectNode.first_child(); lShader; lShader = lShader.next_sibling() )
     {
       const char* lTag  = lShader.name();
       const char* lFile = lShader.attribute("file").value();
+      glm::vec3 lVec = xml::GetAttribute<glm::vec3>(lShader, "vec3");
     }
   }
 

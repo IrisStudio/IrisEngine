@@ -1,9 +1,14 @@
 #ifndef __XML__
 #define __XML__
 
-#include "pugixml.hpp"
+#include "pugixml/pugixml.hpp"
 
-typedef pugi::xml_document      CXMLDocument;
-typedef pugi::xml_node          CXMLNode;
+namespace xml
+{
+  typedef pugi::xml_document      CDocument;
+  typedef pugi::xml_node          CNode;
+
+  template< typename T > T GetAttribute( const CNode& aNode, const char* aAttributeName );
+}
 
 #endif
