@@ -31,9 +31,11 @@ project "RenderSystem"
 project "Math"
     kind "StaticLib"
     files { "../Engine/Math/**.h", "../Engine/Math/**.cpp", "../Engine/Math/**.inl" }
+	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 	
 project "Common"
     kind "StaticLib"
     files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Math/**.inl", "../Engine/Common/**.hpp" }
+	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
