@@ -13,6 +13,11 @@ namespace xml
     return lResult != NULL;
   }
 
+  template<> std::string GetAttribute<std::string>(const CNode& aNode, const char* aAttributeName)
+  {
+    return aNode.attribute(aAttributeName).value();
+  }
+
   template<> float GetAttribute<float>(const CNode& aNode, const char* aAttributeName)
   {
     const char* lValue = aNode.attribute(aAttributeName).value();

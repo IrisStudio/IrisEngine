@@ -13,10 +13,11 @@ workspace "IrisEditor"
       optimize "On"
 
 project "IrisEditor"
-   kind "ConsoleApp"
+   kind "WindowedApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
    links {"RenderSystem", "Math", "Common", "glfw3", "opengl32", "glew32s" }
+   includedirs { "../Engine/RenderSystem/ogl" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32"), "../3rdParty/glfw_WIN32/lib-vc2015/", "../3rdParty/glew_WIN32/lib/Release/Win32" }
@@ -25,17 +26,21 @@ project "RenderSystem"
     kind "StaticLib"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
 	includedirs { "../Engine/Common/" }
+	includedirs { "../Engine/RenderSystem/" }
+	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../3rdParty/glfw_WIN32/include/", "../3rdParty/glew_WIN32/include" }
 	includedirs { "../3rdParty/" }
     
 project "Math"
     kind "StaticLib"
     files { "../Engine/Math/**.h", "../Engine/Math/**.cpp", "../Engine/Math/**.inl" }
+	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 	
 project "Common"
     kind "StaticLib"
     files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Math/**.inl", "../Engine/Common/**.hpp" }
+	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }

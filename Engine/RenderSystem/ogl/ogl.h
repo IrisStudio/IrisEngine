@@ -3,9 +3,13 @@
 #define _OGL_LIBRARY_
 
 //Be sure to include GLEW before any other library that uses ogl
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include <Windows.h>
+#include <GL/gl.h>
+#include <cstddef>
 
-#include <GLFW\glfw3.h>
+//#define GLEW_STATIC
+//#include <GL/glew.h>
+
+//#include <GLFW/glfw3.h>
 
 #endif
