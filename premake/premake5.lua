@@ -16,11 +16,11 @@ project "IrisEditor"
    kind "WindowedApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "glfw3", "opengl32", "glew32s" }
+   links {"RenderSystem", "Math", "Common", "loki", "opengl32" }
    includedirs { "../Engine/RenderSystem/ogl" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/" }
    includedirs { "../3rdParty/" }
-   libdirs { os.findlib("opengl32"), "../3rdParty/glfw_WIN32/lib-vc2015/", "../3rdParty/glew_WIN32/lib/Release/Win32" }
+   libdirs { os.findlib("opengl32"), "../3rdParty/loki/bin" }
 
 project "RenderSystem"
     kind "StaticLib"
@@ -28,7 +28,6 @@ project "RenderSystem"
 	includedirs { "../Engine/Common/" }
 	includedirs { "../Engine/RenderSystem/" }
 	includedirs { "../Engine/RenderSystem/ogl" }
-	includedirs { "../3rdParty/glfw_WIN32/include/", "../3rdParty/glew_WIN32/include" }
 	includedirs { "../3rdParty/" }
     
 project "Math"

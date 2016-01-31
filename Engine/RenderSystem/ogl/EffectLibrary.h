@@ -3,7 +3,8 @@
 
 #include <Types.h>
 #include <map>
-#include "RenderSystem.h"
+#include "Shader.h"
+#include "Effect.h"
 
 class CEffectLibrary
 {

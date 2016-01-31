@@ -2,7 +2,6 @@
 #include "ExtensionManager.h"
 #include "ogl.h"
 #include "Effect.h"
-#include "RenderSystem.h"
 #include "EffectLibrary.h"
 #include "Logger/Logger.h"
 

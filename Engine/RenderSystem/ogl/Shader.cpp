@@ -9,6 +9,7 @@
 CShader::CShader()
   : mID(0)
   , mType( VERTEX_SHADER )
+  , mOk(false)
 {
 }
 
@@ -97,5 +98,6 @@ bool CShader::Create(EType aType, const char * aCode)
   return lOk;
 
   */
-  return false;
+  mOk = true;
+  return mOk;
 }

@@ -1,8 +1,10 @@
 #ifndef __EFFECT__
 #define __EFFECT__
 
-#include <Types.h>
-#include "RenderSystem.h"
+#include "Types.h"
+#include <loki/SmartPtr.h>
+
+#include "Shader.h"
 
 class CEffect
 {
@@ -15,5 +17,7 @@ private:
 };
 
 inline uint32 CEffect::GetID() const { return mID; }
+
+typedef Loki::SmartPtr<CEffect> CEffectSPtr;
 
 #endif

@@ -23,6 +23,14 @@ typedef glm::vec2           float2;
 typedef glm::vec3           float3;
 typedef glm::vec4           float4;
 
+typedef glm::ivec2           int2;
+typedef glm::ivec3           int3;
+typedef glm::ivec4           int4;
+
+typedef glm::uvec2           uint2;
+typedef glm::uvec3           uint3;
+typedef glm::uvec4           uint4;
+
 typedef glm::highp_mat3x3   float3x3;
 typedef glm::highp_mat4x4   float4x4;
 
