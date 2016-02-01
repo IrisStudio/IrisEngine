@@ -23,8 +23,8 @@ namespace debug
   class CLoggerImpl
   {
   public:
-    CLoggerImpl();
-    virtual ~CLoggerImpl();
+    CLoggerImpl(){}
+    virtual ~CLoggerImpl(){}
     void AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg);
 
   private:

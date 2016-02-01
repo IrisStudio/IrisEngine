@@ -1,12 +1,13 @@
-#include "Renderer.h"
+﻿#include "Renderer.h"
 
 #include "ogl.h"
 #include "Window.h"
 #include "Logger/Logger.h"
 
 #include <Windows.h>
-
 #include <string.h>
+
+#include "ExtensionManager.h"
 
 static HWND mHandle;
 static HDC  mhDC;
@@ -119,6 +120,12 @@ bool CWindowImpl::Show()
 
   if (!wglMakeCurrent(mhDC, mhRC))
     return false;
+
+  IRIS_LOG_APPLICATION((const char*)glGetString(GL_VENDOR));
+  IRIS_LOG_APPLICATION((const char*)glGetString(GL_RENDERER));
+  IRIS_LOG_APPLICATION((const char*)glGetString(GL_VERSION));
+
+  CExtensionManager::Instance().GetExtensions();
 
   return true;
 }

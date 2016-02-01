@@ -9,7 +9,7 @@ workspace "IrisEditor"
       flags { "Symbols" }
 
    filter "configurations:Release"
-      defines { "NDEBUG" }
+      defines { "NO_DEBUG", "NO_LOG" }
       optimize "On"
 
 project "IrisEditor"
@@ -26,7 +26,6 @@ project "RenderSystem"
     kind "StaticLib"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
 	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/RenderSystem/" }
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../3rdParty/" }
     
