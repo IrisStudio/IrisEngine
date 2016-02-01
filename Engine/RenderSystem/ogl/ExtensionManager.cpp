@@ -6,15 +6,15 @@
 
 #include <string.h>
 
-CExtensionManager::CExtensionManager()
+CExtensionManagerImpl::CExtensionManagerImpl()
 {
 }
 
-CExtensionManager::~CExtensionManager()
+CExtensionManagerImpl::~CExtensionManagerImpl()
 {
 }
 
-void CExtensionManager::GetExtensions()
+void CExtensionManagerImpl::GetExtensions()
 {
   IRIS_LOG_APPLICATION("Supported extensions:");
   int NumberOfExtensions = 0;
@@ -26,7 +26,7 @@ void CExtensionManager::GetExtensions()
   }
 }
 
-bool CExtensionManager::IsSupported(const char* aExtension)
+bool CExtensionManagerImpl::IsSupported(const char* aExtension)
 {
   return mExtensions.count( std::string( aExtension ) ) != 0;
 }

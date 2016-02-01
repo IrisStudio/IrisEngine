@@ -4,17 +4,17 @@
 
 namespace debug
 {
-  CLogger::CLogger()
+  CLoggerImpl::CLoggerImpl()
   {
 
   }
 
-  CLogger::~CLogger()
+  CLoggerImpl::~CLoggerImpl()
   {
 
   }
 
-  void CLogger::AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg)
+  void CLoggerImpl::AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg)
   {
     std::string lMsg;
     switch (aEntryLevel)

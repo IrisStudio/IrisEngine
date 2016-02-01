@@ -1,3 +1,3 @@
 cd premake
-premake5 vs2015
+premake5 vs2010
 cd ..

@@ -1,19 +1,21 @@
 #ifndef __OGL_EXTENSION_MANAGER__
 #define __OGL_EXTENSION_MANAGER__
 
-#include "Utils/Singleton.h"
+#include <loki/Singleton.h>
 #include <set>
+#include <string>
 
-class CExtensionManager : public Singleton<CExtensionManager>
+class CExtensionManagerImpl
 {
-  friend class Singleton<CExtensionManager>;
 public:
-  virtual ~CExtensionManager();
+  CExtensionManagerImpl();
+  virtual ~CExtensionManagerImpl();
   void GetExtensions();
   bool IsSupported( const char* aExtension );
 private:
-  CExtensionManager();
   std::set< std::string > mExtensions;
 };
+
+typedef Loki::SingletonHolder< CExtensionManagerImpl > CExtensionManager;
 
 #endif

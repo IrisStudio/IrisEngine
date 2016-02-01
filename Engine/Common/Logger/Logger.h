@@ -1,7 +1,7 @@
 #ifndef __LOGGER__
 #define __LOGGER__
 
-#include "Utils/Singleton.h"
+#include <loki/Singleton.h>
 
 #define IRIS_LOG_APPLICATION(aEntryMsg) debug::CLogger::Instance().AddNewEntry( debug::eDL_Trace,      aEntryMsg );
 #define IRIS_LOG_ERROR(aEntryMsg)       debug::CLogger::Instance().AddNewEntry( debug::eDL_Error,      aEntryMsg );
@@ -20,16 +20,17 @@ namespace debug
     eDL_Assertion
   };
 
-  class CLogger : public Singleton<CLogger>
+  class CLoggerImpl
   {
-    friend class Singleton<CLogger>;
   public:
-    virtual ~CLogger();
+    CLoggerImpl();
+    virtual ~CLoggerImpl();
     void AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg);
 
   private:
-    CLogger();
   };
+
+  typedef Loki::SingletonHolder< CLoggerImpl > CLogger;
 }
 
 #endif // __LOGGER__
