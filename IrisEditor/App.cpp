@@ -18,7 +18,7 @@ int main()
   std::string file_str("../data/scripts/test.chai");
 
   CScriptManager::Instance().ExecuteFile(file_str);
-  int32 lResult2 = CScriptManager::Instance().ExecuteInstructionAndGet("a");
+  int32 lResult2 = CScriptManager::Instance().ExecuteInstructionAndGet("c");
   
   if( lMainWindow.Create() )
   {

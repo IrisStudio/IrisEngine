@@ -4,3 +4,7 @@ def PlusTwo(num)
 }
 
 var a = PlusTwo(2);
+
+var b = TestClass();
+
+var c = b.TestMethod();
