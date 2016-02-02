@@ -16,13 +16,18 @@ project "IrisEditor"
    kind "WindowedApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script" }
+   links {"RenderSystem", "Math", "Common", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script", "Graphics" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/" }
    includedirs { "../3rdParty/ChaiScript/include/" }
    includedirs { "../3rdParty/" }
-   libdirs { os.findlib("opengl32"), "../3rdParty/loki/bin" }
+   libdirs { os.findlib("opengl32") }
 
+project "loki"
+    kind "StaticLib"
+    files { "../3rdParty/loki/**.h", "../3rdParty/loki/**.cpp" }
+	includedirs { "../3rdParty/loki/" }
+	
 project "RenderSystem"
     kind "StaticLib"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
