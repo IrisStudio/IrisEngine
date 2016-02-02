@@ -13,7 +13,9 @@ public:
 
   void Init();
 
-  int32 ExecuteInstruction( std::string aInstruction );
+  void ExecuteInstruction(std::string aInstruction);
+  int32 ExecuteInstructionAndGet( std::string aInstruction );
+  void ExecuteFile(std::string aFilePath);
 };
 
 typedef Loki::SingletonHolder< CScriptManagerImpl > CScriptManager;

@@ -13,7 +13,12 @@ int main()
 
   CScriptManager::Instance().Init();
 
-  int32 lResult = CScriptManager::Instance().ExecuteInstruction("TestFunc(20)");
+  int32 lResult = CScriptManager::Instance().ExecuteInstructionAndGet("TestFunc(20)");
+
+  std::string file_str("../data/scripts/test.chai");
+
+  CScriptManager::Instance().ExecuteFile(file_str);
+  int32 lResult2 = CScriptManager::Instance().ExecuteInstructionAndGet("a");
   
   if( lMainWindow.Create() )
   {

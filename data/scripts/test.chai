@@ -1,0 +1,6 @@
+def PlusTwo(num)
+{
+	return num + 2;
+}
+
+var a = PlusTwo(2);
