@@ -3,11 +3,12 @@
 
 #include <memory>
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat3x3.hpp>
-#include <glm/mat4x4.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 typedef signed char         int8;
 typedef short               int16;
@@ -31,7 +32,14 @@ typedef glm::uvec2           uint2;
 typedef glm::uvec3           uint3;
 typedef glm::uvec4           uint4;
 
-typedef glm::highp_mat3x3   float3x3;
-typedef glm::highp_mat4x4   float4x4;
+typedef glm::mat3            float3x3;
+typedef glm::mat4            float4x4;
+
+typedef glm::quat            quaternion;
+
+
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&);   \
+  void operator=(const TypeName&) 
 
 #endif

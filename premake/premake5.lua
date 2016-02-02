@@ -28,6 +28,14 @@ project "RenderSystem"
 	includedirs { "../Engine/Common/" }
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../3rdParty/" }
+
+project "Graphics"
+    kind "StaticLib"
+    files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp" }
+	includedirs { "../Engine/Common/" }
+	includedirs { "../Engine/RenderSystem/ogl" }
+    includedirs { "../Engine/Graphics/" }
+	includedirs { "../3rdParty/" }
     
 project "Math"
     kind "StaticLib"
