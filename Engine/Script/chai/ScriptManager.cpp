@@ -1,5 +1,9 @@
 #include "ScriptManager.h"
 
+#include "chaiscript/chaiscript.hpp"
+
+static chaiscript::ChaiScript mInterpreter;
+
 CScriptManagerImpl::CScriptManagerImpl()
 {
 }
