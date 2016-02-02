@@ -4,10 +4,17 @@
 #include "ogl\ogl.h"
 #include "Window.h"
 
+#include "ScriptManager.h"
+#include "Types.h"
+
 int main()
 {
   CWindowImpl lMainWindow = CWindow::Instance();
 
+  CScriptManager::Instance().Init();
+
+  int32 lResult = CScriptManager::Instance().ExecuteInstruction("TestFunc(20)");
+  
   if( lMainWindow.Create() )
   {
     if( lMainWindow.Show() )

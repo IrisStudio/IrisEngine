@@ -16,9 +16,10 @@ project "IrisEditor"
    kind "WindowedApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "loki", "opengl32" }
-   includedirs { "../Engine/RenderSystem/ogl" }
+   links {"RenderSystem", "Math", "Common", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script" }
+   includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/" }
+   includedirs { "../3rdParty/ChaiScript/include/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32"), "../3rdParty/loki/bin" }
 
@@ -43,6 +44,20 @@ project "Math"
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
+
+project "chaiscript_stdlib-5.7.1"
+    kind "SharedLib"
+    files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
+	includedirs { "../3rdParty/ChaiScript/include/" }
+	
+project "Script"
+    kind "StaticLib"
+    files { "../Engine/Script/**.h", "../Engine/Script/**.cpp", "../Engine/Script/**.inl" }
+	includedirs { "../Engine/Common/" }
+	includedirs { "../Engine/Script/" }
+	includedirs { "../Engine/RenderSystem/ogl" }
+	includedirs { "../3rdParty/" }
+	includedirs { "../3rdParty/ChaiScript/include/" }
 	
 project "Common"
     kind "StaticLib"
