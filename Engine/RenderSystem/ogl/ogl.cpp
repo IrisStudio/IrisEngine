@@ -55,4 +55,10 @@ namespace ogl
     BIND_OGL_ADDR(const GLubyte *, glGetString, GLenum name )
     return CALL_PROC_ADDR(glGetString, name )
   }
+
+  HGLRC wglCreateContextAttribsARB(HDC hDC, HGLRC hShareContext, const int *attribList)
+  {
+    BIND_OGL_ADDR( HGLRC, wglCreateContextAttribsARB, HDC hDC, HGLRC hShareContext, const int *attribList )
+    return CALL_PROC_ADDR(wglCreateContextAttribsARB, hDC, hShareContext, attribList)
+  }
 }

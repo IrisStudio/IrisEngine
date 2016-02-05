@@ -15,6 +15,7 @@ namespace ogl
   extern const GLubyte *glGetString(GLenum name);
   extern const GLubyte *glGetStringi(GLenum name, GLuint index);
   extern void glGetIntegerv( GLenum pname, GLint params);
+  extern HGLRC wglCreateContextAttribsARB(HDC hDC, HGLRC hShareContext, const int *attribList);
 }
 
 #endif

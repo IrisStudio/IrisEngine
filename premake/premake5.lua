@@ -42,6 +42,10 @@ project "Graphics"
 	includedirs { "../Engine/RenderSystem/ogl" }
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
+	
+project "effects"
+    kind "None"
+    files { "../data/effects/**.xml", "../data/effects/**.xml" }
     
 project "Math"
     kind "StaticLib"

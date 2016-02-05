@@ -2,15 +2,14 @@
 #include "Effect.h"
 #include "EffectLibrary.h"
 #include "ogl\ogl.h"
-#include "Window.h"
 
 #include "ScriptManager.h"
 #include "Types.h"
 
+#include "IApplication.h"
+
 int main()
 {
-  CWindowImpl lMainWindow = CWindow::Instance();
-
   CScriptManager::Instance().Init();
 
   int32 lResult = CScriptManager::Instance().ExecuteInstructionAndGet("TestFunc(20)");
@@ -19,19 +18,10 @@ int main()
 
   CScriptManager::Instance().ExecuteFile(file_str);
   int32 lResult2 = CScriptManager::Instance().ExecuteInstructionAndGet("c");
-  
-  if( lMainWindow.Create() )
-  {
-    if( lMainWindow.Show() )
-    {
-      while (true)
-      {
-        lMainWindow.BeginRender();
-        lMainWindow.Clear(true, false, false);
-        lMainWindow.EndRender();
-      }
-    }
-  }
+
+  IApplication *app = new IApplication();;
+  app->Run();
+  CHECKED_DELETE(app);
 
   return 0;
 }

@@ -42,4 +42,11 @@ typedef glm::quat            quaternion;
   TypeName(const TypeName&);   \
   void operator=(const TypeName&) 
 
+#define CHECKED_DELETE(Ptr) \
+  if( Ptr )                 \
+  {                         \
+    delete Ptr;             \
+    Ptr = nullptr;          \
+  }                         \
+
 #endif
