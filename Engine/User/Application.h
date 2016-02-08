@@ -16,8 +16,6 @@ public:
 public:
   IApplication();
   virtual ~IApplication();
-
-  void Init(EDisplayType aDisplayType);
   void ProccessInputs();
   void Update( const float dt );
   void Render();

@@ -4,8 +4,11 @@
 
 #include <Windows.h>
 
-#include "IApplication.h"
+#include "Application.h"
 #include "Window.h"
+
+#include "Effect.h"
+#include "EffectLibrary.h"
 
 static CWindowImpl sMainWindow = CWindow::Instance();
 static const float sMaximumFrameRate = 60.0f;
@@ -20,6 +23,20 @@ static int       mSampleCount;
 static float     mTimeScale;
 static float     mActualElapsedTimeSec;
 static float     mFrameTimes[sMaxSamples];
+
+struct TSimpleVertex
+{
+  float x, y;
+  float r, g, b, a;
+};
+
+TSimpleVertex quad[] =
+{
+  { 1.0f, 0.0f, 1.0f, 1.0f ,-0.4f,  0.4f } ,
+  { 0.0f, 0.0f, 1.0f, 1.0f ,-0.4f, -0.4f } ,
+  { 0.0f, 0.0f, 1.0f, 1.0f , 0.4f,  0.4f } ,
+  { 0.0f, 0.0f, 1.0f, 1.0f , 0.4f, -0.4f }
+};
 
 IApplication::IApplication()
   : mCyclesLeft(0.0f)
@@ -49,6 +66,9 @@ void IApplication::Run()
       QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mFreq));
       QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mLastTime));
       mTimeScale = 1.0f / mFreq;
+
+      CEffectLibrary lLib;
+      CEffectSPtr lEffect = lLib.CreateEffect("../data/effects/effect01.xml");
 
       while (sMainWindow.Update())
       {

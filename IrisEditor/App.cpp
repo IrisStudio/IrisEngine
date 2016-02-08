@@ -6,7 +6,7 @@
 #include "ScriptManager.h"
 #include "Types.h"
 
-#include "IApplication.h"
+#include "Application.h"
 
 int main()
 {

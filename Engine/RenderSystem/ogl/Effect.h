@@ -11,6 +11,7 @@ class CEffect
 public:
   CEffect(CShaderSPtr aVertexShader, CShaderSPtr aPixelShader);
   virtual ~CEffect();
+  void    Bind();
   uint32 GetID() const;
 private:
   uint32 mID;

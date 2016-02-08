@@ -17,18 +17,24 @@ public:
   CShader();
   virtual ~CShader();
   bool Create( EType aType, const char* aCode );
-  uint32 GetID() const;
+  uint32 GetProgramID() const;
+  uint32 GetShaderID() const;
   EType GetType() const;
   bool  IsOk() const;
 
-private:
-  uint32 mID;
-  EType  mType;
-  bool   mOk;
+private: // Members
+  uint32       mProgramID, mShaderID;
+  EType        mType;
+  std::string  mCode;
+  bool         mOk;
+private: // Methods
+  bool Compile();
+  bool Link();
 };
 
-inline uint32         CShader::GetID() const { return mID; }
-inline bool           CShader::IsOk() const { return mOk; }
+inline uint32         CShader::GetProgramID() const   { return mProgramID; }
+inline uint32         CShader::GetShaderID() const    { return mShaderID; }
+inline bool           CShader::IsOk()  const   { return mOk; }
 inline CShader::EType CShader::GetType() const { return mType; }
 
 typedef Loki::SmartPtr<CShader> CShaderSPtr;

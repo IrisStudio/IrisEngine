@@ -173,7 +173,8 @@ bool CWindowImpl::Show()
   }
 
   // Set the window name with the rendering version
-  const std::string& lWindowName = str_utils::Format("OGL WINDOW: Vendor: %s - Renderer: %s - Version: %s", (const char*)glGetString(GL_VENDOR), (const char*)glGetString(GL_RENDERER), (const char*)glGetString(GL_VERSION));
+
+  const std::string& lWindowName = str_utils::Format("Vendor: %s - Renderer: %s - OGL Version: %s - GLSL Version %s", (const char*)glGetString(GL_VENDOR), (const char*)glGetString(GL_RENDERER), (const char*)glGetString(GL_VERSION), (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
   SetWindowText(mHandle, lWindowName.c_str() );
 
   CExtensionManager::Instance().GetExtensions();
