@@ -24,30 +24,12 @@ project "IrisEditor"
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32") }
 
-project "loki"
-    kind "StaticLib"
-    files { "../3rdParty/loki/**.h", "../3rdParty/loki/**.cpp" }
-	includedirs { "../3rdParty/" }
-	
-project "RenderSystem"
-    kind "StaticLib"
-    files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
-	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/RenderSystem/ogl" }
-	includedirs { "../3rdParty/" }
-
-project "Graphics"
-    kind "StaticLib"
-    files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp" }
-	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/RenderSystem/ogl" }
-    includedirs { "../Engine/Graphics/" }
-	includedirs { "../3rdParty/" }
-	
+group "FileSystem"
 project "effects"
     kind "None"
     files { "../data/effects/**.xml", "../data/effects/**.xml" }
-    
+   
+group "Engine"
 project "Math"
     kind "StaticLib"
     files { "../Engine/Math/**.h", "../Engine/Math/**.cpp", "../Engine/Math/**.inl" }
@@ -61,18 +43,6 @@ project "User"
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
-
-project "entityx-1.1.2"
-    kind "StaticLib"
-    files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
-    excludes { "../3rdParty/entityx/entityx/**test.cc" }
-	includedirs { "../3rdParty/entityx/" }
-    
-project "chaiscript_stdlib-5.7.1"
-    kind "SharedLib"
-    targetdir "../bin/%{cfg.buildcfg}"
-    files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
-	includedirs { "../3rdParty/ChaiScript/include/" }
 	
 project "Script"
     kind "StaticLib"
@@ -88,4 +58,37 @@ project "Common"
     files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Math/**.inl", "../Engine/Common/**.hpp" }
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
+	includedirs { "../3rdParty/" }
+
+project "RenderSystem"
+    kind "StaticLib"
+    files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
+	includedirs { "../Engine/Common/" }
+	includedirs { "../Engine/RenderSystem/ogl" }
+	includedirs { "../3rdParty/" }
+
+project "Graphics"
+    kind "StaticLib"
+    files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp" }
+	includedirs { "../Engine/Common/" }
+	includedirs { "../Engine/RenderSystem/ogl" }
+    includedirs { "../Engine/Graphics/" }
+	includedirs { "../3rdParty/" }
+    
+group "3rdParty"
+project "chaiscript_stdlib-5.7.1"
+    kind "SharedLib"
+    targetdir "../bin/%{cfg.buildcfg}"
+    files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
+	includedirs { "../3rdParty/ChaiScript/include/" }
+    
+project "entityx-1.1.2"
+    kind "StaticLib"
+    files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
+    excludes { "../3rdParty/entityx/entityx/**test.cc" }
+	includedirs { "../3rdParty/entityx/" }
+    
+project "loki"
+    kind "StaticLib"
+    files { "../3rdParty/loki/**.h", "../3rdParty/loki/**.cpp" }
 	includedirs { "../3rdParty/" }
