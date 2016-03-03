@@ -16,7 +16,7 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script", "Graphics", "flatbuffers" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "ChaiScript", "loki", "opengl32", "Script", "Graphics", "flatbuffers" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -76,7 +76,7 @@ project "Graphics"
 	includedirs { "../3rdParty/" }
     
 group "3rdParty"
-project "chaiscript_stdlib-5.7.1"
+project "ChaiScript"
     kind "SharedLib"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }

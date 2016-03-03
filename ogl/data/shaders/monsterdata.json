@@ -1,9 +1,35 @@
 {
-  pos: {
-    x: 1,
-    y: 2,
-    z: 3
-  },
-  hp: 300,
-  name: "Orc"
+	monsters:
+	[
+		{
+		  pos: { x: 1, y: 2, z: 3 },
+		  hp: 300,
+		  name: "Orc2"
+		},
+		{
+		  pos: { x: 1, y: 2, z: 3 },
+		  hp: 300,
+		  name: "Orc3"
+		},
+		{
+		  pos: { x: 1, y: 2, z: 3 },
+		  hp: 300,
+		  name: "Orc6"
+		},
+		{
+		  pos: { x: 1, y: 2, z: 3 },
+		  hp: 300,
+		  name: "Orc7"
+		},
+		{
+		  pos: { x: 1, y: 2, z: 3 },
+		  hp: 300,
+		  name: "Orc8"
+		},
+		{
+		  pos: { x: 1, y: 2, z: 3 },
+		  hp: 300,
+		  name: "Orc9"
+		}
+	]
 }

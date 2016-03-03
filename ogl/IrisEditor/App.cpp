@@ -10,7 +10,7 @@
 
 int main()
 {
-  CScriptManager::Instance().Init();
+  /*CScriptManager::Instance().Init();
 
   int32 lResult = CScriptManager::Instance().ExecuteInstructionAndGet("TestFunc(20)");
 
@@ -18,6 +18,7 @@ int main()
 
   CScriptManager::Instance().ExecuteFile(file_str);
   int32 lResult2 = CScriptManager::Instance().ExecuteInstructionAndGet("c");
+  */
 
   IApplication *app = new IApplication();;
   app->Run();

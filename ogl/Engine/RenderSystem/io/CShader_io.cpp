@@ -6,7 +6,7 @@
 #include <flatbuffers/idl.h>
 #include <flatbuffers/util.h>
 
-#include "monster_generated.h" // Already includes "flatbuffers/flatbuffers.h".
+#include "monstermanager_generated.h" // Already includes "flatbuffers/flatbuffers.h".
 
 namespace iris { namespace io {
 
@@ -27,15 +27,17 @@ namespace iris { namespace io {
 		const char *include_directories[] = { "../data/shaders/", nullptr };
 		ok = parser.Parse(schemafile.c_str(), include_directories) &&
 			parser.Parse(jsonfile.c_str(), include_directories);
-		assert(ok);
+    printf("%s", parser.error_.c_str());
 
-		auto monster = MyGame::Sample::GetMonster(parser.builder_.GetBufferPointer());
-
-		IRIS_LOG_APPLICATION(monster->name()->c_str());
-
-		printf("%d\n", monster->hp());            // `80`
-		printf("%d\n", monster->mana());          // default value of `150`
-		printf("%s\n", monster->name()->c_str()); // "MyMonster"
+		const MonsterManager* monster = GetMonsterManager(parser.builder_.GetBufferPointer());
+    auto vecoftables = monster->monsters();
+    for (auto it = vecoftables->begin(); it != vecoftables->end(); ++it)
+    {
+      printf("%d\n", it->hp());            // `80`
+      printf("%d\n", it->mana());          // default value of `150`
+      printf("%s\n", it->name()->c_str()); // "MyMonster"
+      printf("\n\n"); // "MyMonster"
+    }
 
 		// here, parser.builder_ contains a binary buffer that is the parsed data.
         /*
