@@ -16,10 +16,11 @@ project "IrisEditor"
    kind "WindowedApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script", "Graphics" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script", "Graphics" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/"}
    includedirs { "../3rdParty/ChaiScript/include/" }
+   includedirs { "../3rdParty/entityx/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32") }
 
@@ -61,8 +62,15 @@ project "User"
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 
+project "entityx-1.1.2"
+    kind "StaticLib"
+    files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
+    excludes { "../3rdParty/entityx/entityx/**test.cc" }
+	includedirs { "../3rdParty/entityx/" }
+    
 project "chaiscript_stdlib-5.7.1"
     kind "SharedLib"
+    targetdir "../bin/%{cfg.buildcfg}"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
 	
