@@ -1,6 +1,7 @@
 #include "EffectLibrary.h"
 
 #include "XML/XML.h"
+#include "io/io.h"
 #include "Shader.h"
 #include "Effect.h"
 #include "Logger/Logger.h"
@@ -15,13 +16,18 @@ namespace
 
   CShaderSPtr CompileAndStoreShader( const uint32 aID, CShader::EType aShaderType, const std::string& aFile, TMapShader& aMap )
   {
+	  CShaderSPtr lShader;
+	  CShader shader;
+	  iris::io::Serialize(shader);
+		 /*
+
     // First try to find if the shader is already on the map
     TMapShader::const_iterator lFind = aMap.find(aID);
     if (lFind != aMap.end())
       return lFind->second;
 
     // Is not on the map, then compile it and return it if all
-    CShaderSPtr lShader;
+    
     std::ifstream t(aFile);
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
     lShader = CShaderSPtr(new CShader());
@@ -29,6 +35,7 @@ namespace
       aMap[aID] = lShader;
 
     assert(lShader->IsOk());
+	*/
     return lShader;
   }
 }

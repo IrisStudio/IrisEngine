@@ -13,10 +13,10 @@ workspace "IrisEditor"
       optimize "On"
 
 project "IrisEditor"
-   kind "WindowedApp"
+   kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script", "Graphics" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "chaiscript_stdlib-5.7.1", "loki", "opengl32", "Script", "Graphics", "flatbuffers" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -78,7 +78,6 @@ project "Graphics"
 group "3rdParty"
 project "chaiscript_stdlib-5.7.1"
     kind "SharedLib"
-    targetdir "../bin/%{cfg.buildcfg}"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
     
@@ -91,4 +90,9 @@ project "entityx-1.1.2"
 project "loki"
     kind "StaticLib"
     files { "../3rdParty/loki/**.h", "../3rdParty/loki/**.cpp" }
+	includedirs { "../3rdParty/" }
+
+project "flatbuffers"
+    kind "StaticLib"
+    files { "../3rdParty/flatbuffers/**.h", "../3rdParty/flatbuffers/src/**.cpp" }
 	includedirs { "../3rdParty/" }
