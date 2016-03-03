@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_DX11|x64">
+      <Configuration>Debug_DX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DX11|x64">
+      <Configuration>Release_DX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Final_DX11|x64">
+      <Configuration>Final_DX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E344C65F-CFFC-07AD-3804-E10824DBA29D}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>IrisEditor</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX11|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX11|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Final_DX11|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_DX11|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_DX11|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Final_DX11|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX11|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>Debug_DX11\</OutDir>
+    <IntDir>obj\x64\Debug_DX11\</IntDir>
+    <TargetName>IrisEditor</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX11|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>Release_DX11\</OutDir>
+    <IntDir>obj\x64\Release_DX11\</IntDir>
+    <TargetName>IrisEditor</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Final_DX11|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>Final_DX11\</OutDir>
+    <IntDir>obj\x64\Final_DX11\</IntDir>
+    <TargetName>IrisEditor</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX11|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_DEBUG;WIN64;_WIN64;_WINDOWS;_USRDLL;TW_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\ThirdParty;..\ThirdParty\expat;..\ThirdParty\AntTweakBar;..\ThirdParty\AntTweakBar\include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>AntTweakBar64.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;libexpat64.lib;dinput8.lib;DXGI.lib;D2D1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ThirdParty\expat;..\ThirdParty\AntTweakBar\bin;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX11|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;WIN64;_WIN64;_WINDOWS;_USRDLL;TW_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\ThirdParty;..\ThirdParty\expat;..\ThirdParty\AntTweakBar;..\ThirdParty\AntTweakBar\include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>AntTweakBar64.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;libexpat64.lib;dinput8.lib;DXGI.lib;D2D1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ThirdParty\expat;..\ThirdParty\AntTweakBar\bin;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_DX11|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>..\ThirdParty;..\ThirdParty\expat;..\ThirdParty\AntTweakBar;..\ThirdParty\AntTweakBar\include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>AntTweakBar64.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;libexpat64.lib;dinput8.lib;DXGI.lib;D2D1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ThirdParty\expat;..\ThirdParty\AntTweakBar\bin;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\ApplicationDX.h" />
+    <ClInclude Include="..\Source\Camera.h" />
+    <ClInclude Include="..\Source\CameraController.h" />
+    <ClInclude Include="..\Source\CameraManager.h" />
+    <ClInclude Include="..\Source\DebugRender.h" />
+    <ClInclude Include="..\Source\EffectManager.h" />
+    <ClInclude Include="..\Source\FPSCameraController.h" />
+    <ClInclude Include="..\Source\Frustum.h" />
+    <ClInclude Include="..\Source\InputManager.h" />
+    <ClInclude Include="..\Source\KeyboardInput.h" />
+    <ClInclude Include="..\Source\MouseInput.h" />
+    <ClInclude Include="..\Source\Player.h" />
+    <ClInclude Include="..\Source\RenderableVertexs.h" />
+    <ClInclude Include="..\Source\SphericalCameraController.h" />
+    <ClInclude Include="..\Source\VertexTypes.h" />
+    <ClInclude Include="..\Source\defines.h" />
+    <ClInclude Include="..\Source\text.h" />
+    <ClInclude Include="..\ThirdParty\expat\XMLParser.h" />
+    <ClInclude Include="..\ThirdParty\expat\expat.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\ApplicationDX.cpp" />
+    <ClCompile Include="..\Source\Camera.cpp" />
+    <ClCompile Include="..\Source\CameraController.cpp" />
+    <ClCompile Include="..\Source\CameraManager.cpp" />
+    <ClCompile Include="..\Source\DebugRender.cpp" />
+    <ClCompile Include="..\Source\EffectManager.cpp" />
+    <ClCompile Include="..\Source\FPSCameraController.cpp" />
+    <ClCompile Include="..\Source\Frustum.cpp" />
+    <ClCompile Include="..\Source\InputManager.cpp" />
+    <ClCompile Include="..\Source\KeyboardInput.cpp" />
+    <ClCompile Include="..\Source\MouseInput.cpp" />
+    <ClCompile Include="..\Source\Player.cpp" />
+    <ClCompile Include="..\Source\SphericalCameraController.cpp" />
+    <ClCompile Include="..\Source\UAB Videojuegos.cpp" />
+    <ClCompile Include="..\Source\VertexTypes.cpp" />
+    <ClCompile Include="..\Source\defines.cpp" />
+    <ClCompile Include="..\Source\text.cpp" />
+    <ClCompile Include="..\ThirdParty\expat\XMLParser.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
