@@ -12,10 +12,11 @@ namespace iris { namespace io {
 
 	template <> bool Serialize(const CShader& aObject)
 	{
+		/*
 		// load FlatBuffer schema (.fbs) and JSON from disk
 		std::string schemafile;
 		std::string jsonfile;
-		bool ok = flatbuffers::LoadFile("../data/shaders/monster.fbs", false, &schemafile) &&
+		bool ok = flatbuffers::LoadFile("../data/shaders/monstermanager.fbs", false, &schemafile) &&
 			flatbuffers::LoadFile("../data/shaders/monsterdata.json", false, &jsonfile);
 		if (!ok) {
 			printf("couldn't load files!\n");
@@ -28,6 +29,21 @@ namespace iris { namespace io {
 		ok = parser.Parse(schemafile.c_str(), include_directories) &&
 			parser.Parse(jsonfile.c_str(), include_directories);
     printf("%s", parser.error_.c_str());
+
+	*/
+	// load FlatBuffer schema (.fbs) and JSON from disk
+		std::string jsonfile;
+		bool ok = flatbuffers::LoadFile("../data/shaders/monsterdata.json", false, &jsonfile);
+		if (!ok) {
+			printf("couldn't load files!\n");
+			return 1;
+		}
+
+		// parse schema first, so we can use it to parse the data after
+		flatbuffers::Parser parser;
+		const char *include_directories[] = { "../data/shaders/", nullptr };
+		ok = parser.Parse(jsonfile.c_str(), include_directories);
+		printf("%s", parser.error_.c_str());
 
 		const MonsterManager* monster = GetMonsterManager(parser.builder_.GetBufferPointer());
     auto vecoftables = monster->monsters();
