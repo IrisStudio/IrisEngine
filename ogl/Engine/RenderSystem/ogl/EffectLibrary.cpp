@@ -18,7 +18,7 @@ namespace
   {
 	  CShaderSPtr lShader;
 	  CShader shader;
-	  iris::io::Serialize(shader);
+	  //iris::io::Serialize(shader);
 		 /*
 
     // First try to find if the shader is already on the map

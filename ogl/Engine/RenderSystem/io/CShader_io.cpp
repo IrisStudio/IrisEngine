@@ -6,18 +6,18 @@
 #include <flatbuffers/idl.h>
 #include <flatbuffers/util.h>
 
-#include "monstermanager_generated.h" // Already includes "flatbuffers/flatbuffers.h".
+#include "fbs/shader_generated.h" // Already includes "flatbuffers/flatbuffers.h".
 
 namespace iris { namespace io {
 
-	template <> bool Serialize(const CShader& aObject)
+	template <> bool Serialize(const char* filename, const char* schema, const CShader& aObject)
 	{
 		/*
 		// load FlatBuffer schema (.fbs) and JSON from disk
 		std::string schemafile;
 		std::string jsonfile;
-		bool ok = flatbuffers::LoadFile("../data/shaders/monstermanager.fbs", false, &schemafile) &&
-			flatbuffers::LoadFile("../data/shaders/monsterdata.json", false, &jsonfile);
+		bool ok = flatbuffers::LoadFile(filename , false, &schemafile) &&
+			flatbuffers::LoadFile(filename, false, &jsonfile);
 		if (!ok) {
 			printf("couldn't load files!\n");
 			return 1;
@@ -30,7 +30,6 @@ namespace iris { namespace io {
 			parser.Parse(jsonfile.c_str(), include_directories);
     printf("%s", parser.error_.c_str());
 
-	*/
 	// load FlatBuffer schema (.fbs) and JSON from disk
 		std::string jsonfile;
 		bool ok = flatbuffers::LoadFile("../data/shaders/monsterdata.json", false, &jsonfile);
@@ -67,11 +66,6 @@ namespace iris { namespace io {
 		}*/
 
 		printf("The FlatBuffer has been parsed from JSON successfully.\n");
-		return true;
-	}
-
-	template <> bool Unserialize(CShader& aObject)
-	{
 		return true;
 	}
 }}
