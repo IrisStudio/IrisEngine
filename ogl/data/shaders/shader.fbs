@@ -4,8 +4,8 @@ enum Type:byte { Vertex = 0, Fragment, Geometry, Tesselation }
 
 table Shader
 {
-  type:Type = Vertex;
   name:string;
+  type:Type = Vertex;
   filename:string;
 }
 

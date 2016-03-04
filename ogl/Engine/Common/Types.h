@@ -39,14 +39,14 @@ typedef glm::quat            quaternion;
 
 
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&);   \
-  void operator=(const TypeName&) 
+    TypeName(const TypeName&);   \
+    void operator=(const TypeName&)
 
 #define CHECKED_DELETE(Ptr) \
-  if( Ptr )                 \
-  {                         \
-    delete Ptr;             \
-    Ptr = nullptr;          \
-  }                         \
+    if( Ptr )                 \
+    {                         \
+        delete Ptr;             \
+        Ptr = nullptr;          \
+    }                         \
 
 #endif

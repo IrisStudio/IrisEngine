@@ -671,7 +671,7 @@ CheckedError Parser::ParseAnyValue(Value &val, FieldDef *field,
   return NoError();
 }
 
-void Parser::SerializeStruct(const StructDef &struct_def, const Value &val) {
+void Parser::SaveStruct(const StructDef &struct_def, const Value &val) {
   assert(val.constant.length() == struct_def.bytesize);
   builder_.Align(struct_def.minalign);
   builder_.PushBytes(reinterpret_cast<const uint8_t *>(val.constant.c_str()),
@@ -763,7 +763,7 @@ CheckedError Parser::ParseTable(const StructDef &struct_def, std::string *value,
             case BASE_TYPE_ ## ENUM: \
               builder_.Pad(field->padding); \
               if (IsStruct(field->value.type)) { \
-                SerializeStruct(*field->value.type.struct_def, field_value); \
+                SaveStruct(*field->value.type.struct_def, field_value); \
               } else { \
                 CTYPE val; \
                 ECHECK(atot(field_value.constant.c_str(), *this, &val)); \
@@ -783,7 +783,7 @@ CheckedError Parser::ParseTable(const StructDef &struct_def, std::string *value,
     builder_.EndStruct();
     assert(value);
     // Temporarily store this struct in the value string, since it is to
-    // be serialized in-place elsewhere.
+    // be Saved in-place elsewhere.
     value->assign(
           reinterpret_cast<const char *>(builder_.GetCurrentBufferPointer()),
           struct_def.bytesize);
@@ -819,7 +819,7 @@ CheckedError Parser::ParseVector(const Type &type, uoffset_t *ovalue) {
     switch (val.type.base_type) {
       #define FLATBUFFERS_TD(ENUM, IDLTYPE, CTYPE, JTYPE, GTYPE, NTYPE, PTYPE) \
         case BASE_TYPE_ ## ENUM: \
-          if (IsStruct(val.type)) SerializeStruct(*val.type.struct_def, val); \
+          if (IsStruct(val.type)) SaveStruct(*val.type.struct_def, val); \
           else { \
              CTYPE elem; \
              ECHECK(atot(val.constant.c_str(), *this, &elem)); \
@@ -1783,21 +1783,21 @@ template<typename T> void AssignIndices(const std::vector<T *> &defvec) {
   for (int i = 0; i < static_cast<int>(vec.size()); i++) vec[i]->index = i;
 }
 
-void Parser::Serialize() {
+void Parser::Save() {
   builder_.Clear();
   AssignIndices(structs_.vec);
   AssignIndices(enums_.vec);
   std::vector<Offset<reflection::Object>> object_offsets;
   for (auto it = structs_.vec.begin(); it != structs_.vec.end(); ++it) {
-    auto offset = (*it)->Serialize(&builder_);
+    auto offset = (*it)->Save(&builder_);
     object_offsets.push_back(offset);
-    (*it)->serialized_location = offset.o;
+    (*it)->Saved_location = offset.o;
   }
   std::vector<Offset<reflection::Enum>> enum_offsets;
   for (auto it = enums_.vec.begin(); it != enums_.vec.end(); ++it) {
-    auto offset = (*it)->Serialize(&builder_);
+    auto offset = (*it)->Save(&builder_);
     enum_offsets.push_back(offset);
-    (*it)->serialized_location = offset.o;
+    (*it)->Saved_location = offset.o;
   }
   auto schema_offset = reflection::CreateSchema(
                          builder_,
@@ -1806,17 +1806,17 @@ void Parser::Serialize() {
                          builder_.CreateString(file_identifier_),
                          builder_.CreateString(file_extension_),
                          root_struct_def_
-                           ? root_struct_def_->serialized_location
+                           ? root_struct_def_->Saved_location
                            : 0);
   builder_.Finish(schema_offset, reflection::SchemaIdentifier());
 }
 
-Offset<reflection::Object> StructDef::Serialize(FlatBufferBuilder *builder)
+Offset<reflection::Object> StructDef::Save(FlatBufferBuilder *builder)
                                                                          const {
   std::vector<Offset<reflection::Field>> field_offsets;
   for (auto it = fields.vec.begin(); it != fields.vec.end(); ++it) {
     field_offsets.push_back(
-      (*it)->Serialize(builder,
+      (*it)->Save(builder,
                        static_cast<uint16_t>(it - fields.vec.begin())));
   }
   return reflection::CreateObject(*builder,
@@ -1828,11 +1828,11 @@ Offset<reflection::Object> StructDef::Serialize(FlatBufferBuilder *builder)
                                   static_cast<int>(bytesize));
 }
 
-Offset<reflection::Field> FieldDef::Serialize(FlatBufferBuilder *builder,
+Offset<reflection::Field> FieldDef::Save(FlatBufferBuilder *builder,
                                               uint16_t id) const {
   return reflection::CreateField(*builder,
                                  builder->CreateString(name),
-                                 value.type.Serialize(builder),
+                                 value.type.Save(builder),
                                  id,
                                  value.offset,
                                  IsInteger(value.type.base_type)
@@ -1848,29 +1848,29 @@ Offset<reflection::Field> FieldDef::Serialize(FlatBufferBuilder *builder,
   // space by sharing it. Same for common values of value.type.
 }
 
-Offset<reflection::Enum> EnumDef::Serialize(FlatBufferBuilder *builder) const {
+Offset<reflection::Enum> EnumDef::Save(FlatBufferBuilder *builder) const {
   std::vector<Offset<reflection::EnumVal>> enumval_offsets;
   for (auto it = vals.vec.begin(); it != vals.vec.end(); ++it) {
-    enumval_offsets.push_back((*it)->Serialize(builder));
+    enumval_offsets.push_back((*it)->Save(builder));
   }
   return reflection::CreateEnum(*builder,
                                 builder->CreateString(name),
                                 builder->CreateVector(enumval_offsets),
                                 is_union,
-                                underlying_type.Serialize(builder));
+                                underlying_type.Save(builder));
 }
 
-Offset<reflection::EnumVal> EnumVal::Serialize(FlatBufferBuilder *builder) const
+Offset<reflection::EnumVal> EnumVal::Save(FlatBufferBuilder *builder) const
                                                                                {
   return reflection::CreateEnumVal(*builder,
                                    builder->CreateString(name),
                                    value,
                                    struct_def
-                                     ? struct_def->serialized_location
+                                     ? struct_def->Saved_location
                                      : 0);
 }
 
-Offset<reflection::Type> Type::Serialize(FlatBufferBuilder *builder) const {
+Offset<reflection::Type> Type::Save(FlatBufferBuilder *builder) const {
   return reflection::CreateType(*builder,
                                 static_cast<reflection::BaseType>(base_type),
                                 static_cast<reflection::BaseType>(element),

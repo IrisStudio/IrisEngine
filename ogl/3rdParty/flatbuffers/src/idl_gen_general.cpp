@@ -275,7 +275,7 @@ static std::string GenTypeGet(const LanguageParameters &lang, const Parser &pars
 }
 
 // Find the destination type the user wants to receive the value in (e.g.
-// one size higher signed types for unsigned serialized values in Java).
+// one size higher signed types for unsigned Saved values in Java).
 static Type DestinationType(const LanguageParameters &lang, const Parser &parser, const Type &type,
                             bool vectorelem) {
   if (lang.language != IDLOptions::kJava) return type;
@@ -326,7 +326,7 @@ static std::string GenTypeNameDest(const LanguageParameters &lang, const Parser 
   return GenTypeGet(lang, parser, DestinationType(lang, parser, type, true));
 }
 
-// Mask to turn serialized value into destination type value.
+// Mask to turn Saved value into destination type value.
 static std::string DestinationMask(const LanguageParameters &lang,
                                    const Type &type, bool vectorelem) {
   if (lang.language != IDLOptions::kJava) return "";
@@ -342,7 +342,7 @@ static std::string DestinationMask(const LanguageParameters &lang,
   }
 }
 
-// Casts necessary to correctly read serialized data
+// Casts necessary to correctly read Saved data
 static std::string DestinationCast(const LanguageParameters &lang, const Parser &parser,
                                    const Type &type) {
   if (type.base_type == BASE_TYPE_VECTOR) {
@@ -350,7 +350,7 @@ static std::string DestinationCast(const LanguageParameters &lang, const Parser 
   } else {
     switch (lang.language) {
     case IDLOptions::kJava:
-      // Cast necessary to correctly read serialized unsigned values.
+      // Cast necessary to correctly read Saved unsigned values.
       if (type.base_type == BASE_TYPE_UINT) return "(long)";
       break;
 

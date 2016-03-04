@@ -132,7 +132,7 @@ struct Type {
 
   Type VectorType() const { return Type(element, struct_def, enum_def); }
 
-  Offset<reflection::Type> Serialize(FlatBufferBuilder *builder) const;
+  Offset<reflection::Type> Save(FlatBufferBuilder *builder) const;
 
   BaseType base_type;
   BaseType element;       // only set if t == BASE_TYPE_VECTOR
@@ -206,7 +206,7 @@ struct Namespace {
 // Base class for all definition types (fields, structs_, enums_).
 struct Definition {
   Definition() : generated(false), defined_namespace(nullptr),
-                 serialized_location(0), index(-1) {}
+                 Saved_location(0), index(-1) {}
 
   std::string name;
   std::string file;
@@ -215,15 +215,15 @@ struct Definition {
   bool generated;  // did we already output code for this definition?
   Namespace *defined_namespace;  // Where it was defined.
 
-  // For use with Serialize()
-  uoffset_t serialized_location;
+  // For use with Save()
+  uoffset_t Saved_location;
   int index;  // Inside the vector it is stored.
 };
 
 struct FieldDef : public Definition {
   FieldDef() : deprecated(false), required(false), key(false), padding(0) {}
 
-  Offset<reflection::Field> Serialize(FlatBufferBuilder *builder, uint16_t id)
+  Offset<reflection::Field> Save(FlatBufferBuilder *builder, uint16_t id)
                                                                           const;
 
   Value value;
@@ -250,7 +250,7 @@ struct StructDef : public Definition {
     if (fields.vec.size()) fields.vec.back()->padding = padding;
   }
 
-  Offset<reflection::Object> Serialize(FlatBufferBuilder *builder) const;
+  Offset<reflection::Object> Save(FlatBufferBuilder *builder) const;
 
   SymbolTable<FieldDef> fields;
   bool fixed;       // If it's struct, not a table.
@@ -277,7 +277,7 @@ struct EnumVal {
   EnumVal(const std::string &_name, int64_t _val)
     : name(_name), value(_val), struct_def(nullptr) {}
 
-  Offset<reflection::EnumVal> Serialize(FlatBufferBuilder *builder) const;
+  Offset<reflection::EnumVal> Save(FlatBufferBuilder *builder) const;
 
   std::string name;
   std::vector<std::string> doc_comment;
@@ -299,7 +299,7 @@ struct EnumDef : public Definition {
     return nullptr;
   }
 
-  Offset<reflection::Enum> Serialize(FlatBufferBuilder *builder) const;
+  Offset<reflection::Enum> Save(FlatBufferBuilder *builder) const;
 
   SymbolTable<EnumVal> vals;
   bool is_union;
@@ -437,7 +437,7 @@ class Parser {
 
   // Fills builder_ with a binary version of the schema parsed.
   // See reflection/reflection.fbs
-  void Serialize();
+  void Save();
 
   FLATBUFFERS_CHECKED_ERROR CheckBitsFit(int64_t val, size_t bits);
 
@@ -462,7 +462,7 @@ private:
                                           size_t parent_fieldn);
   FLATBUFFERS_CHECKED_ERROR ParseTable(const StructDef &struct_def,
                                        std::string *value, uoffset_t *ovalue);
-  void SerializeStruct(const StructDef &struct_def, const Value &val);
+  void SaveStruct(const StructDef &struct_def, const Value &val);
   void AddVector(bool sortbysize, int count);
   FLATBUFFERS_CHECKED_ERROR ParseVector(const Type &type, uoffset_t *ovalue);
   FLATBUFFERS_CHECKED_ERROR ParseMetaData(Definition &def);

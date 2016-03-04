@@ -120,7 +120,7 @@ static void Error(const std::string &err, bool usage, bool show_exe_name) {
       "  --raw-binary    Allow binaries without file_indentifier to be read.\n"
       "                  This may crash flatc given a mismatched schema.\n"
       "  --proto         Input is a .proto, translate to .fbs.\n"
-      "  --schema        Serialize schemas instead of JSON (use with -b)\n"
+      "  --schema        Save schemas instead of JSON (use with -b)\n"
       "FILEs may be schemas, or JSON files (conforming to preceding schema)\n"
       "FILEs after the -- must be binary flatbuffer format files.\n"
       "Output files are named using the base file name of the input,\n"
@@ -276,7 +276,7 @@ int main(int argc, const char *argv[]) {
                           file_it->c_str()))
           Error(parser->error_, false, false);
         if (schema_binary) {
-          parser->Serialize();
+          parser->Save();
           parser->file_extension_ = reflection::SchemaExtension();
         }
         include_directories.pop_back();

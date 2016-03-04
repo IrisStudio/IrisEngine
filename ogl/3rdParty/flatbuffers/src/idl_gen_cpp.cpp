@@ -109,7 +109,7 @@ static std::string GenTypeWire(const Parser &parser, const Type &type,
 }
 
 // Return a C++ type for any type (scalar/pointer) that reflects its
-// serialized size.
+// Saved size.
 static std::string GenTypeSize(const Parser &parser, const Type &type) {
   return IsScalar(type.base_type)
     ? GenTypeBasic(type, false)

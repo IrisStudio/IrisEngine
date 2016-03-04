@@ -27,18 +27,18 @@ struct Shader FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_NAME = 4,
     VT_TYPE = 6,
-    VT_FILNAME = 8
+    VT_FILENAME = 8
   };
   const flatbuffers::String *name() const { return GetPointer<const flatbuffers::String *>(VT_NAME); }
   Type type() const { return static_cast<Type>(GetField<int8_t>(VT_TYPE, 0)); }
-  const flatbuffers::String *filname() const { return GetPointer<const flatbuffers::String *>(VT_FILNAME); }
+  const flatbuffers::String *filename() const { return GetPointer<const flatbuffers::String *>(VT_FILENAME); }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<flatbuffers::uoffset_t>(verifier, VT_NAME) &&
            verifier.Verify(name()) &&
            VerifyField<int8_t>(verifier, VT_TYPE) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_FILNAME) &&
-           verifier.Verify(filname()) &&
+           VerifyField<flatbuffers::uoffset_t>(verifier, VT_FILENAME) &&
+           verifier.Verify(filename()) &&
            verifier.EndTable();
   }
 };
@@ -48,7 +48,7 @@ struct ShaderBuilder {
   flatbuffers::uoffset_t start_;
   void add_name(flatbuffers::Offset<flatbuffers::String> name) { fbb_.AddOffset(Shader::VT_NAME, name); }
   void add_type(Type type) { fbb_.AddElement<int8_t>(Shader::VT_TYPE, static_cast<int8_t>(type), 0); }
-  void add_filname(flatbuffers::Offset<flatbuffers::String> filname) { fbb_.AddOffset(Shader::VT_FILNAME, filname); }
+  void add_filename(flatbuffers::Offset<flatbuffers::String> filename) { fbb_.AddOffset(Shader::VT_FILENAME, filename); }
   ShaderBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
   ShaderBuilder &operator=(const ShaderBuilder &);
   flatbuffers::Offset<Shader> Finish() {
@@ -60,9 +60,9 @@ struct ShaderBuilder {
 inline flatbuffers::Offset<Shader> CreateShader(flatbuffers::FlatBufferBuilder &_fbb,
    flatbuffers::Offset<flatbuffers::String> name = 0,
    Type type = Type_Vertex,
-   flatbuffers::Offset<flatbuffers::String> filname = 0) {
+   flatbuffers::Offset<flatbuffers::String> filename = 0) {
   ShaderBuilder builder_(_fbb);
-  builder_.add_filname(filname);
+  builder_.add_filename(filename);
   builder_.add_name(name);
   builder_.add_type(type);
   return builder_.Finish();
