@@ -12,25 +12,25 @@
 
 namespace debug
 {
-  enum DebugLevelMsg
-  {
-    eDL_Warning = 0,
-    eDL_Trace,
-    eDL_Error,
-    eDL_Assertion
-  };
+    enum DebugLevelMsg
+    {
+        eDL_Warning = 0,
+        eDL_Trace,
+        eDL_Error,
+        eDL_Assertion
+    };
 
-  class CLoggerImpl
-  {
-  public:
-    CLoggerImpl(){}
-    virtual ~CLoggerImpl(){}
-    void AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg, ... );
+    class CLoggerImpl
+    {
+        public:
+            CLoggerImpl() {}
+            virtual ~CLoggerImpl() {}
+            void AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg, ... );
 
-  private:
-  };
+        private:
+    };
 
-  typedef Loki::SingletonHolder< CLoggerImpl > CLogger;
+    typedef Loki::SingletonHolder< CLoggerImpl > CLogger;
 }
 
 #endif // __LOGGER__
