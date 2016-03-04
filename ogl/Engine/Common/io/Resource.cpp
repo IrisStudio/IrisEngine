@@ -1,25 +1,46 @@
 #include "Resource.h"
 
-#include "Types.h"
-#include "Logger/Logger.h"
+#include <fstream>
+#include <streambuf>
 
-namespace iris {
-	namespace io
-	{
-		CResource::CResource(const std::string& aFilename, const std::string& aFileNameSchema)
-			: mFilename(aFilename) 
-			, mFilenameSchema(aFileNameSchema)
-		{
-		}
+namespace iris
+{
+    namespace io
+    {
+        //---------------------------------------------------------------------------------------------
+        CResource::CResource(const std::string& aFilename)
+            : mFilename(aFilename)
+        {
+            Fill();
+        }
 
-		//---------------------------------------------------------------------------------------------
-		void CResource::Fill()
-		{
+        //---------------------------------------------------------------------------------------------
+        CResource::CResource(const std::string& aFilename, const std::string& aFileNameSchema)
+            : mFilename(aFilename)
+            , mFilenameSchema(aFileNameSchema)
+        {
+            Fill();
+        }
 
-			mFullFilename			= "../data/" + mFilename;
-			mFullFilenameSchema     = "../data/" + mFilenameSchema;
-			//mDirectory			=
-			//mExtension			=
-		}
-	}
+        //---------------------------------------------------------------------------------------------
+        void CResource::Fill()
+        {
+            mFullFilename           = "../data/" + mFilename;
+
+            if( !mFilenameSchema.empty() )
+            {
+                mFullFilenameSchema     = "../data/" + mFilenameSchema;
+            }
+
+            size_t found = mFullFilename.find_last_of("/\\");
+            mDirectory = (mFullFilename.substr(0, found)) + "/";
+        }
+
+        //---------------------------------------------------------------------------------------------
+        const std::string CResource::GetFileContent() const
+        {
+            std::ifstream t(mFullFilename);
+            return std::string((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+        }
+    }
 }
