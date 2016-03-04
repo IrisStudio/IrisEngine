@@ -4,7 +4,7 @@
 
 namespace debug
 {
-  void CLoggerImpl::AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg)
+  void CLoggerImpl::AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg, ... )
   {
     std::string lMsg;
     switch (aEntryLevel)
@@ -17,8 +17,20 @@ namespace debug
       break;
     }
 
-    lMsg += aEntryMsg;
-    lMsg += "\n";
+    va_list args;
+    char* buffer;
+    va_start(args, aEntryMsg);
+    int len = _vscprintf(aEntryMsg, args) + 1;
+    buffer = (char*)malloc(len * sizeof(char));
+    vsprintf_s(buffer, len, aEntryMsg, args);
+
+    lMsg += buffer + std::string("\n");
+   
+
     OutputDebugString(lMsg.c_str());
+    printf("%s", lMsg.c_str());
+
+    free(buffer);
+    va_end(args);
   }
 }

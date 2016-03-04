@@ -3,12 +3,12 @@
 
 #include <loki/Singleton.h>
 
-#define IRIS_LOG_APPLICATION(aEntryMsg) debug::CLogger::Instance().AddNewEntry( debug::eDL_Trace,      aEntryMsg );
-#define IRIS_LOG_ERROR(aEntryMsg)       debug::CLogger::Instance().AddNewEntry( debug::eDL_Error,      aEntryMsg );
-#define IRIS_LOG_WARNING(aEntryMsg)     debug::CLogger::Instance().AddNewEntry( debug::eDL_Warning,    aEntryMsg );
-#define IRIS_LOG_ASSERT(aEntryMsg)      debug::CLogger::Instance().AddNewEntry( debug::eDL_Assertion,  aEntryMsg );
+#define IRIS_LOG_APPLICATION(aEntryMsg, ... ) debug::CLogger::Instance().AddNewEntry( debug::eDL_Trace,      aEntryMsg, __VA_ARGS__ );
+#define IRIS_LOG_ERROR(aEntryMsg, ... )       debug::CLogger::Instance().AddNewEntry( debug::eDL_Error,      aEntryMsg, __VA_ARGS__ );
+#define IRIS_LOG_WARNING(aEntryMsg, ... )     debug::CLogger::Instance().AddNewEntry( debug::eDL_Warning,    aEntryMsg, __VA_ARGS__ );
+#define IRIS_LOG_ASSERT(aEntryMsg, ... )      debug::CLogger::Instance().AddNewEntry( debug::eDL_Assertion,  aEntryMsg, __VA_ARGS__ );
 
-#define IRIS_LOG_ERROR_IF(aCondition, aEntryMsg) if( aCondition ) { debug::CLogger::Instance().AddNewEntry( debug::eDL_Error,      aEntryMsg ); };
+#define IRIS_LOG_ERROR_IF(aCondition, aEntryMsg, ... ) if( aCondition ) { debug::CLogger::Instance().AddNewEntry( debug::eDL_Error,      aEntryMsg, __VA_ARGS__ ); };
 
 namespace debug
 {
@@ -25,7 +25,7 @@ namespace debug
   public:
     CLoggerImpl(){}
     virtual ~CLoggerImpl(){}
-    void AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg);
+    void AddNewEntry(DebugLevelMsg aEntryLevel, const char* aEntryMsg, ... );
 
   private:
   };
