@@ -8,16 +8,19 @@
 
 class CEffect
 {
-public:
-  CEffect(CShaderSPtr aVertexShader, CShaderSPtr aPixelShader);
-  virtual ~CEffect();
-  void    Bind();
-  uint32 GetID() const;
-private:
-  uint32 mID;
+    public:
+        CEffect( CShaderSPtr aVertexShader, CShaderSPtr aPixelShader);
+        virtual ~CEffect();
+        void    Bind();
+        uint32 GetID() const;
+    private:
+        uint32 mID;
 };
 
-inline uint32 CEffect::GetID() const { return mID; }
+inline uint32 CEffect::GetID() const
+{
+    return mID;
+}
 
 typedef Loki::SmartPtr<CEffect> CEffectSPtr;
 

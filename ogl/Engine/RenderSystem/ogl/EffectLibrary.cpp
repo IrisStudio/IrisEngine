@@ -18,6 +18,10 @@ CEffectLibrary::~CEffectLibrary()
 
 CEffectSPtr CEffectLibrary::CreateEffect(const char* aEffectFile)
 {
+    CShaderSPtr lVertexShader;
+    iris::io::Load(iris::io::CResource("shaders/effect01.bin"), lVertexShader);
+
+
     /*
     CEffectSPtr lEffect;
     CShaderSPtr lVertexShader;

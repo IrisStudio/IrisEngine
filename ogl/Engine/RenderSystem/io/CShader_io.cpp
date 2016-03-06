@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "Types.h"
 
-
 #include <flatbuffers/idl.h>
 #include <flatbuffers/util.h>
 
@@ -24,15 +23,19 @@ namespace iris
 
                 if (lShader)
                 {
-                    const char* lName = lShader->name()->c_str();
                     CResource lShaderCode(lShader->filename()->c_str());
+
                     aObject = CShaderSPtr(new CShader());
 
-                    if (aObject->Create(CShader::VERTEX_SHADER, lShaderCode.GetFileContent().c_str()))
-                    {
-                        lOk = true;
-                    }
+                    ShaderType lShaderType;
 
+                    if(EnumString< ShaderType >::ToEnum( lShaderType, lShader->type()->c_str() ) )
+                    {
+                        if (aObject->Create(lShaderType, lShaderCode.GetFileContent().c_str()))
+                        {
+                            lOk = true;
+                        }
+                    }
                 }
 
                 free(lBufferPtr);

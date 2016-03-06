@@ -33,7 +33,6 @@ group "Engine"
 project "Math"
     kind "StaticLib"
     files { "../Engine/Math/**.h", "../Engine/Math/**.cpp", "../Engine/Math/**.inl" }
-	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 
@@ -41,6 +40,7 @@ project "User"
     kind "StaticLib"
     files { "../Engine/User/**.h", "../Engine/User/**.cpp", "../Engine/User/**.inl" }
 	includedirs { "../Engine/RenderSystem/ogl" }
+	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 	
@@ -50,13 +50,13 @@ project "Script"
 	includedirs { "../Engine/Common/" }
 	includedirs { "../Engine/Script/" }
 	includedirs { "../Engine/RenderSystem/ogl" }
+	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../3rdParty/" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
 	
 project "Common"
     kind "StaticLib"
     files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Math/**.inl", "../Engine/Common/**.hpp" }
-	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 
@@ -64,7 +64,7 @@ project "RenderSystem"
     kind "StaticLib"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
 	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/RenderSystem/ogl" }
+	includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
 	includedirs { "../3rdParty/" }
 
 project "Graphics"

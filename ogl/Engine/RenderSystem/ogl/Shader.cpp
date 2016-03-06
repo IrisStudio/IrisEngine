@@ -9,81 +9,86 @@
 using namespace ogl;
 
 CShader::CShader()
-  : mProgramID(0)
-  , mShaderID(0)
-  , mType( VERTEX_SHADER )
-  , mOk(false)
+    : mProgramID(0)
+    , mShaderID(0)
+    , mType( eST_Vertex )
+    , mOk(false)
 {
 }
 
 CShader::~CShader()
 {
-  glDeleteShader(mShaderID);
-  glDeleteProgram(mProgramID);
+    glDeleteShader(mShaderID);
+    glDeleteProgram(mProgramID);
 }
 
-bool CShader::Create(EType aType, const char * aCode)
+bool CShader::Create(ShaderType aType, const char * aCode)
 {
-  mType = aType;
-  mCode = aCode;
-  mOk = (Compile() && Link());
-  return mOk;
+    mType = aType;
+    mCode = aCode;
+    mOk = (Compile() && Link());
+    return mOk;
 }
 
 bool CShader::Compile()
 {
-  GLint lSuccess = 0;
-  mShaderID = glCreateShader(mType);
+    GLint lSuccess = 0;
+    mShaderID = glCreateShader(mType);
 
-  if (mShaderID)
-  {
-    GLint lSizeCode = mCode.length();
-    const GLchar* lShaderSrc = mCode.c_str();
-    glShaderSource(mShaderID, 1, &lShaderSrc, &lSizeCode);
-    glCompileShader(mShaderID);
-
-    glGetShaderiv(mShaderID, GL_COMPILE_STATUS, &lSuccess);
-
-#ifdef _DEBUG
-    if (!lSuccess)
+    if (mShaderID)
     {
-      char lInfoLog[512];
-      glGetShaderInfoLog(mShaderID, 512, NULL, lInfoLog);
-      IRIS_LOG_ERROR("Error compiling the shader");
-      IRIS_LOG_ERROR(lInfoLog);
+        GLint lSizeCode = mCode.length();
+        const GLchar* lShaderSrc = mCode.c_str();
+        glShaderSource(mShaderID, 1, &lShaderSrc, &lSizeCode);
+        glCompileShader(mShaderID);
+
+        glGetShaderiv(mShaderID, GL_COMPILE_STATUS, &lSuccess);
+
+        #ifdef _DEBUG
+
+        if (!lSuccess)
+        {
+            char lInfoLog[512];
+            glGetShaderInfoLog(mShaderID, 512, NULL, lInfoLog);
+            IRIS_LOG_ERROR("Error compiling the shader");
+            IRIS_LOG_ERROR(lInfoLog);
+        }
+
+        #endif
+
     }
-#endif
 
-  }
-
-  return lSuccess != GL_FALSE;
+    return lSuccess != GL_FALSE;
 }
 
 bool CShader::Link()
 {
-  GLint lSuccess = GL_FALSE;
+    GLint lSuccess = GL_FALSE;
 
-  mProgramID = glCreateProgram();
-  if (mProgramID)
-  {
-    glProgramParameteri(mProgramID, GL_PROGRAM_SEPARABLE, GL_TRUE);
-    glAttachShader(mProgramID, mShaderID );
-    glLinkProgram(mProgramID);
+    mProgramID = glCreateProgram();
 
-    glGetProgramiv(mProgramID, GL_LINK_STATUS, &lSuccess);
-
-#ifdef _DEBUG
-    if (!lSuccess)
+    if (mProgramID)
     {
-      char lInfoLog[512];
-      glGetProgramInfoLog(mProgramID, 512, NULL, lInfoLog);
-      IRIS_LOG_ERROR("Error linking the program");
-      IRIS_LOG_ERROR(lInfoLog);
+        glProgramParameteri(mProgramID, GL_PROGRAM_SEPARABLE, GL_TRUE);
+        glAttachShader(mProgramID, mShaderID);
+        glLinkProgram(mProgramID);
+
+        glGetProgramiv(mProgramID, GL_LINK_STATUS, &lSuccess);
+
+        #ifdef _DEBUG
+
+        if (!lSuccess)
+        {
+            char lInfoLog[512];
+            glGetProgramInfoLog(mProgramID, 512, NULL, lInfoLog);
+            IRIS_LOG_ERROR("Error linking the program");
+            IRIS_LOG_ERROR(lInfoLog);
+        }
+
+        #endif
+
+        glDetachShader(mProgramID, mShaderID);
     }
-#endif
 
-    glDetachShader(mProgramID, mShaderID);
-  }
-
-  return lSuccess != GL_FALSE;
+    return lSuccess != GL_FALSE;
 }

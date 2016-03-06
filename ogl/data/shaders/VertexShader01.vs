@@ -1,13 +1,13 @@
 #version 450 core
 
-layout(location = 0) in vec2 AttrPosition;
-
-out vec3 Color;
-
 out gl_PerVertex
 {
     vec4 gl_Position;
 };
+
+layout(location = 0) in vec2 AttrPosition;
+
+out vec3 Color;
 
 void main()
 {	

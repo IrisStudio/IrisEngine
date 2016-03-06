@@ -1,5 +1,4 @@
 {
-	name: "VertexShader",
-	filename:"shaders/VertexShader01.vs",
-	type:Vertex,
+	type:"Vertex",
+	filename:"shaders/VertexShader01.vs"
 }
