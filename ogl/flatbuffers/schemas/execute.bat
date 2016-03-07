@@ -1,0 +1,2 @@
+python schemasfactory.py
+pause
