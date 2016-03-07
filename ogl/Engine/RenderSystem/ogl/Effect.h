@@ -2,7 +2,6 @@
 #define __EFFECT__
 
 #include "Types.h"
-#include <loki/SmartPtr.h>
 
 #include "Shader.h"
 
@@ -22,6 +21,6 @@ inline uint32 CEffect::GetID() const
     return mID;
 }
 
-typedef Loki::SmartPtr<CEffect> CEffectSPtr;
+typedef std::shared_ptr< CEffect > CEffectSPtr;
 
 #endif

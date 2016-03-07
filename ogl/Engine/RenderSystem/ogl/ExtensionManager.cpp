@@ -6,16 +6,16 @@
 
 #include <string.h>
 
-CExtensionManagerImpl::CExtensionManagerImpl()
+CExtensionManager::CExtensionManager()
 {
 }
 
-CExtensionManagerImpl::~CExtensionManagerImpl()
+CExtensionManager::~CExtensionManager()
 {
 }
 
 using namespace ogl;
-void CExtensionManagerImpl::GetExtensions()
+void CExtensionManager::GetExtensions()
 {
     IRIS_LOG_APPLICATION("Supported extensions:");
     int NumberOfExtensions = 0;
@@ -28,7 +28,7 @@ void CExtensionManagerImpl::GetExtensions()
     }
 }
 
-bool CExtensionManagerImpl::IsSupported(const char* aExtension)
+bool CExtensionManager::IsSupported(const char* aExtension)
 {
     return mExtensions.count( std::string( aExtension ) ) != 0;
 }

@@ -14,7 +14,6 @@
 
 #include "ogl.h"
 
-static CWindowImpl sMainWindow = CWindow::Instance();
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
 static const float sUpdateInterval = 1.0f / sMaximumFrameRate;
@@ -27,14 +26,6 @@ static int       mSampleCount;
 static float     mTimeScale;
 static float     mActualElapsedTimeSec;
 static float     mFrameTimes[sMaxSamples];
-
-GLfloat vertices[] =
-{
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f,  0.5f, 0.0f
-};
-
 
 IApplication::IApplication()
     : mCyclesLeft(0.0f)
@@ -58,10 +49,12 @@ void IApplication::Run()
     #endif
 
     float lUpdateIterations = 0.0f;
+    
+    CWindow& lMainWindow = CWindow::Instance();
 
-    if (sMainWindow.Create(eST_Windowed))
+    if (lMainWindow.Create(eST_Windowed))
     {
-        if (sMainWindow.Show())
+        if (lMainWindow.Show())
         {
             QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mFreq));
             QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mLastTime));
@@ -108,7 +101,7 @@ void IApplication::Run()
 
             CEffectSPtr lEffect(new CEffect( lVertexShader, lFragmentShader ));
 
-            while (sMainWindow.Update())
+            while (lMainWindow.Update())
             {
                 ProccessInputs();
 
@@ -128,8 +121,8 @@ void IApplication::Run()
 
                 mCyclesLeft = lUpdateIterations;
 
-                sMainWindow.BeginRender();
-                sMainWindow.Clear(true, false, false);
+                lMainWindow.BeginRender();
+                lMainWindow.Clear(true, false, false);
                 ogl::CHECK_OGL_ERROR("Setting effect");
                 lEffect->Bind();
                 ogl::CHECK_OGL_ERROR("berfore seting vao");
@@ -140,7 +133,7 @@ void IApplication::Run()
                 ogl::glBindVertexArray(0);
                 ogl::CHECK_OGL_ERROR("End loop");
 
-                sMainWindow.EndRender();
+                lMainWindow.EndRender();
 
                 //Render();
             }
@@ -160,9 +153,9 @@ void IApplication::Update( const float dt )
 
 void IApplication::Render()
 {
-    sMainWindow.BeginRender();
-    sMainWindow.Clear(true, false, false);
-    sMainWindow.EndRender();
+    //sMainWindow.BeginRender();
+    //sMainWindow.Clear(true, false, false);
+    //sMainWindow.EndRender();
 }
 
 float IApplication::dt()

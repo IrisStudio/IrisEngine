@@ -68,6 +68,6 @@ namespace gph
   };
 }
 
-typedef Loki::SmartPtr< gph::CCamera > CCameraSPtr;
+typedef std::shared_ptr< gph::CCamera > CCameraSPtr;
 
 #endif

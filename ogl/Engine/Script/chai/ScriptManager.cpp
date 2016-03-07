@@ -2,11 +2,11 @@
 
 #include "chaiscript/chaiscript.hpp"
 
-CScriptManagerImpl::CScriptManagerImpl()
+CScriptManager::CScriptManager()
 {
 }
 
-CScriptManagerImpl::~CScriptManagerImpl()
+CScriptManager::~CScriptManager()
 {
 
 }
@@ -29,7 +29,7 @@ private:
   int b;
 };
 
-void CScriptManagerImpl::Init()
+void CScriptManager::Init()
 {
   static chaiscript::ChaiScript mInterpreter;
   mInterpreter.add(chaiscript::fun(&TestFunc), "TestFunc");
@@ -38,19 +38,19 @@ void CScriptManagerImpl::Init()
   mInterpreter.add(chaiscript::fun(&TestClass::TestMethod), "TestMethod");
 }
 
-void CScriptManagerImpl::ExecuteInstruction(std::string aInstruction)
+void CScriptManager::ExecuteInstruction(std::string aInstruction)
 {
   static chaiscript::ChaiScript mInterpreter;
   mInterpreter.eval(aInstruction);
 }
 
-int32 CScriptManagerImpl::ExecuteInstructionAndGet(std::string aInstruction)
+int32 CScriptManager::ExecuteInstructionAndGet(std::string aInstruction)
 {
   static chaiscript::ChaiScript mInterpreter;
   return mInterpreter.eval<int>(aInstruction);
 }
 
-void CScriptManagerImpl::ExecuteFile(std::string aFilePath)
+void CScriptManager::ExecuteFile(std::string aFilePath)
 {
   static chaiscript::ChaiScript mInterpreter;
   mInterpreter.eval_file(aFilePath);

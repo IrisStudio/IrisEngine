@@ -1,6 +1,7 @@
 -- premake5.lua
 workspace "IrisEditor"
    configurations { "Debug", "Release", "Final" }
+   platforms { "x32", "x64" }
    location "../vs2015"
    language "C++"
    
@@ -16,7 +17,7 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "ChaiScript", "loki", "opengl32", "Script", "Graphics", "flatbuffers" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -86,11 +87,6 @@ project "entityx-1.1.2"
     files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
     excludes { "../3rdParty/entityx/entityx/**test.cc" }
 	includedirs { "../3rdParty/entityx/" }
-    
-project "loki"
-    kind "StaticLib"
-    files { "../3rdParty/loki/**.h", "../3rdParty/loki/**.cpp" }
-	includedirs { "../3rdParty/" }
 
 project "flatbuffers"
     kind "StaticLib"

@@ -68,19 +68,19 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
   return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-CWindowImpl::CWindowImpl()
+CWindow::CWindow()
   : mName("OGL_RENDERER")
-  , mSize(uint2(800, 600))
+  , mSize(uint2(400, 300))
   , mClearColor(float4(0.25f, 0.25f, 0.25f,1.0f))
 {
   memset(&msg, 0, sizeof(msg));
 }
 
-CWindowImpl::~CWindowImpl()
+CWindow::~CWindow()
 {
 }
 
-bool CWindowImpl::Create( ESizeType aSizeType )
+bool CWindow::Create( ESizeType aSizeType )
 {
   bool lOk(true);
 
@@ -100,16 +100,26 @@ bool CWindowImpl::Create( ESizeType aSizeType )
   //Register window class
   RegisterClass(&wnd);
 
-  mSize = uint2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-
-  if (eST_FitDesktop == aSizeType)
+  switch (aSizeType)
   {
+  case eST_Windowed:
+    break;
+  case eST_FitDesktop:
+  {
+    mSize = uint2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
     RECT rect;
     HWND taskBar = FindWindow("Shell_traywnd", NULL);
     if (taskBar && GetWindowRect(taskBar, &rect))
     {
       mSize.y -= rect.bottom - rect.top;
     }
+    break;
+  }
+  case eST_FullScreen:
+    mSize = uint2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+    break;
+  default:
+    break;
   }
 
   mHandle = CreateWindowEx(
@@ -140,7 +150,7 @@ bool CWindowImpl::Create( ESizeType aSizeType )
   return lOk;
 }
 
-bool CWindowImpl::Show()
+bool CWindow::Show()
 {
   ShowWindow(mHandle, SW_SHOWDEFAULT);
 
@@ -205,12 +215,12 @@ bool CWindowImpl::Show()
   return glGetError() == GL_NO_ERROR;
 }
 
-void CWindowImpl::SetSize(const uint2& aSize)
+void CWindow::SetSize(const uint2& aSize)
 {
   mSize = aSize;
 }
 
-bool CWindowImpl::Update()
+bool CWindow::Update()
 {
   bool lUpdated = false;
   if (msg.message != WM_QUIT)
@@ -227,12 +237,12 @@ bool CWindowImpl::Update()
   return lUpdated;
 }
 
-void CWindowImpl::BeginRender()
+void CWindow::BeginRender()
 {
   glViewport(0, 0, mSize.x, mSize.y );
 }
 
-void CWindowImpl::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
+void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
 {
   GLbitfield clear_mask = 0;
   if( aColorBuffer )
@@ -249,7 +259,7 @@ void CWindowImpl::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffe
   glClear(clear_mask);
 }
 
-void CWindowImpl::EndRender()
+void CWindow::EndRender()
 {
   SwapBuffers(mhDC);
 }

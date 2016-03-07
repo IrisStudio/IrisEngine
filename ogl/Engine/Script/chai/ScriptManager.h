@@ -3,13 +3,13 @@
 
 #include "Types.h"
 
-#include <loki/Singleton.h>
+#include "Singleton.h"
 
-class CScriptManagerImpl
+class CScriptManager : public Singleton< CScriptManager >
 {
 public:
-  CScriptManagerImpl();
-  virtual ~CScriptManagerImpl();
+  CScriptManager();
+  virtual ~CScriptManager();
 
   void Init();
 
@@ -17,7 +17,5 @@ public:
   int32 ExecuteInstructionAndGet( std::string aInstruction );
   void ExecuteFile(std::string aFilePath);
 };
-
-typedef Loki::SingletonHolder< CScriptManagerImpl > CScriptManager;
 
 #endif //__CHAI_SCRIPT_MANAGER__

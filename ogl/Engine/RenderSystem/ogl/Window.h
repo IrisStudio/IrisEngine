@@ -1,7 +1,9 @@
 #ifndef __OGL__WINDOW__
 #define __OGL__WINDOW__
 
-#include <loki/Singleton.h>
+#include "Singleton.h"
+#include "Types.h"
+
 
 enum ESizeType
 {
@@ -10,11 +12,11 @@ enum ESizeType
   eST_FullScreen
 };
 
-class CWindowImpl
+class CWindow : public Singleton< CWindow >
 {
 public:
-  CWindowImpl();
-  virtual ~CWindowImpl();
+  CWindow();
+  virtual ~CWindow();
 
   virtual bool Create( ESizeType aSizeType );
   bool Show();
@@ -29,7 +31,5 @@ private:
   uint2       mSize;
   float4      mClearColor;
 };
-
-typedef Loki::SingletonHolder<CWindowImpl> CWindow;
 
 #endif
