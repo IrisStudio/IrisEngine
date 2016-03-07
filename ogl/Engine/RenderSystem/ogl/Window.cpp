@@ -9,7 +9,7 @@
 #include <Windows.h>
 #include <string.h>
 
-#include "ExtensionManager.h"
+#include "Context.h"
 
 static HWND   mHandle;
 static HDC    mhDC;
@@ -183,20 +183,22 @@ bool CWindow::Show()
   }
 
   // Set the window name with the rendering version
+  CContext& lContext = CContext::Instance();
+  lContext.Init();
 
-  const std::string& lWindowName = str_utils::Format("Vendor: %s - Renderer: %s - OGL Version: %s - GLSL Version %s", (const char*)glGetString(GL_VENDOR), (const char*)glGetString(GL_RENDERER), (const char*)glGetString(GL_VERSION), (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
-  SetWindowText(mHandle, lWindowName.c_str() );
-
-  CExtensionManager::Instance().GetExtensions();
-
+  lContext.SetGLSLVersion("450");
   if (!CreateContext(4, 5))
   {
+    lContext.SetGLSLVersion("410");
     if (!CreateContext(4, 1))
     {
+      lContext.SetGLSLVersion("330");
       if (!CreateContext(3, 3))
       {
+        lContext.SetGLSLVersion("320");
         if (!CreateContext(3, 2))
         {
+          lContext.SetGLSLVersion("310");
           if (!CreateContext(3, 1))
           {
             return false;
@@ -205,6 +207,9 @@ bool CWindow::Show()
       }
     }
   }
+
+  const std::string& lWindowName = "Vendor:" + lContext.GetOGLVendor() + "-Renderer:" + lContext.GetOGLRenderer() + "-Version:" + lContext.GetOGLVersion() + "-Shaders:" + lContext.GetGLSLVersion();
+  SetWindowText(mHandle, lWindowName.c_str());
 
   if (!wglMakeCurrent(mhDC, mhRC))
   {

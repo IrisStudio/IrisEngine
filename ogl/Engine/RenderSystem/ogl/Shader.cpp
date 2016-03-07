@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "ogl.h"
+#include "Context.h"
 #include "Shader.h"
 #include "Logger/Logger.h"
 #include "ExtensionManager.h"
@@ -25,7 +26,7 @@ CShader::~CShader()
 bool CShader::Create(ShaderType aType, const char * aCode)
 {
     mType = aType;
-    mCode = aCode;
+    mCode = "#version " + CContext::Instance().GetGLSLVersion() + " core\n" + aCode;
     mOk = (Compile() && Link());
     return mOk;
 }
