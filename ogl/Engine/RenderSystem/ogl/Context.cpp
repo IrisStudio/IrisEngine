@@ -30,7 +30,7 @@ bool CContext::Init()
   mOGLVendor   = (const char*)glGetString(GL_VENDOR);
   mOGLRenderer = (const char*)glGetString(GL_RENDERER);
   mOGLVersion  = (const char*)glGetString(GL_VERSION);
-  mGLSLVersion = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+  //mGLSLVersion = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
   return lOk;
 }
@@ -63,4 +63,10 @@ bool CContext::IsCapable(ogl::Extension ar_extension) const
 void CContext::SetGLSLVersion(const std::string& ar_version)
 {
   mGLSLVersion = ar_version;
+  mShaderVersion = "#version " + ar_version + " core\n";
+}
+
+const std::string& CContext::GetShaderVersion() const
+{
+  return mShaderVersion;
 }

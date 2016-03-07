@@ -17,12 +17,14 @@ public:
   const std::string& GetOGLRenderer() const;
   const std::string& GetOGLVersion() const;
   const std::string& GetGLSLVersion() const;
+  const std::string& GetShaderVersion() const;
   void               SetGLSLVersion(const std::string& ar_version );
   bool  IsCapable( ogl::Extension ar_extension) const;
 
 private:
   std::string mOGLVersion;
   std::string mGLSLVersion;
+  std::string mShaderVersion;
   std::string mOGLVendor;
   std::string mOGLRenderer;
 };

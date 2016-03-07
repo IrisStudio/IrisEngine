@@ -26,7 +26,7 @@ CShader::~CShader()
 bool CShader::Create(ShaderType aType, const char * aCode)
 {
     mType = aType;
-    mCode = "#version " + CContext::Instance().GetGLSLVersion() + " core\n" + aCode;
+    mCode = CContext::Instance().GetShaderVersion() + aCode;
     mOk = (Compile() && Link());
     return mOk;
 }
