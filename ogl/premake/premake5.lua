@@ -82,6 +82,7 @@ project "Hierarchy"
     kind "StaticLib"
     files { "../Engine/Hierarchy/**.h", "../Engine/Hierarchy/**.cpp" }
 	includedirs { "../Engine/Common/" }
+    includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
 	includedirs { "../3rdParty/entityx/" }
     includedirs { "../3rdParty/" }
     
