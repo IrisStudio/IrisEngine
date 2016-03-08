@@ -17,9 +17,9 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
-   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/"}
+   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy"}
    includedirs { "../3rdParty/ChaiScript/include/" }
    includedirs { "../3rdParty/entityx/" }
    includedirs { "../3rdParty/" }
@@ -43,7 +43,9 @@ project "User"
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../Engine/Common/" }
+    includedirs { "../Engine/Hierarchy/" }
 	includedirs { "../3rdParty/" }
+    includedirs { "../3rdParty/entityx/" }
 	
 project "Script"
     kind "StaticLib"
@@ -75,6 +77,13 @@ project "Graphics"
 	includedirs { "../Engine/RenderSystem/ogl" }
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
+    
+project "Hierarchy"
+    kind "StaticLib"
+    files { "../Engine/Hierarchy/**.h", "../Engine/Hierarchy/**.cpp" }
+	includedirs { "../Engine/Common/" }
+	includedirs { "../3rdParty/entityx/" }
+    includedirs { "../3rdParty/" }
     
 group "3rdParty"
 project "ChaiScript"

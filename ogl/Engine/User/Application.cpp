@@ -14,6 +14,8 @@
 
 #include "ogl.h"
 
+#include "GameObjectManager.h"
+
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
 static const float sUpdateInterval = 1.0f / sMaximumFrameRate;
@@ -49,7 +51,7 @@ void IApplication::Run()
     #endif
 
     float lUpdateIterations = 0.0f;
-    
+
     CWindow& lMainWindow = CWindow::Instance();
 
     if (lMainWindow.Create(eST_Windowed))
@@ -101,6 +103,9 @@ void IApplication::Run()
 
             CEffectSPtr lEffect(new CEffect( lVertexShader, lFragmentShader ));
 
+            //Testing the EntityX construction
+            CGameObjectManager& game_object_manager = CGameObjectManager::Instance();
+
             while (lMainWindow.Update())
             {
                 ProccessInputs();
@@ -117,6 +122,8 @@ void IApplication::Run()
                 {
                     lUpdateIterations -= sUpdateInterval;
                     Update( sUpdateInterval );
+
+                    game_object_manager.update(sUpdateInterval);
                 }
 
                 mCyclesLeft = lUpdateIterations;
