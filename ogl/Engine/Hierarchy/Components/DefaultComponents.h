@@ -14,4 +14,15 @@ struct Transform
     float3 position, rotation, scale;
 };
 
+struct Velocity
+{
+    Velocity(float3 direction = float3(1.0f, 0.0f, 0.0f), float speed = 0.0f)
+        : direction(direction)
+        , speed(speed)
+    {}
+
+    float3 direction;
+    float speed;
+};
+
 #endif //__DEFAULT_COMPONENTS__
