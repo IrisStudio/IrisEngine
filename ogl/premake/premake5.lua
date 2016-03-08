@@ -17,7 +17,7 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx-1.1.2", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -92,7 +92,7 @@ project "ChaiScript"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
     
-project "entityx-1.1.2"
+project "entityx"
     kind "StaticLib"
     files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
     excludes { "../3rdParty/entityx/entityx/**test.cc" }

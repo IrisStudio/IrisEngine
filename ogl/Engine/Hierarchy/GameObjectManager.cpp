@@ -22,6 +22,7 @@ void CGameObjectManager::update(entityx::TimeDelta dt)
     // Update systems
     systems.update<MovementSystem>(dt);
 
+    // Render
     CWindow& lMainWindow = CWindow::Instance();
     lMainWindow.BeginRender();
     lMainWindow.Clear(true, false, false);
