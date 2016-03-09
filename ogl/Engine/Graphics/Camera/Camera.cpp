@@ -1,16 +1,30 @@
 #include "Camera.h"
 #include "Mth.h"
+#include "ogl.h"
 
 CCamera::CCamera()
+  : mType( eFree )
+  , mPosition( float3(0.0f) )
+  , mLookAt( float3(1.0f, 0.0f, 0.0f) )
+  , mDirection( float3(0.0f) )
+  , mUp(float3(0.0f, 0.0f, 1.0f) )
+  , mDelta(float3(0.0f))
+  , mRotation(quaternion(1, 0, 0, 0))
+  , mAspectRatio( 16.0f / 9.0f )
+  , mFOV(60.0f)
+  , mNearClip(0.01)
+  , mFarClip(1000.0f)
+  , mViewportX(0)
+  , mViewportY(0)
+  , mViewportWidth(800)
+  , mViewportHeight(600)
+  , mMove(false)
 {
-
+  mDirection = glm::normalize(mLookAt - mPosition);
+  mYaw       = mth::ATan2(mDirection.z, mDirection.x);
+  mPitch     = mth::ATan2(mDirection.y, mth::Sqrt(mDirection.z * mDirection.z + mDirection.x * mDirection.x));
 }
 
-CCamera::CCamera( ECameraType aType )
-  : mType(aType)
-{
-
-}
 
 CCamera::~CCamera()
 {
@@ -97,5 +111,38 @@ void  CCamera::ChangePitch(float aDeg)
 
 void CCamera::Update()
 {
-  mDirection = mth::normalize(mLookAt - mPosition);
+  mDirection = glm::normalize(mLookAt - mPosition);
+  switch (mType)
+  {
+  case eOrtho:
+  {
+    mProjection = glm::ortho(-1.5f * float(mAspectRatio), 1.5f * float(mAspectRatio), -1.5f, 1.5f, -10.0f, 10.f);
+    break;
+  }
+  case eFree:
+  {
+    mProjection           = glm::perspective(mFOV, mAspectRatio, mNearClip, mFarClip);
+    const float3& lSide   = glm::cross( mDirection, mUp );
+    quaternion lPitchQuat = glm::angleAxis(mPitch, lSide);
+    mUp                   = glm::cross(lSide, mDirection);
+    quaternion lYawQuat   = glm::angleAxis(mYaw, mUp);
+    glm::quat temp        = glm::cross(lPitchQuat, lYawQuat);
+    temp                  = glm::normalize(temp);
+    mDirection            = glm::rotate(temp, mDirection);
+    mLookAt               = mPosition + mDirection * 1.0f;
+    break;
+  }
+  }
+  //compute the MVP
+  mView = glm::lookAt(mPosition, mLookAt, mUp);
+  float4x4      mProjection;
+  float4x4      mView;
+  float4x4      mModel;
+  float4x4      mMVP;
+
+  mModel = glm::mat4(1.0f);
+  mMVP = mProjection * mView * mModel;
+
+  glLoadMatrixf(glm::value_ptr(mMVP));
+  ogl::CHECK_OGL_ERROR("finish update camera");
 }

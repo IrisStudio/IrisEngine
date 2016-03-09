@@ -16,7 +16,6 @@ class CCamera
 {
 public:
   CCamera();
-  CCamera( ECameraType aType );
   virtual ~CCamera();
   void     Update();
 private:
@@ -57,11 +56,15 @@ private:
   float         mFOV;
   float         mNearClip;
   float         mFarClip;
+  float         mYaw;
+  float         mPitch;
 
   uint32        mViewportX;
   uint32        mViewportY;
   uint32        mViewportWidth;
   uint32        mViewportHeight;
+
+  bool          mMove;
 
   float4x4      mProjection;
   float4x4      mView;
