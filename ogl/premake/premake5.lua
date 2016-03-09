@@ -17,9 +17,9 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx-1.1.2", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers" }
+   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
-   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Mth/"}
+   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Mth/"}
    includedirs { "../3rdParty/ChaiScript/include/" }
    includedirs { "../3rdParty/entityx/" }
    includedirs { "../3rdParty/" }
@@ -43,7 +43,9 @@ project "User"
 	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../Engine/Common/" }
+    includedirs { "../Engine/Hierarchy/" }
 	includedirs { "../3rdParty/" }
+    includedirs { "../3rdParty/entityx/" }
 	
 project "Script"
     kind "StaticLib"
@@ -77,13 +79,21 @@ project "Graphics"
     includedirs { "../Engine/Mth/" }
 	includedirs { "../3rdParty/" }
     
+project "Hierarchy"
+    kind "StaticLib"
+    files { "../Engine/Hierarchy/**.h", "../Engine/Hierarchy/**.cpp" }
+	includedirs { "../Engine/Common/" }
+    includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
+	includedirs { "../3rdParty/entityx/" }
+    includedirs { "../3rdParty/" }
+    
 group "3rdParty"
 project "ChaiScript"
     kind "SharedLib"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
     
-project "entityx-1.1.2"
+project "entityx"
     kind "StaticLib"
     files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
     excludes { "../3rdParty/entityx/entityx/**test.cc" }

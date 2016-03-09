@@ -405,6 +405,27 @@ TEST_CASE_METHOD(EntityManagerFixture, "TestComponentRemovedEvent") {
   REQUIRE(!(e.component<Direction>()));
 }
 
+TEST_CASE_METHOD(EntityManagerFixture, "TestComponentRemovedEventOnEntityDestroyed") {
+  struct ComponentRemovedReceiver : public Receiver<ComponentRemovedReceiver> {
+    void receive(const ComponentRemovedEvent<Direction> &event) {
+      removed = true;
+    }
+
+    bool removed = false;
+  };
+
+  ComponentRemovedReceiver receiver;
+  ev.subscribe<ComponentRemovedEvent<Direction>>(receiver);
+
+  REQUIRE(!(receiver.removed));
+
+  Entity e = em.create();
+  e.assign<Direction>(1.0, 2.0);
+  e.destroy();
+
+  REQUIRE(receiver.removed);
+}
+
 TEST_CASE_METHOD(EntityManagerFixture, "TestEntityAssignment") {
   Entity a, b;
   a = em.create();
@@ -603,4 +624,28 @@ TEST_CASE_METHOD(EntityManagerFixture, "TestConstComponentsNotInstantiatedTwice"
   REQUIRE(b.component<const Position>().valid());
   REQUIRE(b.component<const Position>()->x == 1);
   REQUIRE(b.component<const Position>()->y == 2);
+}
+
+TEST_CASE_METHOD(EntityManagerFixture, "TestEntityManagerEach") {
+  Entity a = em.create();
+  a.assign<Position>(1, 2);
+  int count = 0;
+  em.each<Position>([&count](Entity entity, Position &position) {
+    count++;
+    REQUIRE(position.x == 1);
+    REQUIRE(position.y == 2);
+  });
+  REQUIRE(count == 1);
+}
+
+TEST_CASE_METHOD(EntityManagerFixture, "TestViewEach") {
+  Entity a = em.create();
+  a.assign<Position>(1, 2);
+  int count = 0;
+  em.entities_with_components<Position>().each([&count](Entity entity, Position &position) {
+    count++;
+    REQUIRE(position.x == 1);
+    REQUIRE(position.y == 2);
+  });
+  REQUIRE(count == 1);
 }

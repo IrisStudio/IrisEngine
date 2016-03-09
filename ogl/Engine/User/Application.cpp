@@ -7,12 +7,7 @@
 #include "Application.h"
 #include "Window.h"
 
-#include "Effect.h"
-#include "EffectLibrary.h"
-
-#include "io/Resource.h"
-
-#include "ogl.h"
+#include "GameObjectManager.h"
 
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
@@ -49,7 +44,7 @@ void IApplication::Run()
     #endif
 
     float lUpdateIterations = 0.0f;
-    
+
     CWindow& lMainWindow = CWindow::Instance();
 
     if (lMainWindow.Create(eST_Windowed))
@@ -63,43 +58,8 @@ void IApplication::Run()
             /*CEffectLibrary lLib;
             CEffectSPtr lEffect = lLib.CreateEffect("../data/effects/effect01.xml");*/
 
-            GLuint VBO;
-            ogl::glGenBuffers(1, &VBO);
-
-            float points[] =
-            {
-                0.0f,  0.5f,  0.0f,
-                0.5f, -0.5f,  0.0f,
-                -0.5f, -0.5f,  0.0f
-            };
-
-            ogl::CHECK_OGL_ERROR("Before all");
-            GLuint vbo = 0;
-            ogl::glGenBuffers(1, &vbo);
-            ogl::glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            ogl::glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
-            ogl::CHECK_OGL_ERROR("after vbo");
-
-            GLuint vao = 0;
-            ogl::CHECK_OGL_ERROR("before vao");
-            ogl::glGenVertexArrays(1, &vao);
-            ogl::glBindVertexArray(vao);
-            ogl::glEnableVertexAttribArray(0);
-            ogl::glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-            ogl::CHECK_OGL_ERROR("after vao");
-
-            iris::io::CResource vert("shaders/first_triangle/ft.vert");
-            const std::string lVtxShaderSrc( vert.GetFileContent() );
-            CShaderSPtr lVertexShader(new CShader());
-            lVertexShader->Create(ShaderType::eST_Vertex, lVtxShaderSrc.c_str() );
-
-            iris::io::CResource frag("shaders/first_triangle/ft.frag");
-            const std::string lFragShaderSrc(frag.GetFileContent());
-            CShaderSPtr lFragmentShader(new CShader());
-            lFragmentShader->Create(ShaderType::eST_Fragment, lFragShaderSrc.c_str() );
-
-            CEffectSPtr lEffect(new CEffect( lVertexShader, lFragmentShader ));
+            //Testing the EntityX construction
+            CGameObjectManager& game_object_manager = CGameObjectManager::Instance();
 
             while (lMainWindow.Update())
             {
@@ -117,23 +77,11 @@ void IApplication::Run()
                 {
                     lUpdateIterations -= sUpdateInterval;
                     Update( sUpdateInterval );
+
+                    game_object_manager.update(sUpdateInterval);
                 }
 
                 mCyclesLeft = lUpdateIterations;
-
-                lMainWindow.BeginRender();
-                lMainWindow.Clear(true, false, false);
-                ogl::CHECK_OGL_ERROR("Setting effect");
-                lEffect->Bind();
-                ogl::CHECK_OGL_ERROR("berfore seting vao");
-                ogl::glBindVertexArray(vao);
-                ogl::CHECK_OGL_ERROR("before draw");
-                glDrawArrays(GL_TRIANGLES, 0, 3);
-                ogl::CHECK_OGL_ERROR("after draw");
-                ogl::glBindVertexArray(0);
-                ogl::CHECK_OGL_ERROR("End loop");
-
-                lMainWindow.EndRender();
 
                 //Render();
             }
