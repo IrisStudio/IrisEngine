@@ -17,7 +17,7 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy" }
+   links {"RenderSystem", "Math", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "gainput" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -46,6 +46,7 @@ project "User"
     includedirs { "../Engine/Hierarchy/" }
 	includedirs { "../3rdParty/" }
     includedirs { "../3rdParty/entityx/" }
+	includedirs { "../3rdParty/gainput/include/" }
 	
 project "Script"
     kind "StaticLib"
@@ -102,3 +103,8 @@ project "flatbuffers"
     kind "StaticLib"
     files { "../3rdParty/flatbuffers/**.h", "../3rdParty/flatbuffers/src/**.cpp" }
 	includedirs { "../3rdParty/" }
+	
+project "gainput"
+    kind "StaticLib"
+    files { "../3rdParty/gainput/include/**.h", "../3rdParty/gainput/source/**.cpp" }
+	includedirs { "../3rdParty/gainput/include/" }
