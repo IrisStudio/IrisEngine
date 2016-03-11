@@ -7,9 +7,7 @@
 
 #include "ExtensionManager.h"
 
-namespace
-{
-}
+#include "ogl.h"
 
 CContext::CContext()
   : mOGLVersion("")
@@ -25,12 +23,16 @@ bool CContext::Init()
 {
   bool lOk(true);
   
-  CExtensionManager::Instance().GetExtensions();
-
   mOGLVendor   = (const char*)glGetString(GL_VENDOR);
   mOGLRenderer = (const char*)glGetString(GL_RENDERER);
   mOGLVersion  = (const char*)glGetString(GL_VERSION);
-  //mGLSLVersion = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+  mGLSLVersion = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+  // Init all the open gl functions
+  ogl::InitOGLFunctions();
+
+  // Init the extensions
+  CExtensionManager::Instance().GetExtensions();
 
   return lOk;
 }
