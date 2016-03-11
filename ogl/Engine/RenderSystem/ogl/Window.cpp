@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "Context.h"
+#include "Shader.h"
 
 static HWND   mHandle;
 static HDC    mhDC;
@@ -186,19 +187,19 @@ bool CWindow::Show()
   CContext& lContext = CContext::Instance();
   lContext.Init();
 
-  lContext.SetGLSLVersion("450");
+  char* lVersion = "450"; 
   if (!CreateContext(4, 5))
   {
-    lContext.SetGLSLVersion("410");
+    lVersion = "410";
     if (!CreateContext(4, 1))
     {
-      lContext.SetGLSLVersion("330");
+      lVersion = "330";
       if (!CreateContext(3, 3))
       {
-        lContext.SetGLSLVersion("320");
+        lVersion = "320";
         if (!CreateContext(3, 2))
         {
-          lContext.SetGLSLVersion("310");
+          lVersion = "310";
           if (!CreateContext(3, 1))
           {
             return false;
@@ -208,6 +209,7 @@ bool CWindow::Show()
     }
   }
 
+  CShader::SetGLSLVersion(lVersion);
   const std::string& lWindowName = "Vendor:" + lContext.GetOGLVendor() + "-Renderer:" + lContext.GetOGLRenderer() + "-Version:" + lContext.GetOGLVersion() + "-Shaders:" + lContext.GetGLSLVersion();
   SetWindowText(mHandle, lWindowName.c_str());
 
