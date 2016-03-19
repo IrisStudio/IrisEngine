@@ -2,6 +2,7 @@
 #define _TYPES_H_
 
 #include <memory>
+#include <math.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -9,6 +10,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/compatibility.hpp>
 
 typedef signed char         int8;
 typedef short               int16;
