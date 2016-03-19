@@ -59,14 +59,3 @@ bool CContext::IsCapable(ogl::Extension ar_extension) const
 {
   return true;
 }
-
-void CContext::SetGLSLVersion(const std::string& ar_version)
-{
-  mGLSLVersion = ar_version;
-  mShaderVersion = "#version " + ar_version + " core\n";
-}
-
-const std::string& CContext::GetShaderVersion() const
-{
-  return mShaderVersion;
-}

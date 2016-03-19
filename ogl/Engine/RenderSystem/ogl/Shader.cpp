@@ -7,6 +7,13 @@
 #include "ExtensionManager.h"
 #include <string.h>
 
+std::string CShader::mGLSLVersion = "";
+
+void CShader::SetGLSLVersion(const std::string& aVersion)
+{
+  mGLSLVersion = "#version " + std::string(aVersion) + " core\n";
+}
+
 using namespace ogl;
 
 CShader::CShader()
@@ -26,7 +33,7 @@ CShader::~CShader()
 bool CShader::Create(ShaderType aType, const char * aCode)
 {
     mType = aType;
-    mCode = CContext::Instance().GetShaderVersion() + aCode;
+    mCode = mGLSLVersion + aCode;
     mOk = (Compile() && Link());
     return mOk;
 }

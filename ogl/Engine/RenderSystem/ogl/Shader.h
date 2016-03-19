@@ -9,6 +9,7 @@ class CShader
     public:
         CShader();
         virtual ~CShader();
+        static void SetGLSLVersion( const std::string& aVersion );
         bool Create( ShaderType aType, const char* aCode);
         uint32 GetProgramID() const;
         uint32 GetShaderID() const;
@@ -20,6 +21,7 @@ class CShader
         ShaderType   mType;
         std::string  mCode;
         bool         mOk;
+        static std::string  mGLSLVersion;
     private: // Methods
         bool Compile();
         bool Link();

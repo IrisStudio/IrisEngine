@@ -12,43 +12,51 @@
 
 #define CHECK_OGL_ERROR( aMsg, ... ) CheckOGLError( aMsg, __VA_ARGS__ );
 
+#ifndef APIENTRY
+#define APIENTRY
+#endif
+
+#ifndef GLAPI
+#define GLAPI extern
+#endif
+
 namespace ogl
 {
-    extern void CheckOGLError( const char* aErrorMsg, ... );
-    extern const GLubyte *glGetString(GLenum name);
-    extern const GLubyte *glGetStringi(GLenum name, GLuint index);
-    extern void glGetIntegerv( GLenum pname, GLint params);
-    extern HGLRC wglCreateContextAttribsARB(HDC hDC, HGLRC hShareContext, const int *attribList);
+    GLAPI void CheckOGLError( const char* aErrorMsg, ... );
+    GLAPI const GLubyte *glGetString(GLenum name);
+    GLAPI const GLubyte *glGetStringi(GLenum name, GLuint index);
+    GLAPI void glGetIntegerv( GLenum pname, GLint params);
+    GLAPI HGLRC wglCreateContextAttribsARB(HDC hDC, HGLRC hShareContext, const int *attribList);
 
-    extern GLuint glCreateShader(GLenum type);
-    extern void glAttachShader(GLuint program, GLuint shader);
-    extern void glCompileShader(GLuint shader);
-    extern void glShaderSource(GLuint shader, GLsizei count, const GLchar* *string, const GLint *length);
-    extern void glGetProgramiv(GLuint program, GLenum pname, GLint *params);
-    extern void glGetProgramInfoLog(GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
-    extern void glGetShaderiv(GLuint shader, GLenum pname, GLint *params);
-    extern void glGetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
-    extern GLuint glCreateProgram();
-    extern void glDeleteProgram(GLuint program);
-    extern void glDeleteShader(GLuint shader);
-    extern void glDetachShader(GLuint program, GLuint shader);
-    extern void glProgramParameteri(GLuint program, GLenum pname, GLint value);
-    extern void glLinkProgram(GLuint program);
-    extern void glGenProgramPipelines(GLsizei n, GLuint *pipelines);
-    extern void glBindProgramPipeline(GLuint pipeline);
-    extern void glUseProgramStages(GLuint pipeline, GLbitfield stages, GLuint program);
-    extern GLuint glCreateShaderProgramv(GLenum type, GLsizei count, const char **strings);
+    GLAPI GLuint glCreateShader(GLenum type);
+    GLAPI void glAttachShader(GLuint program, GLuint shader);
+    GLAPI void glCompileShader(GLuint shader);
+    GLAPI void glShaderSource(GLuint shader, GLsizei count, const GLchar* *string, const GLint *length);
+    GLAPI void glGetProgramiv(GLuint program, GLenum pname, GLint *params);
+    GLAPI void glGetProgramInfoLog(GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
+    GLAPI void glGetShaderiv(GLuint shader, GLenum pname, GLint *params);
+    GLAPI void glGetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
+    GLAPI GLuint glCreateProgram();
+    GLAPI void glDeleteProgram(GLuint program);
+    GLAPI void glDeleteShader(GLuint shader);
+    GLAPI void glDetachShader(GLuint program, GLuint shader);
+    GLAPI void glProgramParameteri(GLuint program, GLenum pname, GLint value);
+    GLAPI void glLinkProgram(GLuint program);
+    GLAPI void glGenProgramPipelines(GLsizei n, GLuint *pipelines);
+    GLAPI void glBindProgramPipeline(GLuint pipeline);
+    GLAPI void glUseProgramStages(GLuint pipeline, GLbitfield stages, GLuint program);
+    GLAPI GLuint glCreateShaderProgramv(GLenum type, GLsizei count, const char **strings);
 
-    extern void glGenVertexArrays(GLsizei n, GLuint *arrays);
-    extern void glBindVertexArray(GLuint array);
+    GLAPI void glGenVertexArrays(GLsizei n, GLuint *arrays);
+    GLAPI void glBindVertexArray(GLuint array);
 
-    extern void glGenBuffers(GLsizei n, GLuint * buffers);
-    extern void glBindBuffer(GLenum target, GLuint buffer);
-    extern void glBufferData(GLenum target,
+    GLAPI void glGenBuffers(GLsizei n, GLuint * buffers);
+    GLAPI void glBindBuffer(GLenum target, GLuint buffer);
+    GLAPI void glBufferData(GLenum target,
                              GLsizeiptr size,
                              const GLvoid * data,
                              GLenum usage);
-    extern void glVertexAttribPointer(GLuint index,
+    GLAPI void glVertexAttribPointer(GLuint index,
                                       GLint size,
                                       GLenum type,
                                       GLboolean normalized,
