@@ -24,7 +24,7 @@ void CGeometry::Create(uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, u
     //
     ogl::glGenBuffers(1, &mVB);
     ogl::glBindBuffer(GL_ARRAY_BUFFER, mVB);
-    //ogl::glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
+    //FillBufferData< aFlags >(aVertexBuffer, aVertexSize );
 }
 
 void CGeometry::Bind() const
@@ -32,7 +32,15 @@ void CGeometry::Bind() const
     ogl::glBindVertexArray(mVao);
 }
 
-template <> void CGeometry::FillBufferData<eGD_ScreenPosition>(void* aVertexBuffer, uint32 aVertexCount )
-{
 
+template<>
+void CGeometry::FillBufferData< eGD_ScreenPosition >(void* aVertexBuffer, uint32 aVertexCount)
+{
+    ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * sizeof(float), aVertexBuffer, GL_STATIC_DRAW);
+}
+
+template<>
+void CGeometry::FillBufferData< eGD_ScreenPosition | eGD_Normal >(void* aVertexBuffer, uint32 aVertexCount)
+{
+    ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * sizeof(float), aVertexBuffer, GL_STATIC_DRAW);
 }

@@ -15,7 +15,7 @@ class CGeometry
         uint32 mVao;
         uint32 mVB;
     private: // Methods
-        template < typename T > void FillBufferData(void* aVertexBuffer, uint32 aVertexCount);
+        template< uint32 T> void FillBufferData(void* aVertexBuffer, uint32 aVertexCount);
 };
 
 #endif
