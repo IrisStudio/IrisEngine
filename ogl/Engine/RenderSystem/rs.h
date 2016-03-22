@@ -12,6 +12,15 @@ enum ShaderType
     eST_Geometry  = 0x8DD9,
 };
 
+enum GeometryData
+{
+    eGD_Position        = 1 << 0,
+    eGD_ScreenPosition  = 1 << 1,
+    eGD_Normal          = 1 << 2,
+    eGD_Tangent         = 1 << 3,
+    eGD_Binormal        = 1 << 4
+};
+
 Begin_Enum_String(ShaderType)
 {
     Enum_String_Id(eST_Vertex, "Vertex");
