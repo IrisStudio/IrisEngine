@@ -8,14 +8,15 @@ class CGeometry
     public:
         CGeometry();
         virtual ~CGeometry();
-        void Create( uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount );
+        template < uint32 N > void Create( void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount );
         void Bind() const;
 
     private: // Members
         uint32 mVao;
         uint32 mVB;
     private: // Methods
-        template< uint32 T> void FillBufferData(void* aVertexBuffer, uint32 aVertexCount);
 };
+
+typedef std::shared_ptr< CGeometry > CGeometrySPtr;
 
 #endif

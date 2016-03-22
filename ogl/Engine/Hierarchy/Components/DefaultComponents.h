@@ -6,6 +6,7 @@
 #include "Effect.h"
 #include "EffectLibrary.h"
 #include "ogl.h"
+#include "Geometry.h"
 
 #include "io/Resource.h"
 
@@ -35,31 +36,16 @@ struct Renderer
 {
     Renderer()
     {
-        GLuint VBO;
-        ogl::glGenBuffers(1, &VBO);
-
+        mGeom = CGeometrySPtr(new CGeometry());
         float points[] =
         {
             0.0f,  0.5f,  0.0f,
             0.5f, -0.5f,  0.0f,
-            -0.5f, -0.5f,  0.0f
+            -0.5f, -0.5f,  0.0f,
         };
-
-        ogl::CHECK_OGL_ERROR("Before all");
-        GLuint vbo = 0;
-        ogl::glGenBuffers(1, &vbo);
-        ogl::glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        ogl::glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
-        ogl::CHECK_OGL_ERROR("after vbo");
-
-        vao = 0;
-        ogl::CHECK_OGL_ERROR("before vao");
-        ogl::glGenVertexArrays(1, &vao);
-        ogl::glBindVertexArray(vao);
-        ogl::glEnableVertexAttribArray(0);
-        ogl::glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-        ogl::CHECK_OGL_ERROR("after vao");
+        mGeom->Create<eGD_Position | eGD_Normal >(&points, nullptr, 12, uint32(0));
+        mGeom->Create<eGD_Position>(&points, nullptr, 12, uint32(0));
+        mGeom->Create<eGD_ScreenPosition>(&points, nullptr, 12, uint32(0) );
 
         iris::io::CResource vert("shaders/first_triangle/ft.vert");
         const std::string lVtxShaderSrc(vert.GetFileContent());
@@ -75,7 +61,7 @@ struct Renderer
         mEffect = lEffect;
     }
 
-    GLuint vao;
+    CGeometrySPtr mGeom;
     CEffectSPtr mEffect;
 };
 

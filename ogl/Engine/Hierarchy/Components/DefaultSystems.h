@@ -27,7 +27,7 @@ struct RenderSystem : public entityx::System<RenderSystem>
             ogl::CHECK_OGL_ERROR("Setting effect");
             renderer.mEffect->Bind();
             ogl::CHECK_OGL_ERROR("before setting vao");
-            ogl::glBindVertexArray(renderer.vao);
+            renderer.mGeom->Bind();
             ogl::CHECK_OGL_ERROR("before draw");
             glDrawArrays(GL_TRIANGLES, 0, 3);
             ogl::CHECK_OGL_ERROR("after draw");
