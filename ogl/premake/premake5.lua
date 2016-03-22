@@ -17,7 +17,7 @@ project "IrisEditor"
    kind "ConsoleApp"
    targetdir "../bin/%{cfg.buildcfg}"
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Math", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "gainput" }
+   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "gainput" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -31,12 +31,6 @@ project "effects"
     files { "../data/effects/**.xml", "../data/effects/**.xml" }
    
 group "Engine"
-project "Math"
-    kind "StaticLib"
-    files { "../Engine/Math/**.h", "../Engine/Math/**.cpp", "../Engine/Math/**.inl" }
-	includedirs { "../Engine/Common/" }
-	includedirs { "../3rdParty/" }
-
 project "User"
     kind "StaticLib"
     files { "../Engine/User/**.h", "../Engine/User/**.cpp", "../Engine/User/**.inl" }
@@ -60,7 +54,7 @@ project "Script"
 	
 project "Common"
     kind "StaticLib"
-    files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Math/**.inl", "../Engine/Common/**.hpp" }
+    files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Common/**.hpp" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 
