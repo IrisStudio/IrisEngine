@@ -64,7 +64,6 @@ project "RenderSystem"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
-    includedirs { "../3rdParty/tinyobjloader/" }
 	includedirs { "../3rdParty/" }
 
 project "Graphics"
@@ -73,6 +72,7 @@ project "Graphics"
 	includedirs { "../Engine/Common/" }
 	includedirs { "../Engine/RenderSystem/ogl" }
     includedirs { "../Engine/Graphics/" }
+    includedirs { "../3rdParty/tinyobjloader/" }
 	includedirs { "../3rdParty/" }
     
 project "Hierarchy"
