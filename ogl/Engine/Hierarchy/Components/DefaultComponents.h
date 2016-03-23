@@ -32,6 +32,7 @@ struct Velocity
     float speed;
 };
 
+extern uint32 flags = 0;
 struct Renderer
 {
     Renderer()
@@ -43,9 +44,10 @@ struct Renderer
             0.5f, -0.5f,  0.0f,
             -0.5f, -0.5f,  0.0f,
         };
-        mGeom->Create<eGD_Position | eGD_Normal >(&points, nullptr, 12, uint32(0));
-        mGeom->Create<eGD_Position>(&points, nullptr, 12, uint32(0));
-        mGeom->Create<eGD_ScreenPosition>(&points, nullptr, 12, uint32(0) );
+
+        flags = eGD_ScreenPosition;
+
+        mGeom->Create( flags, &points, nullptr, 12, uint32(0) );
 
         iris::io::CResource vert("shaders/first_triangle/ft.vert");
         const std::string lVtxShaderSrc(vert.GetFileContent());

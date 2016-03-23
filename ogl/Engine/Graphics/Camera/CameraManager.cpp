@@ -2,6 +2,7 @@
 #include "Window.h"
 
 CCameraManager::CCameraManager()
+    : mCurrentCamera( nullptr )
 {
 }
 

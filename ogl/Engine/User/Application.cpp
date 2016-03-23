@@ -8,6 +8,7 @@
 #include "Window.h"
 
 #include "GameObjectManager.h"
+#include "Camera\CameraManager.h"
 
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
@@ -60,6 +61,10 @@ void IApplication::Run()
 
             //Testing the EntityX construction
             CGameObjectManager& game_object_manager = CGameObjectManager::Instance();
+
+            CCameraSPtr lCamera(new CCamera());
+            CCameraManager::Instance().AddCamera("current_cam", lCamera);
+            CCameraManager::Instance().SetCurrentCamera(lCamera);
 
             while (lMainWindow.Update())
             {

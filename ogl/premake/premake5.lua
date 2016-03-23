@@ -40,6 +40,7 @@ project "User"
 	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../Engine/Common/" }
     includedirs { "../Engine/Hierarchy/" }
+    includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
     includedirs { "../3rdParty/entityx/" }
 	includedirs { "../3rdParty/gainput/include/" }
@@ -64,6 +65,7 @@ project "RenderSystem"
     kind "StaticLib"
     files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
 	includedirs { "../Engine/Common/" }
+    includedirs { "../Engine/Graphics/" }
 	includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
 	includedirs { "../3rdParty/" }
 

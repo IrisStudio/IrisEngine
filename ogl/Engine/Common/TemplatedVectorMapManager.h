@@ -16,23 +16,23 @@ template <class T> class CTemplatedVectorMapManager
         class CMapResourceValue
         {
             public:
-                T*     mPtr;
+                T     mPtr;
                 uint32 mIdx;
 
-                CMapResourceValue(T* value, uint32 aIdx)
-                  : mPtr(value)
-                  , mIdx(aIdx)
+                CMapResourceValue(T value, uint32 aIdx)
+                    : mPtr(value)
+                    , mIdx(aIdx)
                 {
                 }
 
                 CMapResourceValue()
-                  : mPtr(nullptr)
-                  , mIdx(0)
+                    : mPtr(nullptr)
+                    , mIdx(0)
                 {
                 }
         };
 
-        typedef std::vector<T*>                          TVectorResources;
+        typedef std::vector<T>                          TVectorResources;
         typedef std::map<std::string, CMapResourceValue> TMapResources;
 
     protected:
@@ -54,9 +54,12 @@ template <class T> class CTemplatedVectorMapManager
         void RemoveResource( const std::string& Name )
         {
             TMapResources::iterator it = mResMap.find(Name);
-            if ( it == mResMap.end() ) return;
 
-            CHECKED_DELETE(it->second.mPtr);
+            if ( it == mResMap.end() )
+            {
+                return;
+            }
+
             uint32 lIdx = it->second.mIdx;
 
             mResMap.erase(it);
@@ -64,49 +67,54 @@ template <class T> class CTemplatedVectorMapManager
 
             for (uint32 i =  lIdx; i < mResVec.size();  ++i)
             {
-                T* l_TElement = mResVec[i];
+                T l_TElement = mResVec[i];
                 TMapResources::iterator l_ItMap = mResMap.begin();
 
-                while (l_ItMap->second.mPtr != l_TElement) ++l_ItMap;
+                while (l_ItMap->second.mPtr != l_TElement)
+                {
+                    ++l_ItMap;
+                }
+
                 l_ItMap->second.mIdx = i;
             }
         }
 
-        virtual T* GetResourceByaIdx(uint32 aIdx)
+        virtual T GetResourceByaIdx(uint32 aIdx)
         {
             return (mResVec.size() > aIdx) ? mResVec[aIdx] : 0;
         }
 
-        virtual T* GetConstResourceByaIdx(uint32 aIdx) const
+        virtual T GetConstResourceByaIdx(uint32 aIdx) const
         {
-          return (mResVec.size() > aIdx) ? mResVec[aIdx] : 0;
+            return (mResVec.size() > aIdx) ? mResVec[aIdx] : 0;
         }
 
-        virtual T* GetResource(const std::string& Name)
+        virtual T GetResource(const std::string& Name)
         {
             TMapResources::iterator it = mResMap.find(Name );
             return (it != mResMap.end()) ? it->second.mPtr : 0;
         }
 
-        virtual T* GetConstResource(const std::string& Name) const
+        virtual T GetConstResource(const std::string& Name) const
         {
-          TMapResources::const_iterator it = mResMap.find(Name );
-          return (it != mResMap.end()) ? it->second.mPtr : 0;
+            TMapResources::const_iterator it = mResMap.find(Name );
+            return (it != mResMap.end()) ? it->second.mPtr : 0;
         }
 
-        virtual bool AddResource( const std::string& Name, T* Resource )
+        virtual bool AddResource( const std::string& Name, T Resource )
         {
             bool lOk = false;
+
             if (mResMap.find(Name) == mResMap.end() )
             {
-              CMapResourceValue lRes(Resource, mResVec.size());
-              mResVec.push_back(Resource);
-              mResMap[Name] = lRes;
-              lOk = true;
+                CMapResourceValue lRes(Resource, mResVec.size());
+                mResVec.push_back(Resource);
+                mResMap[Name] = lRes;
+                lOk = true;
             }
             else
             {
-              IRIS_LOG_WARNING("Trying to add twice %s", Name.c_str() );
+                IRIS_LOG_WARNING("Trying to add twice %s", Name.c_str() );
             }
 
             return lOk;
@@ -114,11 +122,6 @@ template <class T> class CTemplatedVectorMapManager
 
         virtual void Destroy()
         {
-            for ( uint32 i = 0; i < mResVec.size() ; ++i ) 
-            {
-                CHECKED_DELETE( mResVec[i] );
-            }
-
             mResMap.clear();
             mResVec.clear();
         }

@@ -16,15 +16,26 @@ class CCameraManager : public Singleton<CCameraManager>
             return CCameraSPtr( mCameras.GetConstResource(aCameraName) );
         }
 
-        inline void AddCamera( const std::string& aName, CCamera* aCamera )
+        inline void AddCamera(const std::string& aName, CCameraSPtr aCamera)
         {
             mCameras.AddResource(aName, aCamera);
         }
 
+        inline void SetCurrentCamera(CCameraSPtr aCamera)
+        {
+            mCurrentCamera = aCamera;
+        }
+
+        inline CCameraSPtr GetCurrentCamera() const
+        {
+            return mCurrentCamera;
+        }
+
     private:
 
-        typedef CTemplatedVectorMapManager< CCamera > TCameras;
+        typedef CTemplatedVectorMapManager< CCameraSPtr > TCameras;
         TCameras mCameras;
+        CCameraSPtr mCurrentCamera;
 };
 
 #endif // __CCameraManager__

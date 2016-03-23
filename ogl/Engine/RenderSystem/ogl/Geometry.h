@@ -8,11 +8,11 @@ class CGeometry
     public:
         CGeometry();
         virtual ~CGeometry();
-        template < uint32 N > void Create( void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount );
+        void Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount );
         void Bind() const;
 
     private: // Members
-        uint32 mVao;
+        uint32 mVAO;
         uint32 mVB;
     private: // Methods
 };
