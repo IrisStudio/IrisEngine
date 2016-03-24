@@ -4,8 +4,8 @@
 
 CCamera::CCamera()
     : mType( eFree )
-    , mPosition( float3(0.0f) )
-    , mLookAt( float3(1.0f, 0.0f, 0.0f) )
+    , mPosition(float3(5.0f, 0.0f, 0.0f))
+    , mLookAt( float3(0.0f, 0.0f, 0.0f) )
     , mDirection( float3(0.0f) )
     , mUp(float3(0.0f, 0.0f, 1.0f) )
     , mSide(float3(0.0f, 1.0f, 0.0f))
@@ -95,9 +95,11 @@ void  CCamera::GetViewport(uint32 &aPosX, uint32 &aPosY, uint32 &aWidth, uint32 
     aHeight = mViewportHeight;
 }
 
-void  CCamera::GetMatricies(float4x4 &P, float4x4 &V, float4x4 &M) const
+void  CCamera::GetMatrices(float4x4 &P, float4x4 &V, float4x4 &M) const
 {
-
+  P = mProjection;
+  V = mView;
+  M = mModel;
 }
 
 void  CCamera::ChangeYaw(float aDeg)
@@ -139,11 +141,6 @@ void CCamera::Update()
 
     //compute the MVP
     mView = glm::lookAt(mPosition, mLookAt, mUp);
-    float4x4      mProjection;
-    float4x4      mView;
-    float4x4      mModel;
-    float4x4      mMVP;
-
     mModel = glm::mat4(1.0f);
     mMVP = mProjection * mView * mModel;
 }

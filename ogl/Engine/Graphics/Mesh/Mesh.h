@@ -3,15 +3,19 @@
 #define _CMesh_
 
 #include "Types.h"
+#include "Geometry.h"
+#include "Effect.h"
 
 class CMesh
 {
 public:
   CMesh();
   virtual ~CMesh();
+  void Render();
 protected:
-  float3* mVtx;
-  
+  CGeometrySPtr mGeometry;
+  CEffectSPtr   mEffect;
+
 private:
   DISALLOW_COPY_AND_ASSIGN(CMesh);
 };

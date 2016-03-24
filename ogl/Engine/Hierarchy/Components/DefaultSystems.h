@@ -7,6 +7,8 @@
 
 #include "entityx\System.h"
 
+#include "Camera\CameraManager.h"
+
 struct MovementSystem : public entityx::System<MovementSystem>
 {
     void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
@@ -24,13 +26,17 @@ struct RenderSystem : public entityx::System<RenderSystem>
     {
         es.each<Transform, Renderer>([dt](entityx::Entity entity, Transform &transform, Renderer &renderer)
         {
-            ogl::CHECK_OGL_ERROR("Setting effect");
+            ogl::CHECK_OGL_ERROR("Begin");
+            /*
             renderer.mEffect->Bind();
             ogl::CHECK_OGL_ERROR("before setting vao");
             renderer.mGeom->Bind();
             ogl::CHECK_OGL_ERROR("before draw");
             glDrawArrays(GL_TRIANGLES, 0, 3);
             ogl::CHECK_OGL_ERROR("after draw");
+            */
+            CCameraManager::Instance().GetCurrentCamera()->Update();
+            renderer.mCube.Render();
             ogl::glBindVertexArray(0);
             ogl::CHECK_OGL_ERROR("End loop");
         });

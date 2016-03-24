@@ -11,9 +11,12 @@ class CEffect
         CEffect( CShaderSPtr aVertexShader, CShaderSPtr aPixelShader);
         virtual ~CEffect();
         void    Bind();
-        uint32 GetID() const;
+        uint32  GetID() const;
+        void    BindMatrices(const float4x4& M, const float4x4& V, const float4x4& P);
     private:
         uint32 mID;
+        CShaderSPtr mVertexShader;
+        CShaderSPtr mFragmentShader;
 };
 
 inline uint32 CEffect::GetID() const

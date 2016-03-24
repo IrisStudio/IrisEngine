@@ -7,6 +7,7 @@
 #include "EffectLibrary.h"
 #include "ogl.h"
 #include "Geometry.h"
+#include "Mesh/Cube.h"
 
 #include "io/Resource.h"
 
@@ -45,6 +46,8 @@ struct Renderer
             -0.5f, -0.5f,  0.0f,
         };
 
+       mCube.Init(5.0f, 5.0f, 5.0f);
+
         flags = eGD_ScreenPosition;
 
         mGeom->Create( flags, &points, nullptr, 12, uint32(0) );
@@ -63,6 +66,7 @@ struct Renderer
         mEffect = lEffect;
     }
 
+    CCube mCube;
     CGeometrySPtr mGeom;
     CEffectSPtr mEffect;
 };

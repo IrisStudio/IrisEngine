@@ -47,7 +47,7 @@ class CCamera
         void          SetViewport(uint32 aPosX, uint32 aPosY, uint32 aWidth, uint32 aHeight );
         void          GetViewport (uint32 &aPosX, uint32 &aPosY, uint32 &aWidth, uint32 &aHeight );
 
-        void          GetMatricies(float4x4 &P, float4x4 &V, float4x4 &M) const;
+        void          GetMatrices(float4x4 &P, float4x4 &V, float4x4 &M) const;
 
         void          ChangeYaw   ( float aDeg );
         void          ChangePitch ( float aDeg );

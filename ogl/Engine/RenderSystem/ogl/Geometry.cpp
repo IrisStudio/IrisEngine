@@ -7,6 +7,17 @@
 namespace
 {
     template < uint32 N > void FillBuffer(const uint32 aVB, void * aVertexBuffer, void* aIndexBuffer, uint32 aVertexSize, uint32 aIndexSize);
+    template <> void FillBuffer<eGD_Position>(const uint32 aVB, void * aVertexBuffer, void* aIndexBuffer, uint32 aVertexSize, uint32 aIndexSize)
+    {
+      printf("eGD_Position");
+      ogl::CheckOGLError("Before creating geometry");
+      ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * sizeof(float), aVertexBuffer, GL_STATIC_DRAW);
+      ogl::glEnableVertexAttribArray(0);
+      ogl::glBindBuffer(GL_ARRAY_BUFFER, aVB);
+      ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+      ogl::CheckOGLError("After creating geometry");
+    }
+
     template <> void FillBuffer<eGD_ScreenPosition>( const uint32 aVB, void * aVertexBuffer, void* aIndexBuffer, uint32 aVertexSize, uint32 aIndexSize)
     {
         printf("eGD_ScreenPosition");
@@ -20,7 +31,11 @@ namespace
 
     typedef void(*TCreateFunction)(const uint32, void*, void*, uint32, uint32);
     typedef std::map<uint32, TCreateFunction> TMapCreateFunctions;
-    TMapCreateFunctions map2Func = { { eGD_ScreenPosition, FillBuffer<eGD_ScreenPosition> } };
+    TMapCreateFunctions map2Func =
+    {
+      { eGD_Position, FillBuffer<eGD_Position> },
+      { eGD_ScreenPosition, FillBuffer<eGD_ScreenPosition> }
+    };
 }
 
 CGeometry::CGeometry()
@@ -53,4 +68,5 @@ void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBu
 void CGeometry::Bind() const
 {
     ogl::glBindVertexArray(mVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6*4);
 }
