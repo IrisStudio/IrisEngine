@@ -41,7 +41,7 @@ void IApplication::Run()
 {
     #if defined(DEBUG) | defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(4427);
+    _CrtSetBreakAlloc(3837);
     #endif
 
     float lUpdateIterations = 0.0f;

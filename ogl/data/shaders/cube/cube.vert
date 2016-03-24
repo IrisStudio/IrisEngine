@@ -1,8 +1,8 @@
 layout (location = 0) in vec3 position;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+layout (location = 3) uniform mat4 model;
+layout (location = 1) uniform mat4 view;
+layout (location = 2) uniform mat4 projection;
 
 out gl_PerVertex
 {

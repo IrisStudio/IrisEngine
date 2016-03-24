@@ -13,11 +13,11 @@
 #define CHECK_OGL_ERROR( aMsg, ... ) CheckOGLError( aMsg, __VA_ARGS__ );
 
 #ifndef APIENTRY
-#define APIENTRY
+    #define APIENTRY
 #endif
 
 #ifndef GLAPI
-#define GLAPI extern
+    #define GLAPI extern
 #endif
 
 namespace ogl

@@ -32,14 +32,16 @@ void CEffect::Bind()
 
 void CEffect::BindMatrices(const float4x4& M, const float4x4& V, const float4x4& P)
 {
-  ogl::CHECK_OGL_ERROR("Before bind matrices");
-  GLint modelLoc = ogl::glGetUniformLocation(mID, "model");
-  GLint viewLoc = ogl::glGetUniformLocation(mID, "view");
-  GLint projLoc = ogl::glGetUniformLocation(mID, "projection");
+    ogl::CHECK_OGL_ERROR("Before bind matrices");
+    GLint modelLoc = ogl::glGetUniformLocation(mVertexShader->GetProgramID(), "model");
+    GLint viewLoc = ogl::glGetUniformLocation(mVertexShader->GetProgramID(), "view");
+    GLint projLoc = ogl::glGetUniformLocation(mVertexShader->GetProgramID(), "projection");
+    ogl::CHECK_OGL_ERROR("after bind matrices");
 
-  // Pass the matrices to the shader
-  ogl::glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(V));
-  ogl::glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(P));
-  ogl::glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(M));
-  ogl::CHECK_OGL_ERROR("after bind matrices");
+    ogl::glProgramUniformMatrix4fv(mVertexShader->GetProgramID(), modelLoc, 1, GL_FALSE, &M[0][0]);
+    ogl::glProgramUniformMatrix4fv(mVertexShader->GetProgramID(), viewLoc, 1, GL_FALSE, &V[0][0]);
+    ogl::glProgramUniformMatrix4fv(mVertexShader->GetProgramID(), projLoc, 1, GL_FALSE, &P[0][0]);
+
+
+    ogl::CHECK_OGL_ERROR("after bind matrices");
 }
