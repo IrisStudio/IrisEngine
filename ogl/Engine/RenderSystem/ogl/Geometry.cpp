@@ -31,11 +31,13 @@ namespace
 
     typedef void(*TCreateFunction)(const uint32, void*, void*, uint32, uint32);
     typedef std::map<uint32, TCreateFunction> TMapCreateFunctions;
+#define REGISTER_FILLBUFFER_FNC( enum ) { enum, FillBuffer<enum> }
     TMapCreateFunctions map2Func =
     {
-        { eGD_Position, FillBuffer<eGD_Position> },
-        { eGD_ScreenPosition, FillBuffer<eGD_ScreenPosition> }
+        REGISTER_FILLBUFFER_FNC(eGD_Position),
+        REGISTER_FILLBUFFER_FNC(eGD_ScreenPosition),
     };
+#undef REGISTER_FILLBUFFER_FNC
 }
 
 CGeometry::CGeometry()
