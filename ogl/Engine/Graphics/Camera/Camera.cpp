@@ -4,15 +4,15 @@
 
 CCamera::CCamera()
     : mType( eFree )
-    , mPosition(float3(5.0f, 0.0f, 0.0f))
+    , mPosition(float3(1.0f, 1.0f, 1.0f))
     , mLookAt( float3(0.0f, 0.0f, 0.0f) )
     , mDirection( float3(0.0f) )
     , mUp(float3(0.0f, 0.0f, 1.0f) )
     , mSide(float3(0.0f, 1.0f, 0.0f))
     , mDelta(float3(0.0f))
     , mRotation(quaternion(1, 0, 0, 0))
-    , mAspectRatio( 16.0f / 9.0f )
-    , mFOV(60.0f)
+    , mAspectRatio( 4.0f / 3.0f )
+    , mFOV(45.0f)
     , mNearClip(0.01f)
     , mFarClip(1000.0f)
     , mViewportX(0)
@@ -97,9 +97,9 @@ void  CCamera::GetViewport(uint32 &aPosX, uint32 &aPosY, uint32 &aWidth, uint32 
 
 void  CCamera::GetMatrices(float4x4 &P, float4x4 &V, float4x4 &M) const
 {
-  P = mProjection;
-  V = mView;
-  M = mModel;
+    P = mProjection;
+    V = mView;
+    M = mModel;
 }
 
 void  CCamera::ChangeYaw(float aDeg)
@@ -126,20 +126,22 @@ void CCamera::Update()
 
         case eFree:
             {
-                mProjection           = glm::perspective(mFOV, mAspectRatio, mNearClip, mFarClip);
-                mSide   = glm::cross( mDirection, mUp );
-                quaternion lPitchQuat = glm::angleAxis(mPitch, mSide);
-                mUp                   = glm::cross(mSide, mDirection);
-                quaternion lYawQuat   = glm::angleAxis(mYaw, mUp);
-                glm::quat temp        = glm::cross(lPitchQuat, lYawQuat);
-                temp                  = glm::normalize(temp);
-                mDirection            = glm::rotate(temp, mDirection);
-                mLookAt               = mPosition + mDirection * 1.0f;
+                /*
+                  mSide   = glm::cross( mDirection, mUp );
+                  quaternion lPitchQuat = glm::angleAxis(mPitch, mSide);
+                  mUp                   = glm::cross(mSide, mDirection);
+                  quaternion lYawQuat   = glm::angleAxis(mYaw, mUp);
+                  glm::quat temp        = glm::cross(lPitchQuat, lYawQuat);
+                  temp                  = glm::normalize(temp);
+                  mDirection            = glm::rotate(temp, mDirection);
+                  mLookAt               = mPosition + mDirection * 1.0f;
+                  */
                 break;
             }
     }
 
     //compute the MVP
+    mProjection = glm::perspective(mFOV, mAspectRatio, mNearClip, mFarClip);
     mView = glm::lookAt(mPosition, mLookAt, mUp);
     mModel = glm::mat4(1.0f);
     mMVP = mProjection * mView * mModel;

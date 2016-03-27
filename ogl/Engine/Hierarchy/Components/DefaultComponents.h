@@ -46,7 +46,7 @@ struct Renderer
             -0.5f, -0.5f,  0.0f,
         };
 
-       mCube.Init(5.0f, 5.0f, 5.0f);
+        mCube.Init(5.0f, 5.0f, 5.0f);
 
         flags = eGD_ScreenPosition;
 

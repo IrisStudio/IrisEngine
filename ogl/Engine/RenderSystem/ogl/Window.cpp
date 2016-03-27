@@ -93,7 +93,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 CWindow::CWindow()
     : mName("OGL_RENDERER")
-    , mSize(uint2(400, 300))
+    , mSize(uint2(800, 600))
     , mClearColor(float4(0.25f, 0.25f, 0.25f,1.0f))
 {
     memset(&msg, 0, sizeof(msg));
@@ -300,7 +300,7 @@ void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
 
     if(aDepthBuffer)
     {
-        clear_mask |= GL_COLOR_BUFFER_BIT;
+        clear_mask |= GL_DEPTH_BUFFER_BIT;
     }
 
     if( aStencilBuffer )
