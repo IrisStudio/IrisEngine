@@ -14,6 +14,7 @@ class CGeometry
     private: // Members
         uint32 mVAO;
         uint32 mVB;
+        uint32 mIB;
     private: // Methods
 };
 

@@ -114,7 +114,7 @@ template <class T> class CTemplatedVectorMapManager
             }
             else
             {
-                IRIS_LOG_WARNING("Trying to add twice %s", Name.c_str() );
+                LOG_WARNING("Trying to add twice %s", Name.c_str() );
             }
 
             return lOk;

@@ -1,17 +1,13 @@
-#include "Renderer.h"
-
 #include "ogl.h"
 #include "Context.h"
 #include "Shader.h"
 #include "Logger/Logger.h"
-#include "ExtensionManager.h"
-#include <string.h>
 
 std::string CShader::mGLSLVersion = "";
 
 void CShader::SetGLSLVersion(const std::string& aVersion)
 {
-  mGLSLVersion = "#version " + std::string(aVersion) + " core\n";
+    mGLSLVersion = "#version " + std::string(aVersion) + " core\n";
 }
 
 using namespace ogl;
@@ -58,8 +54,8 @@ bool CShader::Compile()
         {
             char lInfoLog[512];
             glGetShaderInfoLog(mShaderID, 512, NULL, lInfoLog);
-            IRIS_LOG_ERROR("Error compiling the shader");
-            IRIS_LOG_ERROR(lInfoLog);
+            LOG_ERROR("Error compiling the shader");
+            LOG_ERROR(lInfoLog);
         }
 
         #endif
@@ -89,8 +85,8 @@ bool CShader::Link()
         {
             char lInfoLog[512];
             glGetProgramInfoLog(mProgramID, 512, NULL, lInfoLog);
-            IRIS_LOG_ERROR("Error linking the program");
-            IRIS_LOG_ERROR(lInfoLog);
+            LOG_ERROR("Error linking the program");
+            LOG_ERROR(lInfoLog);
         }
 
         #endif

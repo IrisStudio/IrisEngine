@@ -2,8 +2,6 @@
 
 #include "Effect.h"
 #include "EffectLibrary.h"
-#include "ogl.h"
-
 #include "io/Resource.h"
 #include "Camera\CameraManager.h"
 

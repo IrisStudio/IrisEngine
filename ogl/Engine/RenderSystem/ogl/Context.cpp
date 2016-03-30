@@ -1,17 +1,13 @@
-﻿#include "Renderer.h"
-
-#include "StringUtils.h"
+﻿#include "StringUtils.h"
 
 #include "Context.h"
 #include "Logger/Logger.h"
 
-#include "ExtensionManager.h"
-
 #include "ogl.h"
 
 CContext::CContext()
-  : mOGLVersion("")
-  , mGLSLVersion("")
+    : mOGLVersion("")
+    , mGLSLVersion("")
 {
 }
 
@@ -21,43 +17,50 @@ CContext::~CContext()
 
 bool CContext::Init()
 {
-  bool lOk(true);
-  
-  mOGLVendor   = (const char*)glGetString(GL_VENDOR);
-  mOGLRenderer = (const char*)glGetString(GL_RENDERER);
-  mOGLVersion  = (const char*)glGetString(GL_VERSION);
-  mGLSLVersion = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+    bool lOk(true);
 
-  // Init all the open gl functions
-  ogl::InitOGLFunctions();
+    mOGLVendor   = (const char*)glGetString(GL_VENDOR);
+    mOGLRenderer = (const char*)glGetString(GL_RENDERER);
+    mOGLVersion  = (const char*)glGetString(GL_VERSION);
+    mGLSLVersion = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-  // Init the extensions
-  CExtensionManager::Instance().GetExtensions();
+    // Init all the open gl functions
+    ogl::InitOGLFunctions();
 
-  return lOk;
+    LOG_APPLICATION("Supported extensions:");
+    int NumberOfExtensions = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &NumberOfExtensions);
+
+    for (int i = 0; i< NumberOfExtensions; ++i)
+    {
+        mExtensions.insert(std::string((const char*)ogl::glGetStringi(GL_EXTENSIONS, i)));
+        LOG_APPLICATION((const char*)(ogl::glGetStringi(GL_EXTENSIONS, i)));
+    }
+
+    return lOk;
 }
 
 const std::string& CContext::GetOGLVendor() const
 {
-  return mOGLVendor;
+    return mOGLVendor;
 }
 
 const std::string& CContext::GetOGLRenderer() const
 {
-  return mOGLRenderer;
+    return mOGLRenderer;
 }
 
 const std::string& CContext::GetOGLVersion() const
 {
-  return mOGLVersion;
+    return mOGLVersion;
 }
 
 const std::string& CContext::GetGLSLVersion() const
 {
-  return mGLSLVersion;
+    return mGLSLVersion;
 }
 
-bool CContext::IsCapable(ogl::Extension ar_extension) const
+bool CContext::IsCapable(Extension ar_extension) const
 {
-  return true;
+    return true;
 }

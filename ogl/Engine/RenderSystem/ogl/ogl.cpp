@@ -711,7 +711,7 @@ namespace ogl
             int len = _vscprintf(aErrorMsg, args) + 1;
             char* buffer = (char*)malloc(len * sizeof(char));
             vsprintf_s(buffer, len, aErrorMsg, args);
-            IRIS_LOG_ERROR( (lErrorStr + ": " + buffer).c_str() )
+            LOG_ERROR( (lErrorStr + ": " + buffer).c_str() )
             free(buffer);
             va_end(args);
         }

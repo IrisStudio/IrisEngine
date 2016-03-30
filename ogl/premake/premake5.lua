@@ -36,7 +36,6 @@ group "Engine"
 project "User"
     kind "StaticLib"
     files { "../Engine/User/**.h", "../Engine/User/**.cpp", "../Engine/User/**.inl" }
-	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../Engine/Common/" }
     includedirs { "../Engine/Hierarchy/" }
@@ -50,7 +49,6 @@ project "Script"
     files { "../Engine/Script/**.h", "../Engine/Script/**.cpp", "../Engine/Script/**.inl" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../Engine/Script/" }
-	includedirs { "../Engine/RenderSystem/ogl" }
 	includedirs { "../Engine/RenderSystem" }
 	includedirs { "../3rdParty/" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
@@ -73,7 +71,6 @@ project "Graphics"
     kind "StaticLib"
     files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp" }
 	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/RenderSystem/ogl" }
     includedirs { "../Engine/RenderSystem/" }
     includedirs { "../Engine/Graphics/" }
     includedirs { "../3rdParty/tinyobjloader/" }

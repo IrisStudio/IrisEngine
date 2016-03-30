@@ -1,7 +1,7 @@
-#ifndef __OGL_SHADER__
-#define __OGL_SHADER__
+#ifndef __IRIS_SHADER__
+#define __IRIS_SHADER__
 
-#include <Types.h>
+#include "Types.h"
 #include "rs.h"
 
 class CShader

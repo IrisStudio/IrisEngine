@@ -1,6 +1,4 @@
-﻿#include "Renderer.h"
-
-#include "StringUtils.h"
+﻿#include "StringUtils.h"
 
 #include "ogl.h"
 #include "Window.h"
@@ -103,7 +101,7 @@ CWindow::~CWindow()
 {
 }
 
-bool CWindow::Create( ESizeType aSizeType )
+bool CWindow::Create( WindowSize aSizeType )
 {
     bool lOk(true);
 

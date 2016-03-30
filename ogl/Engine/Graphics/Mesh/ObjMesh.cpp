@@ -13,7 +13,7 @@ CObjMesh::CObjMesh(const std::string& filename)
 
     if (!err.empty())   // `err` may contain warning message.
     {
-        IRIS_LOG_ERROR(err.c_str());
+        LOG_ERROR(err.c_str());
     }
 
     if (ret)

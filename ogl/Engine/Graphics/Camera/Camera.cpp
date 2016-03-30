@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "ogl.h"
 #include "Logger\Logger.h"
 
 CCamera::CCamera()
@@ -171,5 +170,5 @@ void CCamera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
         mPosition += mSide * velocity;
     }
 
-    IRIS_LOG_APPLICATION("Position %f, %f, %f", mPosition.x, mPosition.y, mPosition.z);
+    LOG_APPLICATION("Position %f, %f, %f", mPosition.x, mPosition.y, mPosition.z);
 }

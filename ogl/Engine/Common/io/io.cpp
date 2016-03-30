@@ -32,7 +32,7 @@ namespace iris
             // parse schema first, so we can use it to parse the data after
             lOk &= parser.Parse(lFBS.c_str(), include_directories) && parser.Parse(lJson.c_str(), include_directories);
 
-            IRIS_LOG_ERROR_IF(!lOk, "Error parsing file %s \n %s", aResource.GetFullFilename().c_str(), parser.error_.c_str());
+            LOG_ERROR_IF(!lOk, "Error parsing file %s \n %s", aResource.GetFullFilename().c_str(), parser.error_.c_str());
 
             uint32 lSize = parser.builder_.GetSize();
             aBufferPtr = (uint8*)malloc(lSize);
