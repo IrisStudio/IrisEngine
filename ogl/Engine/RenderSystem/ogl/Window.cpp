@@ -44,6 +44,13 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
+        case WM_SIZE:
+            {
+                printf("Resized\n");
+                return 0;
+            }
+            break;
+
         case WM_DESTROY:
             {
                 PostQuitMessage(0);
