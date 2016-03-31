@@ -38,37 +38,10 @@ struct Renderer
 {
     Renderer()
     {
-        mGeom = CGeometrySPtr(new CGeometry());
-        float points[] =
-        {
-            0.0f,  0.5f,  0.0f,
-            0.5f, -0.5f,  0.0f,
-            -0.5f, -0.5f,  0.0f,
-        };
-
         mCube.Init(5.0f, 5.0f, 5.0f);
-
-        flags = eGD_ScreenPosition;
-
-        mGeom->Create( flags, &points, nullptr, 12, uint32(0) );
-
-        iris::io::CResource vert("shaders/first_triangle/ft.vert");
-        const std::string lVtxShaderSrc(vert.GetFileContent());
-        CShaderSPtr lVertexShader(new CShader());
-        lVertexShader->Create(ShaderType::eST_Vertex, lVtxShaderSrc.c_str());
-
-        iris::io::CResource frag("shaders/first_triangle/ft.frag");
-        const std::string lFragShaderSrc(frag.GetFileContent());
-        CShaderSPtr lFragmentShader(new CShader());
-        lFragmentShader->Create(ShaderType::eST_Fragment, lFragShaderSrc.c_str());
-
-        CEffectSPtr lEffect( new CEffect(lVertexShader, lFragmentShader) );
-        mEffect = lEffect;
     }
 
     CCube mCube;
-    CGeometrySPtr mGeom;
-    CEffectSPtr mEffect;
 };
 
 #endif //__DEFAULT_COMPONENTS__

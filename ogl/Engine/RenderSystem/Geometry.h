@@ -15,6 +15,9 @@ class CGeometry
         uint32 mVAO;
         uint32 mVB;
         uint32 mIB;
+        uint32 mVertexCount;
+        uint32 mIndexCount;
+
     private: // Methods
 };
 

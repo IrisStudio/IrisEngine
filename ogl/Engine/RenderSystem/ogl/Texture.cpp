@@ -5,7 +5,10 @@
 #include "Logger\Logger.h"
 
 CTexture::CTexture()
-  : 
+  : mWidth(0)
+  , mHeight(0)
+  , mNumComponents(0)
+  , mType(eTT_2D)
 {
 }
 
@@ -34,5 +37,5 @@ void CTexture::Create(TextureType aType, const std::string& aFilename)
 
 void CTexture::Bind()
 {
-  glBindTexture(GL_TEXTURE_2D, mID);
+  glBindTexture(mType, mID);
 }
