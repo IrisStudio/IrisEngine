@@ -20,6 +20,13 @@ Begin_Enum_String(Extension)
 }
 End_Enum_String;
 
+enum TextureType
+{
+  eTT_1D = 0x0DE0,
+  eTT_2D = 0x0DE1,
+  eTT_3D = 0
+};
+
 
 enum ShaderType
 {

@@ -48,6 +48,8 @@ CGeometry::CGeometry()
 
 CGeometry::~CGeometry()
 {
+  ogl::glDeleteBuffers(1, &mVB);
+  ogl::glDeleteVertexArrays(1, &mVAO);
 }
 
 void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount )
