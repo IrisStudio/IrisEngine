@@ -12,6 +12,9 @@ static const char* sAdditionalVertexCode =
     "    vec4 gl_Position;\n"
     "};\n\n";
 
+static const char* sAdditionalFragmentCode =
+    "#extension GL_ARB_separate_shader_objects : enable\n\n";
+
 void CShader::SetGLSLVersion(const std::string& aVersion)
 {
     mGLSLVersion = "#version " + std::string(aVersion) + " core\n";
@@ -35,14 +38,7 @@ CShader::~CShader()
 
 bool CShader::Create(ShaderType aType, const char * aCode)
 {
-    if( aType == eST_Vertex )
-    {
-        mCode = mGLSLVersion + sAdditionalVertexCode + aCode;
-    }
-    else
-    {
-        mCode = mGLSLVersion + aCode;
-    }
+    mCode = mGLSLVersion + (( aType == eST_Vertex ) ? sAdditionalVertexCode : sAdditionalFragmentCode) + aCode;
 
     mType = aType;
     mOk = (Compile() && Link());

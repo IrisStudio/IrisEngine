@@ -40,5 +40,11 @@ void CEffect::BindMatrices(const float4x4& M, const float4x4& V, const float4x4&
     ogl::glProgramUniformMatrix4fv(lVertexShaderID, viewLoc, 1, GL_FALSE, &V[0][0]);
     ogl::glProgramUniformMatrix4fv(lVertexShaderID, projLoc, 1, GL_FALSE, &P[0][0]);
 
+    GLint colorLoc = ogl::glGetUniformLocation(mFragmentShader->GetProgramID(), "in_color");
+
+    const uint32 lFragmentShaderID = mFragmentShader->GetProgramID();
+    const float4 color(0.6f, 0.2f, 0.8f, 1.0f);
+    ogl::oglProgramUniform4fv(lFragmentShaderID, colorLoc, 1, &color[0] );
+
     ogl::CHECK_OGL_ERROR("after bind matrices");
 }

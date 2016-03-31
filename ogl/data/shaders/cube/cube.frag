@@ -1,6 +1,8 @@
 out vec4 color;
 
+layout (location = 0) uniform vec4 in_color;
+
 void main()
 {
-    color = vec4(0.0f, 1.0f, 0.2f, 1.0f);
+    color = in_color;
 } 
