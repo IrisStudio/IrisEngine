@@ -34,5 +34,4 @@ void CMesh::Render()
     mEffect->Bind();
     mEffect->BindMatrices(M, V, P);
     mGeometry->Bind();
-
 }

@@ -3,7 +3,7 @@
 
 CCamera::CCamera()
     : mType( eFree )
-    , mPosition(float3(1.0f, 1.0f, 1.0f))
+    , mPosition(float3(5.0f, 5.0f, 5.0f))
     , mLookAt( float3(0.0f, 0.0f, 0.0f) )
     , mDirection( float3(0.0f) )
     , mUp(float3(0.0f, 0.0f, 1.0f) )
