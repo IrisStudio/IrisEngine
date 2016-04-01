@@ -8,16 +8,22 @@
 
 class CMesh
 {
-public:
-  CMesh();
-  virtual ~CMesh();
-  void Render();
-protected:
-  CGeometrySPtr mGeometry;
-  CEffectSPtr   mEffect;
+    public:
+        CMesh();
+        virtual ~CMesh();
+        void Render();
 
-private:
-  DISALLOW_COPY_AND_ASSIGN(CMesh);
+        void SetColor(const float4& color);
+        float4 GetColor() const;
+
+    protected:
+        CGeometrySPtr mGeometry;
+        CEffectSPtr   mEffect;
+
+        float4 mColor;
+
+    private:
+        DISALLOW_COPY_AND_ASSIGN(CMesh);
 };
 
 typedef std::shared_ptr< CMesh > CMeshSPtr;

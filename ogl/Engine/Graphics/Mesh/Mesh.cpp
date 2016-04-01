@@ -7,6 +7,7 @@
 
 CMesh::CMesh()
     : mGeometry( new CGeometry() )
+    , mColor( float4(1.0f) )
 {
     iris::io::CResource vert("shaders/cube/cube.vert");
     const std::string lVtxShaderSrc(vert.GetFileContent());
@@ -21,7 +22,6 @@ CMesh::CMesh()
     mEffect = CEffectSPtr(new CEffect(lVertexShader, lFragmentShader));
 }
 
-
 CMesh::~CMesh()
 {
 }
@@ -33,5 +33,16 @@ void CMesh::Render()
     lCam->GetMatrices(P, V, M);
     mEffect->Bind();
     mEffect->BindMatrices(M, V, P);
+    mEffect->BindFragment(mColor, "in_color");
     mGeometry->Bind();
+}
+
+void CMesh::SetColor(const float4& color)
+{
+    mColor = color;
+}
+
+float4 CMesh::GetColor() const
+{
+    return mColor;
 }

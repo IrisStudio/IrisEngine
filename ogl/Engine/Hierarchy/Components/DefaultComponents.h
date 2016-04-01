@@ -39,6 +39,7 @@ struct Renderer
     Renderer()
     {
         mCube.Init(5.0f, 5.0f, 5.0f);
+        mCube.SetColor(float4(0.6f, 0.3f, 0.8f, 1.0f));
     }
 
     CCube mCube;
