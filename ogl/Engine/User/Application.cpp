@@ -6,9 +6,12 @@
 
 #include "Application.h"
 #include "Window.h"
+#include "Time\Timer.h"
 
 #include "GameObjectManager.h"
 #include "Camera\CameraManager.h"
+
+#include "StringUtils.h"
 
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
@@ -47,6 +50,7 @@ void IApplication::Run()
     float lUpdateIterations = 0.0f;
 
     CWindow& lMainWindow = CWindow::Instance();
+    CTimer&  lTimer = CTimer::Instance(10);
 
     if (lMainWindow.Create(eST_Windowed))
     {
@@ -69,26 +73,9 @@ void IApplication::Run()
             while (lMainWindow.Update())
             {
                 ProccessInputs();
-
-                // Update
-                lUpdateIterations = dt() + mCyclesLeft;
-
-                if (lUpdateIterations > sMaxCyclesPerFrame * sUpdateInterval )
-                {
-                    lUpdateIterations = sMaxCyclesPerFrame * sUpdateInterval;
-                }
-
-                while (lUpdateIterations > sUpdateInterval)
-                {
-                    lUpdateIterations -= sUpdateInterval;
-                    Update( sUpdateInterval );
-
-                    game_object_manager.update(sUpdateInterval);
-                }
-
-                mCyclesLeft = lUpdateIterations;
-
-                //Render();
+                lTimer.Update();
+                lMainWindow.SetWindowTitle(iris::str_utils::Format("FPS: %f", lTimer.GetFPS()));
+                game_object_manager.update(lTimer.GetElapsedTime());
             }
         }
     }

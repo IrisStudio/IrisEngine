@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <timeapi.h>
 #include <assert.h>
 #include <float.h>
 #include "Timer.h"

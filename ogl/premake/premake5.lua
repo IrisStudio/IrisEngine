@@ -18,7 +18,7 @@ project "IrisEditor"
    targetdir "../bin/%{cfg.buildcfg}"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "gainput", "tinyobjloader" }
+   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "gainput", "tinyobjloader", "winmm" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy"}
    includedirs { "../3rdParty/ChaiScript/include/" }
