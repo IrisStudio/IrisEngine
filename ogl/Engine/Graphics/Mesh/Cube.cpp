@@ -48,5 +48,5 @@ void CCube::Init( float aLenght, float aWidht, float aHeight )
       6, 7, 3,
     };
 
-    mGeometry->Create(eGD_Position, &vertices, &indices, 24, 36 );
+    mGeometry->Create(eGD_Position, &vertices, &indices, 8, 36 );
 }

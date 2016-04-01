@@ -6,12 +6,20 @@
 
 namespace
 {
+    // Sizes and offsets!
+    static const uint32 eGD_PositionSize       = 3 * sizeof(float);
+    static const uint32 eGD_ScreenPositionSize = 2 * sizeof(float);
+    static const uint32 eGD_NormalSize         = 3 * sizeof(float);
+    static const uint32 eGD_TangentSize        = 3 * sizeof(float);
+    static const uint32 eGD_BinormalSize       = 3 * sizeof(float);
+    static const uint32 eGD_UV                 = 2 * sizeof(float);
+    static const uint32 eGD_UV2                = 2 * sizeof(float);
+
     template < uint32 N > void FillBuffer(void * aVertexBuffer, uint32 aVertexSize );
     template <> void FillBuffer<eGD_Position>( void * aVertexBuffer, uint32 aVertexSize )
     {
-        printf("eGD_Position");
         ogl::CheckOGLError("Before creating geometry");
-        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * sizeof(float), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * eGD_PositionSize, aVertexBuffer, GL_STATIC_DRAW);
         ogl::glEnableVertexAttribArray(0);
         ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
         ogl::CheckOGLError("After creating geometry");
@@ -19,11 +27,10 @@ namespace
 
     template <> void FillBuffer<eGD_ScreenPosition>( void * aVertexBuffer, uint32 aVertexSize )
     {
-        printf("eGD_ScreenPosition");
         ogl::CheckOGLError("Before creating geometry");
-        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * sizeof(float), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * eGD_ScreenPositionSize, aVertexBuffer, GL_STATIC_DRAW);
         ogl::glEnableVertexAttribArray(0);
-        ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+        ogl::glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
         ogl::CheckOGLError("After creating geometry");
     }
 
@@ -47,9 +54,11 @@ CGeometry::CGeometry()
 
 CGeometry::~CGeometry()
 {
+  ogl::CHECK_OGL_ERROR("After deleting the geometry");
   ogl::glDeleteBuffers(1, &mVB);
   ogl::glDeleteBuffers(1, &mIB);
   ogl::glDeleteVertexArrays(1, &mVAO);
+  ogl::CHECK_OGL_ERROR("After deleting the geometry");
 }
 
 void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount )
