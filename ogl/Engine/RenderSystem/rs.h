@@ -49,7 +49,10 @@ enum GeometryData
     eGD_ScreenPosition  = 1 << 1,
     eGD_Normal          = 1 << 2,
     eGD_Tangent         = 1 << 3,
-    eGD_Binormal        = 1 << 4
+    eGD_Binormal        = 1 << 4,
+    eGD_UV              = 1 << 6,
+    eGD_UV2             = 1 << 7,
+    eGeometryData_Count = 5
 };
 
 #endif

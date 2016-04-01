@@ -251,8 +251,8 @@ bool CWindow::Show()
     }
 
     CShader::SetGLSLVersion(lVersion);
-    const std::string& lWindowName = "Vendor:" + lContext.GetOGLVendor() + "-Renderer:" + lContext.GetOGLRenderer() + "-Version:" + lContext.GetOGLVersion() + "-Shaders:" + lContext.GetGLSLVersion();
-    SetWindowText(mHandle, lWindowName.c_str());
+    //const std::string& lWindowName = "Vendor:" + lContext.GetOGLVendor() + "-Renderer:" + lContext.GetOGLRenderer() + "-Version:" + lContext.GetOGLVersion() + "-Shaders:" + lContext.GetGLSLVersion();
+    //SetWindowText(mHandle, lWindowName.c_str());
 
     if (!wglMakeCurrent(mhDC, mhRC))
     {
@@ -290,7 +290,12 @@ bool CWindow::Update()
 
 void CWindow::BeginRender()
 {
-    glViewport(0, 0, mSize.x, mSize.y );
+  RECT lRect;
+  GetWindowRect(mHandle, &lRect);
+  mSize = uint2( uint32(lRect.right- lRect.left), uint32( lRect.bottom - lRect.top ) );
+  ogl::CheckOGLError("before viewport");
+  glViewport(0, 0, mSize.x, mSize.y);
+  ogl::CheckOGLError("after viewport %d, %d", mSize.x, mSize.x );
 }
 
 void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
@@ -319,4 +324,9 @@ void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
 void CWindow::EndRender()
 {
     SwapBuffers(mhDC);
+}
+
+void CWindow::SetWindowTitle(const std::string& aWindowTitle)
+{
+  SetWindowText(mHandle, aWindowTitle.c_str());
 }
