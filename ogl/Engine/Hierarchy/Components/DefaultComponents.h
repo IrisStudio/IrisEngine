@@ -8,6 +8,7 @@
 #include "ogl.h"
 #include "Geometry.h"
 #include "Mesh/Cube.h"
+#include "Mesh/FullScreenQuad.h"
 
 #include "io/Resource.h"
 
@@ -39,10 +40,12 @@ struct Renderer
     Renderer()
     {
         mCube.Init(5.0f, 5.0f, 5.0f);
-        mCube.SetColor(float4(0.6f, 0.3f, 0.8f, 1.0f));
+        mCube.SetColor(float4(0.0f, 0.3f, 0.8f, 1.0f));
+        mQuad.Init(5.0f, 5.0f, 5.0f);
     }
 
     CCube mCube;
+    CFullScreenQuad mQuad;
 };
 
 #endif //__DEFAULT_COMPONENTS__

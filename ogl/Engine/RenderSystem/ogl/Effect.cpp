@@ -51,6 +51,8 @@ void CEffect::BindFragment<float4>(const float4& in, const std::string& name)
     const uint32 lFragmentShaderID = mFragmentShader->GetProgramID();
     GLint varLoc = ogl::glGetUniformLocation(lFragmentShaderID, name.c_str());
     ogl::oglProgramUniform4fv(lFragmentShaderID, varLoc, 1, &in[0]);
+
+    ogl::oglProgramUniform1i(lFragmentShaderID, 1, 0);
 }
 
 template <>

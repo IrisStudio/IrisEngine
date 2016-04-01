@@ -4,6 +4,7 @@
 
 #include "Types.h"
 #include "Geometry.h"
+#include "Texture.h"
 #include "Effect.h"
 
 class CMesh
@@ -13,12 +14,13 @@ class CMesh
         virtual ~CMesh();
         void Render();
 
-        void SetColor(const float4& color);
-        float4 GetColor() const;
+        void          SetColor(const float4& color);
+        const float4& GetColor() const;
 
     protected:
         CGeometrySPtr mGeometry;
         CEffectSPtr   mEffect;
+        CTexture      mTex;
 
         float4 mColor;
 
