@@ -11,6 +11,9 @@
 #include "Shader.h"
 #include "Camera/CameraManager.h"
 
+#include "EffectLibrary.h"
+
+
 static HWND   mHandle;
 static HDC    mhDC;
 static HGLRC  mhRC;
@@ -251,6 +254,10 @@ bool CWindow::Show()
     }
 
     CShader::SetGLSLVersion(lVersion);
+
+    // Init the effects
+    CEffectLibrary::Instance();
+
     //const std::string& lWindowName = "Vendor:" + lContext.GetOGLVendor() + "-Renderer:" + lContext.GetOGLRenderer() + "-Version:" + lContext.GetOGLVersion() + "-Shaders:" + lContext.GetGLSLVersion();
     //SetWindowText(mHandle, lWindowName.c_str());
 
@@ -290,12 +297,12 @@ bool CWindow::Update()
 
 void CWindow::BeginRender()
 {
-  RECT lRect;
-  GetWindowRect(mHandle, &lRect);
-  mSize = uint2( uint32(lRect.right- lRect.left), uint32( lRect.bottom - lRect.top ) );
-  ogl::CheckOGLError("before viewport");
-  glViewport(0, 0, mSize.x, mSize.y);
-  ogl::CheckOGLError("after viewport %d, %d", mSize.x, mSize.x );
+    RECT lRect;
+    GetWindowRect(mHandle, &lRect);
+    mSize = uint2( uint32(lRect.right- lRect.left), uint32( lRect.bottom - lRect.top ) );
+    ogl::CheckOGLError("before viewport");
+    glViewport(0, 0, mSize.x, mSize.y);
+    ogl::CheckOGLError("after viewport %d, %d", mSize.x, mSize.x );
 }
 
 void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
@@ -328,5 +335,5 @@ void CWindow::EndRender()
 
 void CWindow::SetWindowTitle(const std::string& aWindowTitle)
 {
-  SetWindowText(mHandle, aWindowTitle.c_str());
+    SetWindowText(mHandle, aWindowTitle.c_str());
 }

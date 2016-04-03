@@ -9,6 +9,7 @@ class CEffect
 {
     public:
         CEffect( CShaderSPtr aVertexShader, CShaderSPtr aPixelShader);
+        CEffect(const char* aVertexShader, const char* aPixelShader);
         virtual ~CEffect();
         void    Bind();
         uint32  GetID() const;

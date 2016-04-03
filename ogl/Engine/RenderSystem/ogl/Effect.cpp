@@ -13,14 +13,28 @@ CEffect::CEffect(CShaderSPtr aVertexShader, CShaderSPtr aPixelShader)
     ogl::CHECK_OGL_ERROR("Before creating the pipeline");
     ogl::glGenProgramPipelines(1, &mID);
     ogl::glBindProgramPipeline(mID);
-    ogl::glUseProgramStages(mID, GL_VERTEX_SHADER_BIT, aVertexShader->GetProgramID() );
-    ogl::glUseProgramStages(mID, GL_FRAGMENT_SHADER_BIT, aPixelShader->GetProgramID());
+    ogl::glUseProgramStages(mID, GL_VERTEX_SHADER_BIT, mVertexShader->GetProgramID() );
+    ogl::glUseProgramStages(mID, GL_FRAGMENT_SHADER_BIT, mFragmentShader->GetProgramID());
+    ogl::CHECK_OGL_ERROR("After creating the pipeline");
+}
+
+CEffect::CEffect(const char* aVertexShader, const char* aPixelShader)
+    : mID(0)
+    , mVertexShader(new CShader())
+    , mFragmentShader(new CShader())
+{
+    ogl::CHECK_OGL_ERROR("Before creating the pipeline");
+    mVertexShader->Create(ShaderType::eST_Vertex, aVertexShader);
+    mFragmentShader->Create(ShaderType::eST_Fragment, aPixelShader);
+    ogl::glGenProgramPipelines(1, &mID);
+    ogl::glBindProgramPipeline(mID);
+    ogl::glUseProgramStages(mID, GL_VERTEX_SHADER_BIT, mVertexShader->GetProgramID());
+    ogl::glUseProgramStages(mID, GL_FRAGMENT_SHADER_BIT, mFragmentShader->GetProgramID());
     ogl::CHECK_OGL_ERROR("After creating the pipeline");
 }
 
 CEffect::~CEffect()
 {
-
 }
 
 void CEffect::Bind()
