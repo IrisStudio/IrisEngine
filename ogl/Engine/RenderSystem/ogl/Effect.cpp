@@ -60,19 +60,15 @@ void CEffect::BindMatrices(const float4x4& M, const float4x4& V, const float4x4&
 
 // Template implementation
 template <>
-void CEffect::BindFragment<float4>(const float4& in, const std::string& name)
+void CEffect::BindUniform<float4>(const uint32& Id, const int& varLoc, const float4& in)
 {
-    const uint32 lFragmentShaderID = mFragmentShader->GetProgramID();
-    GLint varLoc = ogl::glGetUniformLocation(lFragmentShaderID, name.c_str());
-    ogl::oglProgramUniform4fv(lFragmentShaderID, varLoc, 1, &in[0]);
-
-    ogl::oglProgramUniform1i(lFragmentShaderID, 1, 0);
+    ogl::oglProgramUniform4fv(Id, varLoc, 1, &in[0]);
 }
+IMPLEMENT_BIND_UNIFORM(float4)
 
 template <>
-void CEffect::BindVertex<float4>(const float4& in, const std::string& name)
+void CEffect::BindUniform<float4x4>(const uint32& Id, const int& varLoc, const float4x4& in)
 {
-    const uint32 lVertexShaderID = mVertexShader->GetProgramID();
-    GLint varLoc = ogl::glGetUniformLocation(lVertexShaderID, name.c_str());
-    ogl::oglProgramUniform4fv(lVertexShaderID, varLoc, 1, &in[0]);
+    ogl::glProgramUniformMatrix4fv(Id, varLoc, 1, GL_FALSE, &in[0][0]);
 }
+IMPLEMENT_BIND_UNIFORM(float4x4)
