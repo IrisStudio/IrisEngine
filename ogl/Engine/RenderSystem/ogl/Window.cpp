@@ -326,6 +326,7 @@ void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
     }
 
     glClear(clear_mask);
+    ogl::CheckOGLError("after clear");
 }
 
 void CWindow::EndRender()

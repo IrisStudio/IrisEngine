@@ -10,8 +10,6 @@
 #include <GL/wglext.h>
 #include <cstddef>
 
-#define CHECK_OGL_ERROR( aMsg, ... ) CheckOGLError( aMsg, __VA_ARGS__ );
-
 #ifndef APIENTRY
     #define APIENTRY
 #endif

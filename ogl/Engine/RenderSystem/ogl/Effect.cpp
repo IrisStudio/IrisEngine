@@ -10,12 +10,12 @@ CEffect::CEffect(CShaderSPtr aVertexShader, CShaderSPtr aPixelShader)
     , mVertexShader(aVertexShader)
     , mFragmentShader(aPixelShader)
 {
-    ogl::CHECK_OGL_ERROR("Before creating the pipeline");
+    ogl::CheckOGLError("Before creating the pipeline");
     ogl::glGenProgramPipelines(1, &mID);
     ogl::glBindProgramPipeline(mID);
     ogl::glUseProgramStages(mID, GL_VERTEX_SHADER_BIT, mVertexShader->GetProgramID() );
     ogl::glUseProgramStages(mID, GL_FRAGMENT_SHADER_BIT, mFragmentShader->GetProgramID());
-    ogl::CHECK_OGL_ERROR("After creating the pipeline");
+    ogl::CheckOGLError("After creating the pipeline");
 }
 
 CEffect::CEffect(const char* aVertexShader, const char* aPixelShader)
@@ -23,14 +23,17 @@ CEffect::CEffect(const char* aVertexShader, const char* aPixelShader)
     , mVertexShader(new CShader())
     , mFragmentShader(new CShader())
 {
-    ogl::CHECK_OGL_ERROR("Before creating the pipeline");
-    mVertexShader->Create(ShaderType::eST_Vertex, aVertexShader);
-    mFragmentShader->Create(ShaderType::eST_Fragment, aPixelShader);
+    ogl::CheckOGLError("Before creating the pipeline");
+    bool lOk = mVertexShader->Create(ShaderType::eST_Vertex, aVertexShader);
+    lOk &= mFragmentShader->Create(ShaderType::eST_Fragment, aPixelShader);
+    assert(lOk);
     ogl::glGenProgramPipelines(1, &mID);
     ogl::glBindProgramPipeline(mID);
     ogl::glUseProgramStages(mID, GL_VERTEX_SHADER_BIT, mVertexShader->GetProgramID());
     ogl::glUseProgramStages(mID, GL_FRAGMENT_SHADER_BIT, mFragmentShader->GetProgramID());
-    ogl::CHECK_OGL_ERROR("After creating the pipeline");
+    ogl::glBindProgramPipeline(0);
+    ogl::glBindProgramPipeline(mID);
+    ogl::CheckOGLError("After creating the pipeline");
 }
 
 CEffect::~CEffect()
@@ -39,12 +42,14 @@ CEffect::~CEffect()
 
 void CEffect::Bind()
 {
+    ogl::CheckOGLError("CEffect::Bind() before");
     ogl::glBindProgramPipeline(mID);
+    ogl::CheckOGLError("CEffect::Bind() after");
 }
 
 void CEffect::BindMatrices(const float4x4& M, const float4x4& V, const float4x4& P)
 {
-    ogl::CHECK_OGL_ERROR("Before bind matrices");
+    ogl::CheckOGLError("Before bind matrices");
 
     const uint32 lVertexShaderID = mVertexShader->GetProgramID();
     GLint modelLoc = ogl::glGetUniformLocation(lVertexShaderID, "model");
@@ -55,7 +60,7 @@ void CEffect::BindMatrices(const float4x4& M, const float4x4& V, const float4x4&
     ogl::glProgramUniformMatrix4fv(lVertexShaderID, viewLoc, 1, GL_FALSE, &V[0][0]);
     ogl::glProgramUniformMatrix4fv(lVertexShaderID, projLoc, 1, GL_FALSE, &P[0][0]);
 
-    ogl::CHECK_OGL_ERROR("after bind matrices");
+    ogl::CheckOGLError("after bind matrices");
 }
 
 // Template implementation

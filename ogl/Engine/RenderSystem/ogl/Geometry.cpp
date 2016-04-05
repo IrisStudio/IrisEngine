@@ -75,15 +75,16 @@ CGeometry::CGeometry()
 
 CGeometry::~CGeometry()
 {
-    ogl::CHECK_OGL_ERROR("After deleting the geometry");
+    ogl::CheckOGLError("After deleting the geometry");
     ogl::glDeleteBuffers(1, &mVB);
     ogl::glDeleteBuffers(1, &mIB);
     ogl::glDeleteVertexArrays(1, &mVAO);
-    ogl::CHECK_OGL_ERROR("After deleting the geometry");
+    ogl::CheckOGLError("After deleting the geometry");
 }
 
 void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount )
 {
+    ogl::CheckOGLError("Create geom end");
     mVertexCount = aVertexCount;
     mIndexCount = aIndexCount;
 
@@ -108,10 +109,12 @@ void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBu
     ogl::CheckOGLError("After IB");
 
     ogl::glBindVertexArray(0); // Unbind VAO
+    ogl::CheckOGLError("Create geom end");
 }
 
 void CGeometry::Bind() const
 {
+    ogl::CheckOGLError("Geometry bind begin");
     ogl::glBindVertexArray(mVAO);
     //glEnable(GL_DEPTH_TEST);
     ogl::CheckOGLError("Before draw elements");

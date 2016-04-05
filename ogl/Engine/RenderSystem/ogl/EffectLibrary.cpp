@@ -23,11 +23,11 @@ namespace Shaders
 
 #define in_3d_position      "layout(location = 0) in vec3 position;\n"
 #define in_2d_position      "layout(location = 0) in vec2 position;\n"
-#define compute_3d_position "gl_Position = projection * view * model * vec4(position, 1.0f);\n"
-#define compute_2d_position "gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+#define compute_3d_position "    gl_Position = projection * view * model * vec4(position, 1.0f);\n"
+#define compute_2d_position "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
 
-#define in_out_uv           "layout (location = 1) in vec2 uv;\n out vec2 ftexcoord;\n"
-#define compute_uv          "ftexcoord = uv;\n"
+#define in_out_uv           "layout(location = 1) in vec2 uv;\nout vec2 ftexcoord;\n"
+#define compute_uv          "    ftexcoord = uv;\n"
 
         const char* eGD_ScreenPosition_Str =
             in_2d_position
@@ -75,8 +75,8 @@ namespace Shaders
 
     namespace FS
     {
-#define out_color        "out vec4 color\n;"
-#define return_def_color "color = vec4(1.0); "
+#define out_color        "out vec4 color;\n"
+#define return_def_color "color = vec4(1.0);\n"
 
 #define diffuse_sampler "layout(location = 1) uniform sampler2D diffuse;\n"
 #define in_uv           "in vec2 ftexcoord;\n"
@@ -109,7 +109,7 @@ CEffectLibrary::CEffectLibrary()
         { eGD_ScreenPosition,              new CEffect(VS::eGD_ScreenPosition_Str,    FS::eGD_Position_Str) },
         { eGD_Position,                    new CEffect(VS::eGD_Position_Str,          FS::eGD_Position_Str) },
         { eGD_Position | eGD_UV,           new CEffect(VS::eGD_Position_UV_Str,       FS::eGD_Position_UV_Str) },
-        { eGD_ScreenPosition | eGD_UV,     new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_Str) },
+        { eGD_ScreenPosition | eGD_UV,     new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_UV_Str) },
     };
 }
 

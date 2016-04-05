@@ -26,19 +26,19 @@ struct RenderSystem : public entityx::System<RenderSystem>
     {
         es.each<Transform, Renderer>([dt](entityx::Entity entity, Transform &transform, Renderer &renderer)
         {
-            ogl::CHECK_OGL_ERROR("Begin");
+            ogl::CheckOGLError("Begin");
             /*
             renderer.mEffect->Bind();
-            ogl::CHECK_OGL_ERROR("before setting vao");
+            ogl::CheckOGLError("before setting vao");
             renderer.mGeom->Bind();
-            ogl::CHECK_OGL_ERROR("before draw");
+            ogl::CheckOGLError("before draw");
             glDrawArrays(GL_TRIANGLES, 0, 3);
-            ogl::CHECK_OGL_ERROR("after draw");
+            ogl::CheckOGLError("after draw");
             */
             CCameraManager::Instance().GetCurrentCamera()->Update();
             renderer.mQuad.Render();
             ogl::glBindVertexArray(0);
-            ogl::CHECK_OGL_ERROR("End loop");
+            ogl::CheckOGLError("End loop");
         });
     };
 };

@@ -31,6 +31,6 @@ void CFullScreenQuad::Init( float aLenght, float aWidht, float aHeight )
     };
 
     mGeometry->Create(eGD_ScreenPosition | eGD_UV, &vertices, &indices, 4, 6 );
-    mTex.Create(eTT_2D, "hola");
+    mTex.Create(eTT_2D, "../data/tex/uv.jpg");
     mEffect = CEffectLibrary::Instance().GetEffect(eGD_ScreenPosition | eGD_UV);
 }
