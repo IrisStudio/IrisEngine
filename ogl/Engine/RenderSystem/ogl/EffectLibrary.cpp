@@ -96,37 +96,36 @@ namespace Shaders
             return_uv
             end_main;
     }
-
-    typedef std::map<uint32, CEffect*> TMapShaders;
-    TMapShaders map2Shaders;
 }
 
 CEffectLibrary::CEffectLibrary()
+    : mScreenUV(nullptr)
+{
+
+}
+
+void CEffectLibrary::Init()
 {
     using namespace Shaders;
-    map2Shaders =
-    {
-        { eGD_ScreenPosition,              new CEffect(VS::eGD_ScreenPosition_Str,    FS::eGD_Position_Str) },
-        { eGD_Position,                    new CEffect(VS::eGD_Position_Str,          FS::eGD_Position_Str) },
-        { eGD_Position | eGD_UV,           new CEffect(VS::eGD_Position_UV_Str,       FS::eGD_Position_UV_Str) },
-        { eGD_ScreenPosition | eGD_UV,     new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_UV_Str) },
-    };
+    mEmbedded[eGD_ScreenPosition] = new CEffect(VS::eGD_ScreenPosition_Str, FS::eGD_Position_Str);
+    mEmbedded[eGD_Position] = new CEffect(VS::eGD_Position_Str, FS::eGD_Position_Str);
+    mEmbedded[eGD_Position | eGD_UV] = new CEffect(VS::eGD_Position_UV_Str, FS::eGD_Position_UV_Str);
+    mEmbedded[eGD_ScreenPosition | eGD_UV] = new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_UV_Str);
 }
 
 CEffectLibrary::~CEffectLibrary()
 {
 }
 
-CEffectSPtr CEffectLibrary::CreateEffect(const char* aEffectFile)
+CEffect* CEffectLibrary::CreateEffect(const char* aEffectFile)
 {
-    CShaderSPtr lVertexShader;
-    iris::io::Load(iris::io::CResource("shaders/effect01.bin"), lVertexShader);
-    return CEffectSPtr();
+    return nullptr;
 }
 
-CEffectSPtr CEffectLibrary::GetEffect(uint32 aEffectFlags)
+CEffect* CEffectLibrary::GetEffect(uint32 aEffectFlags)
 {
-    Shaders::TMapShaders::iterator lItfind = Shaders::map2Shaders.find(aEffectFlags);
-    assert(lItfind != Shaders::map2Shaders.end());
-    return CEffectSPtr( lItfind->second );
+    using namespace Shaders;
+    TMapEffects::iterator lItfind = mEmbedded.find(aEffectFlags);
+    assert(lItfind != mEmbedded.end());
+    return lItfind->second;
 }

@@ -31,18 +31,18 @@ CEffect::CEffect(const char* aVertexShader, const char* aPixelShader)
     ogl::glBindProgramPipeline(mID);
     ogl::glUseProgramStages(mID, GL_VERTEX_SHADER_BIT, mVertexShader->GetProgramID());
     ogl::glUseProgramStages(mID, GL_FRAGMENT_SHADER_BIT, mFragmentShader->GetProgramID());
-    ogl::glBindProgramPipeline(0);
-    ogl::glBindProgramPipeline(mID);
     ogl::CheckOGLError("After creating the pipeline");
 }
 
 CEffect::~CEffect()
 {
+    ogl::glDeleteProgramPipelines(1, &mID);
 }
 
 void CEffect::Bind()
 {
     ogl::CheckOGLError("CEffect::Bind() before");
+    bool lIsPipeline = ogl::glIsProgramPipeline(mID) == GL_TRUE;
     ogl::glBindProgramPipeline(mID);
     ogl::CheckOGLError("CEffect::Bind() after");
 }

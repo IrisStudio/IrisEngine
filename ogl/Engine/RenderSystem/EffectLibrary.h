@@ -3,20 +3,25 @@
 
 #include "Types.h"
 #include "Shader.h"
-#include "Effect.h"
 #include "Singleton.h"
+
+class CEffect;
 
 class CEffectLibrary : public Singleton< CEffectLibrary >
 {
     public:
         CEffectLibrary();
         virtual ~CEffectLibrary();
-        CEffectSPtr CreateEffect(const char* aEffectFile);
-        CEffectSPtr GetEffect( uint32 aEffectFlags );
+        void Init();
+        CEffect* CreateEffect(const char* aEffectFile);
+        CEffect* GetEffect( uint32 aEffectFlags );
     private:
         typedef std::map< uint32, CShaderSPtr > TMapShader;
+        typedef std::map< uint32, CEffect* >    TMapEffects;
         TMapShader mVertexShaderLibrary;
         TMapShader mPixelShaderLibrary;
+        TMapEffects mEmbedded;
+        CEffect* mScreenUV;
 };
 
 #endif

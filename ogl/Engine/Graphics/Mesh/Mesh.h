@@ -5,7 +5,8 @@
 #include "Types.h"
 #include "Geometry.h"
 #include "Texture.h"
-#include "Effect.h"
+
+class CEffect;
 
 class CMesh
 {
@@ -19,7 +20,7 @@ class CMesh
 
     protected:
         CGeometrySPtr mGeometry;
-        CEffectSPtr   mEffect;
+        CEffect*      mEffect;
         CTexture      mTex;
 
         float4 mColor;

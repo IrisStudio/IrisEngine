@@ -1,8 +1,10 @@
 #include "Mesh.h"
+#include "Effect.h"
 #include "Camera\CameraManager.h"
 
 CMesh::CMesh()
     : mGeometry( new CGeometry() )
+    , mEffect(nullptr)
     , mColor( float4(1.0f) )
 {
 }

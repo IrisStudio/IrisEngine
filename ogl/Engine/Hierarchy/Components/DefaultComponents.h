@@ -39,13 +39,14 @@ struct Renderer
 {
     Renderer()
     {
-        mCube.Init(5.0f, 5.0f, 5.0f);
-        mCube.SetColor(float4(0.0f, 0.3f, 0.8f, 1.0f));
+        CEffectLibrary::Instance().Init();
         mQuad.Init(5.0f, 5.0f, 5.0f);
+        mQuad2.Init(5.0f, 5.0f, 5.0f);
     }
 
     CCube mCube;
     CFullScreenQuad mQuad;
+    CFullScreenQuad mQuad2;
 };
 
 #endif //__DEFAULT_COMPONENTS__
