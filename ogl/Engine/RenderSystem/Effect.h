@@ -9,10 +9,12 @@
     template <>                                                                     \
     void CEffect::BindFragment<TYPE>(const TYPE& in, const std::string& name)       \
     {                                                                               \
+        ogl::CheckOGLError("After Bind uniform");                                   \
         const uint32 lFragmentShaderID = mFragmentShader->GetProgramID();           \
         GLint varLoc = ogl::glGetUniformLocation(lFragmentShaderID, name.c_str());  \
-        BindUniform(lFragmentShaderID, varLoc, in);                                       \
+        BindUniform(lFragmentShaderID, varLoc, in);                                 \
         ogl::oglProgramUniform1i(lFragmentShaderID, 1, 0);                          \
+        ogl::CheckOGLError("After Bind uniform");                                   \
     }                                                                               \
     template <>                                                                     \
     void CEffect::BindVertex<TYPE>(const TYPE& in, const std::string& name)         \

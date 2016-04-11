@@ -42,7 +42,7 @@ void CTexture::Create(TextureType aType, const std::string& aFilename)
 
 void CTexture::Bind()
 {
-    ogl::CheckOGLError("After CTexture::Bind()");
+    ogl::CheckOGLError("Before CTexture::Bind()");
     ogl::glActiveTexture(GL_TEXTURE0);
     glBindTexture(mType, mID);
     ogl::CheckOGLError("After CTexture::Bind()");
