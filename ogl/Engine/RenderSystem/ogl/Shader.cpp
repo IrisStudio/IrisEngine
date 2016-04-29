@@ -6,14 +6,18 @@
 std::string CShader::mGLSLVersion = "";
 
 static const char* sAdditionalVertexCode =
-    "#extension GL_ARB_separate_shader_objects : enable\n\n"
+    "#extension GL_ARB_separate_shader_objects : enable\n"
+	"#extension GL_ARB_explicit_uniform_location : enable\n"
+	"\n\n"
     "out gl_PerVertex\n"
     "{\n"
     "    vec4 gl_Position;\n"
     "};\n\n";
 
 static const char* sAdditionalFragmentCode =
-    "#extension GL_ARB_separate_shader_objects : enable\n\n";
+	"#extension GL_ARB_separate_shader_objects : enable\n"
+	"#extension GL_ARB_explicit_uniform_location : enable\n"
+	"\n\n";
 
 void CShader::SetGLSLVersion(const std::string& aVersion)
 {

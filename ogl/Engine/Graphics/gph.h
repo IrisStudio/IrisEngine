@@ -13,6 +13,14 @@ enum TextureChanel
   eTC_Count
 };
 
+enum MeshResource
+{
+	eMR_Custom = 0,
+	eMR_Obj,
+	eMR_FBX,
+	eMR_Count
+};
+
 class CMaterial;
 typedef std::shared_ptr< CMaterial > CMaterialSPtr;
 

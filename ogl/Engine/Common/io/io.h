@@ -4,17 +4,11 @@
 #include "Resource.h"
 #include "Types.h"
 
-namespace iris
-{
-    namespace io
-    {
-        template <typename T>             bool Save( CResource& aResource,       const T& aObject);
-        template <typename T, typename U> bool Save( const U* aIOObject,         const T& aObject);
-        template <typename T, typename U> bool Load( const U* aIOObject,         T& aObject);
-        template <typename T>             bool Load( const CResource& aResource, T& aObject);
+template <typename T>             bool Save( CResource& aResource,       const T& aObject);
+template <typename T, typename U> bool Save( const U* aIOObject,         const T& aObject);
+template <typename T, typename U> bool Load( const U* aIOObject,         T& aObject);
+template <typename T>             bool Load( const CResource& aResource, T& aObject);
 
-        bool GetBufferPtr(const CResource& aResource, uint8*& aBufferPtr );
-    }
-}
+bool GetBufferPtr(const CResource& aResource, uint8*& aBufferPtr );
 
 #endif

@@ -8,45 +8,39 @@
 
 #include "fbs/shader_generated.h" // Already includes "flatbuffers/flatbuffers.h".
 
-namespace iris
+template <> bool Load( const CResource& aResource, CShaderSPtr& aObject)
 {
-    namespace io
+    bool lOk = false;
+    uint8* lBufferPtr = nullptr;
+
+    if (GetBufferPtr(aResource, lBufferPtr))
     {
-        template <> bool Load( const CResource& aResource, CShaderSPtr& aObject)
+        const Shader* lShader = GetShader(lBufferPtr);
+
+        if (lShader)
         {
-            bool lOk = false;
-            uint8* lBufferPtr = nullptr;
+            CResource lShaderCode(lShader->filename()->c_str());
 
-            if (GetBufferPtr(aResource, lBufferPtr))
+            aObject = CShaderSPtr(new CShader());
+
+            ShaderType lShaderType;
+
+            if(EnumString< ShaderType >::ToEnum( lShaderType, lShader->type()->c_str() ) )
             {
-                const Shader* lShader = GetShader(lBufferPtr);
-
-                if (lShader)
+                if (aObject->Create(lShaderType, lShaderCode.GetFileContent().c_str()))
                 {
-                    CResource lShaderCode(lShader->filename()->c_str());
-
-                    aObject = CShaderSPtr(new CShader());
-
-                    ShaderType lShaderType;
-
-                    if(EnumString< ShaderType >::ToEnum( lShaderType, lShader->type()->c_str() ) )
-                    {
-                        if (aObject->Create(lShaderType, lShaderCode.GetFileContent().c_str()))
-                        {
-                            lOk = true;
-                        }
-                    }
+                    lOk = true;
                 }
-
-                free(lBufferPtr);
             }
-
-            if( !lOk )
-            {
-                aObject = 0;
-            }
-
-            return lOk;
         }
+
+        free(lBufferPtr);
     }
+
+    if( !lOk )
+    {
+        aObject = 0;
+    }
+
+    return lOk;
 }

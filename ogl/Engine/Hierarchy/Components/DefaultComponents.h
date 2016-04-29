@@ -12,6 +12,8 @@
 
 #include "io/Resource.h"
 
+#include "io/ObjLoader.h"
+
 struct Transform
 {
     Transform(float3 position = float3(0.0f), float3 rotation = float3(0.0f), float3 scale = float3(0.0f))
@@ -39,6 +41,8 @@ struct Renderer
 {
     Renderer()
     {
+		CObjLoader lLoaderObj;
+		lLoaderObj.Load(CResource("models/cube/cube.obj"));
         CEffectLibrary::Instance().Init();
         mQuad.Init(5.0f, 5.0f, 5.0f);
         mQuad2.Init(5.0f, 5.0f, 5.0f);

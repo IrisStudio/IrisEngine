@@ -34,3 +34,8 @@ const float4& CMesh::GetColor() const
 {
     return mColor;
 }
+
+void CMesh::SetGeometry(CGeometrySPtr aGeometry)
+{
+	mGeometry = aGeometry;
+}

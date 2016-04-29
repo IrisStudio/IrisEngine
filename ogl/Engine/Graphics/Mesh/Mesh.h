@@ -3,6 +3,7 @@
 #define _CMesh_
 
 #include "Types.h"
+#include "gph.h"
 #include "Geometry.h"
 #include "Texture.h"
 
@@ -17,6 +18,8 @@ class CMesh
 
         void          SetColor(const float4& color);
         const float4& GetColor() const;
+
+		void		  SetGeometry( CGeometrySPtr aGeometry);
 
     protected:
         CGeometrySPtr mGeometry;
