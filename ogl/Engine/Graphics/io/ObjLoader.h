@@ -6,13 +6,18 @@
 #include "io\Resource.h"
 #include "Mesh\Mesh.h"
 
+#include "tinyobjloader/tiny_obj_loader.h"
+
+#include <functional>
+
 class CObjLoader
 {
     public:
-		CObjLoader();
+        CObjLoader();
         virtual ~CObjLoader();
-		bool Load(const CResource& aResource, CMesh& aMesh );
+        bool Load(const CResource& aResource, CMesh& aMesh );
     private:
+        std::map< uint32, std::function<std::vector< float >(tinyobj::mesh_t) > > mCopyFunctions;
         DISALLOW_COPY_AND_ASSIGN(CObjLoader);
 };
 
