@@ -18,6 +18,19 @@ namespace
         ogl::CheckOGLError("After creating geometry");
     }
 
+	template <> void FillBuffer< eGD_Position | eGD_UV | eGD_Normal >(void * aVertexBuffer, uint32 aVertexSize)
+	{
+		ogl::CheckOGLError("Before creating geometry");
+		ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 8 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
+		ogl::glEnableVertexAttribArray(0);
+		ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(0));
+		ogl::glEnableVertexAttribArray(1);
+		ogl::glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(3 * sizeof(GLfloat)));
+		ogl::glEnableVertexAttribArray(2);
+		ogl::glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(6 * sizeof(GLfloat)));
+		ogl::CheckOGLError("After creating geometry");
+	}
+
     template <> void FillBuffer<eGD_ScreenPosition>( void * aVertexBuffer, uint32 aVertexSize )
     {
         ogl::CheckOGLError("Before creating geometry");
@@ -33,10 +46,10 @@ namespace
         ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 4 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
 
         ogl::glEnableVertexAttribArray(0);
-        ogl::glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), OFFSET_PTR(0));
+        ogl::glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), OFFSET_PTR(0));
 
-        ogl::glEnableVertexAttribArray(1);
-        ogl::glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), OFFSET_PTR(2 * sizeof(GLfloat)));
+        ogl::glEnableVertexAttribArray(2);
+        ogl::glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), OFFSET_PTR(2 * sizeof(GLfloat)));
         ogl::CheckOGLError("After creating geometry");
     }
 
@@ -59,7 +72,8 @@ namespace
     TMapCreateFunctions map2Func =
     {
         REGISTER_FILLBUFFER_FNC(eGD_Position),
-        REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_UV),
+        REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_UV | eGD_Normal),
+		REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_UV),
         REGISTER_FILLBUFFER_FNC(eGD_ScreenPosition),
         REGISTER_FILLBUFFER_FNC(eGD_ScreenPosition | eGD_UV),
     };
@@ -70,6 +84,8 @@ CGeometry::CGeometry()
     : mVAO(0)
     , mVB(0)
     , mIB(0)
+	, mVertexCount(0)
+	, mIndexCount(0)
 {
 }
 
@@ -116,7 +132,7 @@ void CGeometry::Bind() const
 {
     ogl::CheckOGLError("Geometry bind begin");
     ogl::glBindVertexArray(mVAO);
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     ogl::CheckOGLError("Before draw elements");
     glDrawElements(GL_TRIANGLES, mIndexCount, GL_UNSIGNED_INT, 0);
     ogl::CheckOGLError("After draw elements");

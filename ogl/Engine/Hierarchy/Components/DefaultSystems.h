@@ -36,7 +36,8 @@ struct RenderSystem : public entityx::System<RenderSystem>
             ogl::CheckOGLError("after draw");
             */
             CCameraManager::Instance().GetCurrentCamera()->Update();
-            renderer.mQuad.Render();
+			//renderer.mCubePrim.Render();
+            renderer.mSuzane.Render();
             ogl::glBindVertexArray(0);
             ogl::CheckOGLError("End loop");
         });

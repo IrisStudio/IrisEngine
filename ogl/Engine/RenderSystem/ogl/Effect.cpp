@@ -42,7 +42,6 @@ CEffect::~CEffect()
 void CEffect::Bind()
 {
     ogl::CheckOGLError("CEffect::Bind() before");
-    bool lIsPipeline = ogl::glIsProgramPipeline(mID) == GL_TRUE;
     ogl::glBindProgramPipeline(mID);
     ogl::CheckOGLError("CEffect::Bind() after");
 }

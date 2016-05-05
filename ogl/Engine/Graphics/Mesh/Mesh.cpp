@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Effect.h"
 #include "Camera\CameraManager.h"
+#include "EffectLibrary.h"
 
 CMesh::CMesh()
     : mGeometry( new CGeometry() )
@@ -20,8 +21,8 @@ void CMesh::Render()
     lCam->GetMatrices(P, V, M);
     mEffect->Bind();
     mEffect->BindMatrices(M, V, P);
-    mEffect->BindFragment(mColor, "in_color");
-    mTex.Bind();
+    //mEffect->BindFragment(mColor, "in_color");
+    //mTex.Bind();
     mGeometry->Bind();
 }
 
@@ -38,4 +39,5 @@ const float4& CMesh::GetColor() const
 void CMesh::SetGeometry(CGeometrySPtr aGeometry)
 {
 	mGeometry = aGeometry;
+	mEffect = CEffectLibrary::Instance().GetEffect(eGD_Position | eGD_UV | eGD_Normal );
 }
