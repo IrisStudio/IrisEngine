@@ -9,10 +9,8 @@ namespace
 
 CObjLoader::CObjLoader()
 {
-    mCopyFunctions[eGD_Position] = [](tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
     {
-        const uint32 nVertices = aMesh.positions.size() / 3;
-
         std::vector< float > lGeometryData(nVertices * 3, 0); // Positions
 
         for (uint32 i3 = 0; i3 < nVertices * 3; i3 += 3)
@@ -23,10 +21,8 @@ CObjLoader::CObjLoader()
         return lGeometryData;
     };
 
-    mCopyFunctions[eGD_Position | eGD_Normal] = [](tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position | eGD_Normal] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
     {
-        const uint32 nVertices = aMesh.positions.size() / 3;
-
         std::vector< float > lGeometryData(nVertices * 6, 0); // Positions + Normals
 
         for (uint32 i6 = 0, i3 = 0; i6 < nVertices * 6; i6 += 6, i3 += 3)
@@ -38,10 +34,8 @@ CObjLoader::CObjLoader()
         return lGeometryData;
     };
 
-    mCopyFunctions[eGD_Position | eGD_UV] = [](tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position | eGD_UV] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
     {
-        const uint32 nVertices = aMesh.positions.size() / 3;
-
         std::vector< float > lGeometryData(nVertices * 5, 0); // Positions + UV
 
         for (uint32 i5 = 0, i3 = 0, i2 = 0; i5 < nVertices * 5; i5 += 5, i3 += 3, i2 += 2)
@@ -53,10 +47,8 @@ CObjLoader::CObjLoader()
         return lGeometryData;
     };
 
-    mCopyFunctions[eGD_Position | eGD_Normal | eGD_UV] = [](tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position | eGD_Normal | eGD_UV] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
     {
-        const uint32 nVertices = aMesh.positions.size() / 3;
-
         std::vector< float > lGeometryData(nVertices * 8, 0); // Positions + Normals + UV
 
         for (uint32 i8 = 0, i3 = 0, i2 = 0; i8 < nVertices * 8; i8 += 8, i3 += 3, i2 += 2)
@@ -103,7 +95,7 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
             // Create the geometry of the object
             const uint32 nVertices = shape.mesh.positions.size() / 3;
 
-            std::vector< float > lGeometryData = mCopyFunctions[lFlags]( shape.mesh );
+            std::vector< float > lGeometryData = mCopyFunctions[lFlags]( nVertices, shape.mesh );
 
             lGeometry->Create( lFlags,
                                &lGeometryData[0],
