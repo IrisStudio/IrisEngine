@@ -9,7 +9,7 @@ namespace
 
 CObjLoader::CObjLoader()
 {
-    mCopyFunctions[eGD_Position] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
         std::vector< float > lGeometryData(nVertices * 3, 0); // Positions
 
@@ -21,7 +21,7 @@ CObjLoader::CObjLoader()
         return lGeometryData;
     };
 
-    mCopyFunctions[eGD_Position | eGD_Normal] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position | eGD_Normal] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
         std::vector< float > lGeometryData(nVertices * 6, 0); // Positions + Normals
 
@@ -34,7 +34,7 @@ CObjLoader::CObjLoader()
         return lGeometryData;
     };
 
-    mCopyFunctions[eGD_Position | eGD_UV] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position | eGD_UV] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
         std::vector< float > lGeometryData(nVertices * 5, 0); // Positions + UV
 
@@ -47,7 +47,7 @@ CObjLoader::CObjLoader()
         return lGeometryData;
     };
 
-    mCopyFunctions[eGD_Position | eGD_Normal | eGD_UV] = [](const uint32 nVertices, tinyobj::mesh_t aMesh) -> std::vector< float >
+    mCopyFunctions[eGD_Position | eGD_Normal | eGD_UV] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
         std::vector< float > lGeometryData(nVertices * 8, 0); // Positions + Normals + UV
 

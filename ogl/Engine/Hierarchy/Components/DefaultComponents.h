@@ -44,7 +44,7 @@ struct Renderer
         CEffectLibrary::Instance().Init();
         CObjLoader lLoaderObj;
         lLoaderObj.Load(CResource("models/cube/cube.obj"), mCube );
-        lLoaderObj.Load(CResource("models/dragon/dragon.obj"), mSuzane);
+        lLoaderObj.Load(CResource("models/suzane/suzane.obj"), mSuzane);
 
         mCubePrim.Init(5.0f, 5.0f, 5.0f);
         //mQuad2.Init(5.0f, 5.0f, 5.0f);
