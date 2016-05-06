@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <streambuf>
+#include "MD5.h"
 
 //---------------------------------------------------------------------------------------------
 CResource::CResource(const std::string& aFilename)
@@ -30,6 +31,8 @@ void CResource::Fill()
 
     size_t found = mFullFilename.find_last_of("/\\");
     mDirectory = (mFullFilename.substr(0, found)) + "/";
+
+    mHash = fileMD5(mFullFilename);
 }
 
 //---------------------------------------------------------------------------------------------

@@ -14,6 +14,7 @@ class CResource
         inline const std::string& GetFullFilenameSchema() const;
         inline const std::string& GetDirectory()      const;
         inline const std::string& GetExtension()      const;
+        inline const std::string& GetHash()      const;
 
         const std::string GetFileContent() const;
 
@@ -24,6 +25,7 @@ class CResource
         std::string mFullFilenameSchema;
         std::string mDirectory;
         std::string mExtension;
+        std::string mHash;
 
         void Fill();
 };
@@ -50,6 +52,12 @@ inline const std::string& CResource::GetDirectory() const
 inline const std::string& CResource::GetExtension() const
 {
     return mExtension;
+}
+
+//---------------------------------------------------------------------------------------------
+inline const std::string& CResource::GetHash() const
+{
+    return mHash;
 }
 
 //---------------------------------------------------------------------------------------------
