@@ -41,18 +41,18 @@ struct Renderer
 {
     Renderer()
     {
-		CEffectLibrary::Instance().Init();
-		CObjLoader lLoaderObj;
-		lLoaderObj.Load(CResource("models/cube/cube.obj"), mCube );
-		lLoaderObj.Load(CResource("models/suzane/suzane.obj"), mSuzane);
+        CEffectLibrary::Instance().Init();
+        CObjLoader lLoaderObj;
+        lLoaderObj.Load(CResource("models/cube/cube.obj"), mCube );
+        lLoaderObj.Load(CResource("models/dragon/dragon.obj"), mSuzane);
 
-		mCubePrim.Init(5.0f, 5.0f, 5.0f);
+        mCubePrim.Init(5.0f, 5.0f, 5.0f);
         //mQuad2.Init(5.0f, 5.0f, 5.0f);
     }
 
-	CMesh mCube;
-	CMesh mSuzane;
-	CCube mCubePrim;
+    CMesh mCube;
+    CMesh mSuzane;
+    CCube mCubePrim;
     CFullScreenQuad mQuad;
     CFullScreenQuad mQuad2;
 };

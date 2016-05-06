@@ -26,7 +26,7 @@ namespace Shaders
 #define compute_3d_position "    gl_Position = projection * view * model * vec4(position, 1.0f);\n"
 #define compute_2d_position "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
 
-#define in_out_normal		"layout(location = 1) in vec3 normal;\n out vec3 Normal;\n"
+#define in_out_normal       "layout(location = 1) in vec3 normal;\n out vec3 Normal;\n"
 #define interpolate_normal  "    Normal = normal;\n"
 
 #define in_out_uv           "layout(location = 2) in vec2 uv;\nout vec2 ftexcoord;\n"
@@ -66,18 +66,18 @@ namespace Shaders
             compute_uv
             end_main;
 
-		const char* eGD_Position_UV_Normal_Str =
-			in_3d_position
-			in_out_uv
-			in_out_normal
-			in_model
-			in_view
-			in_projection
-			begin_main
-			compute_3d_position
-			compute_uv
-			interpolate_normal
-			end_main;
+        const char* eGD_Position_UV_Normal_Str =
+            in_3d_position
+            in_out_uv
+            in_out_normal
+            in_model
+            in_view
+            in_projection
+            begin_main
+            compute_3d_position
+            compute_uv
+            interpolate_normal
+            end_main;
 
         const char* eGD_Position_Normal_Str =
             in_3d_position
@@ -113,15 +113,15 @@ namespace Shaders
             begin_main
             return_uv
             end_main;
-		
-		const char* eGD_Position_UV_Normal_Str =
-			out_color
-			diffuse_sampler
-			in_uv
-			in_normal
-			begin_main
-			return_normal
-			end_main;
+
+        const char* eGD_Position_UV_Normal_Str =
+            out_color
+            diffuse_sampler
+            in_uv
+            in_normal
+            begin_main
+            return_normal
+            end_main;
     }
 }
 
@@ -134,11 +134,12 @@ CEffectLibrary::CEffectLibrary()
 void CEffectLibrary::Init()
 {
     using namespace Shaders;
-    mEmbedded[eGD_ScreenPosition]				   = new CEffect(VS::eGD_ScreenPosition_Str, FS::eGD_Position_Str);
-    mEmbedded[eGD_Position]						   = new CEffect(VS::eGD_Position_Str, FS::eGD_Position_Str);
-    mEmbedded[eGD_Position | eGD_UV]			   = new CEffect(VS::eGD_Position_UV_Str, FS::eGD_Position_UV_Str);
-	mEmbedded[eGD_Position | eGD_UV | eGD_Normal ] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
-    mEmbedded[eGD_ScreenPosition | eGD_UV]		   = new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_UV_Str);
+    mEmbedded[eGD_ScreenPosition] = new CEffect(VS::eGD_ScreenPosition_Str, FS::eGD_Position_Str);
+    mEmbedded[eGD_Position] = new CEffect(VS::eGD_Position_Str, FS::eGD_Position_Str);
+    mEmbedded[eGD_Position | eGD_UV] = new CEffect(VS::eGD_Position_UV_Str, FS::eGD_Position_UV_Str);
+    mEmbedded[eGD_Position | eGD_UV | eGD_Normal] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
+    mEmbedded[eGD_Position | eGD_Normal] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
+    mEmbedded[eGD_ScreenPosition | eGD_UV] = new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_UV_Str);
 }
 
 CEffectLibrary::~CEffectLibrary()

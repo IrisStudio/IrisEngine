@@ -8,42 +8,53 @@ namespace
 {
 #define OFFSET_PTR(offset) (const GLvoid*)(offset)
 
-    template < uint32 N > void FillBuffer(void * aVertexBuffer, uint32 aVertexSize );
-    template <> void FillBuffer<eGD_Position>( void * aVertexBuffer, uint32 aVertexSize )
+    template < uint32 N > void FillBuffer(void * aVertexBuffer, uint32 aVertexCount);
+    template <> void FillBuffer<eGD_Position>(void * aVertexBuffer, uint32 aVertexCount)
     {
         ogl::CheckOGLError("Before creating geometry");
-        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 3 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * 3 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
         ogl::glEnableVertexAttribArray(0);
         ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
         ogl::CheckOGLError("After creating geometry");
     }
 
-	template <> void FillBuffer< eGD_Position | eGD_UV | eGD_Normal >(void * aVertexBuffer, uint32 aVertexSize)
-	{
-		ogl::CheckOGLError("Before creating geometry");
-		ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 8 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
-		ogl::glEnableVertexAttribArray(0);
-		ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(0));
-		ogl::glEnableVertexAttribArray(1);
-		ogl::glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(3 * sizeof(GLfloat)));
-		ogl::glEnableVertexAttribArray(2);
-		ogl::glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(6 * sizeof(GLfloat)));
-		ogl::CheckOGLError("After creating geometry");
-	}
-
-    template <> void FillBuffer<eGD_ScreenPosition>( void * aVertexBuffer, uint32 aVertexSize )
+    template <> void FillBuffer< eGD_Position | eGD_UV | eGD_Normal >(void * aVertexBuffer, uint32 aVertexCount)
     {
         ogl::CheckOGLError("Before creating geometry");
-        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 2 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * 8 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glEnableVertexAttribArray(0);
+        ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(0));
+        ogl::glEnableVertexAttribArray(1);
+        ogl::glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(3 * sizeof(GLfloat)));
+        ogl::glEnableVertexAttribArray(2);
+        ogl::glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), OFFSET_PTR(6 * sizeof(GLfloat)));
+        ogl::CheckOGLError("After creating geometry");
+    }
+
+    template <> void FillBuffer< eGD_Position | eGD_Normal >(void * aVertexBuffer, uint32 aVertexCount)
+    {
+        ogl::CheckOGLError("Before creating geometry");
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * 6 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glEnableVertexAttribArray(0);
+        ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), OFFSET_PTR(0));
+        ogl::glEnableVertexAttribArray(1);
+        ogl::glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), OFFSET_PTR(3 * sizeof(GLfloat)));
+        ogl::CheckOGLError("After creating geometry");
+    }
+
+    template <> void FillBuffer<eGD_ScreenPosition>(void * aVertexBuffer, uint32 aVertexCount)
+    {
+        ogl::CheckOGLError("Before creating geometry");
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * 2 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
         ogl::glEnableVertexAttribArray(0);
         ogl::glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
         ogl::CheckOGLError("After creating geometry");
     }
 
-    template <> void FillBuffer<eGD_ScreenPosition | eGD_UV>(void * aVertexBuffer, uint32 aVertexSize)
+    template <> void FillBuffer<eGD_ScreenPosition | eGD_UV>(void * aVertexBuffer, uint32 aVertexCount)
     {
         ogl::CheckOGLError("Before creating geometry");
-        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 4 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * 4 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
 
         ogl::glEnableVertexAttribArray(0);
         ogl::glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), OFFSET_PTR(0));
@@ -53,16 +64,16 @@ namespace
         ogl::CheckOGLError("After creating geometry");
     }
 
-    template <> void FillBuffer<eGD_Position | eGD_UV>(void * aVertexBuffer, uint32 aVertexSize)
+    template <> void FillBuffer<eGD_Position | eGD_UV>(void * aVertexBuffer, uint32 aVertexCount)
     {
         ogl::CheckOGLError("Before creating geometry");
-        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexSize * 5 * sizeof( GLfloat ), aVertexBuffer, GL_STATIC_DRAW);
+        ogl::glBufferData(GL_ARRAY_BUFFER, aVertexCount * 5 * sizeof(GLfloat), aVertexBuffer, GL_STATIC_DRAW);
 
         ogl::glEnableVertexAttribArray(0);
         ogl::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), OFFSET_PTR(0));
 
         ogl::glEnableVertexAttribArray(1);
-        ogl::glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), OFFSET_PTR( 3 * sizeof(GLfloat) ) );
+        ogl::glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), OFFSET_PTR(3 * sizeof(GLfloat)));
         ogl::CheckOGLError("After creating geometry");
     }
 
@@ -72,8 +83,9 @@ namespace
     TMapCreateFunctions map2Func =
     {
         REGISTER_FILLBUFFER_FNC(eGD_Position),
+        REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_Normal),
         REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_UV | eGD_Normal),
-		REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_UV),
+        REGISTER_FILLBUFFER_FNC(eGD_Position | eGD_UV),
         REGISTER_FILLBUFFER_FNC(eGD_ScreenPosition),
         REGISTER_FILLBUFFER_FNC(eGD_ScreenPosition | eGD_UV),
     };
@@ -84,8 +96,8 @@ CGeometry::CGeometry()
     : mVAO(0)
     , mVB(0)
     , mIB(0)
-	, mVertexCount(0)
-	, mIndexCount(0)
+    , mVertexCount(0)
+    , mIndexCount(0)
 {
 }
 
@@ -98,7 +110,7 @@ CGeometry::~CGeometry()
     ogl::CheckOGLError("After deleting the geometry");
 }
 
-void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount )
+void CGeometry::Create(const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount)
 {
     ogl::CheckOGLError("Create geom end");
     mVertexCount = aVertexCount;
@@ -115,13 +127,13 @@ void CGeometry::Create( const uint32 aFlags, void* aVertexBuffer, void* aIndexBu
     TMapCreateFunctions::iterator lItfind = map2Func.find(aFlags);
     assert(lItfind != map2Func.end());
 
-    lItfind->second( aVertexBuffer, mVertexCount);
+    lItfind->second(aVertexBuffer, mVertexCount);
 
     ogl::CheckOGLError("Before IB");
     // Create the index buffer
     ogl::glGenBuffers(1, &mIB);
     ogl::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIB);
-    ogl::glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexCount * sizeof( uint32 ), aIndexBuffer, GL_STATIC_DRAW);
+    ogl::glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexCount * sizeof(uint32), aIndexBuffer, GL_STATIC_DRAW);
     ogl::CheckOGLError("After IB");
 
     ogl::glBindVertexArray(0); // Unbind VAO
