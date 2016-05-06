@@ -2,6 +2,7 @@
 
 #include "Mesh/Mesh.h"
 #include "Logger/Logger.h"
+#include "MD5.h"
 
 namespace
 {
@@ -73,6 +74,7 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
     std::vector<tinyobj::material_t> materials;
     std::string err;
 
+    std::string lHash = fileMD5(aResource.GetFullFilename());
     bool ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str());
 
     if (!err.empty())   // `err` may contain warning message.
