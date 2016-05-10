@@ -89,34 +89,36 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
         {
             CGeometrySPtr lGeometry( new CGeometry() );
 
-            // We do not want data with out positions or normals
+            // We do not want data without positions
             assert(shape.mesh.positions.size());
 
-            if (!shape.mesh.normals.size())
-            {
-                std::vector<float3> normals( (*std::max_element(shape.mesh.indices.begin(), shape.mesh.indices.end()))+1);
+            const uint32 lIndexCount = shape.mesh.indices.size();
 
-                for ( uint32 i = 0; i < shape.mesh.indices.size(); i+=3 )
+            const std::vector< float >& lVerticesVector = shape.mesh.positions;
+            std::vector< float >& lNormals = shape.mesh.normals;
+
+            //if (!shape.mesh.normals.size())
+            {
+                // The size of the normals must be the same size as the vertices, because we want one normal for each vertex
+                lNormals.resize(lVerticesVector.size());
+
+                const std::vector< uint32 >& lIndicesVector = shape.mesh.indices;
+
+                for ( register uint32 i = 0; i < lIndexCount; i+=3 )
                 {
-                    float3 v1(shape.mesh.positions[shape.mesh.indices[i]], shape.mesh.positions[shape.mesh.indices[i]] + 1, shape.mesh.positions[shape.mesh.indices[i]] + 2);
-                    float3 v2(shape.mesh.positions[shape.mesh.indices[i + 1]], shape.mesh.positions[shape.mesh.indices[i + 1]] + 1, shape.mesh.positions[shape.mesh.indices[i + 1]] + 2);
-                    float3 v3(shape.mesh.positions[shape.mesh.indices[i + 2]], shape.mesh.positions[shape.mesh.indices[i + 2]] + 1, shape.mesh.positions[shape.mesh.indices[i + 2]] + 2);
+                    float3 v1, v2, v3;
+                    memcpy(&v1, &lVerticesVector[lIndicesVector[i] * 3], sizeof(float3));
+                    memcpy(&v2, &lVerticesVector[lIndicesVector[i + 1] * 3], sizeof(float3));
+                    memcpy(&v3, &lVerticesVector[lIndicesVector[i + 2] * 3], sizeof(float3));
 
                     float3 v12 = v1 - v2;
                     float3 v13 = v1 - v3;
 
                     float3 normal = normalize( cross(v12, v13) );
 
-                    normals[shape.mesh.indices[i]] = normal;
-                    normals[shape.mesh.indices[i+1]] = normal;
-                    normals[shape.mesh.indices[i+2]] = normal;
-                }
-
-                for (uint32 i = 0; i < normals.size(); ++i)
-                {
-                    shape.mesh.normals.push_back(normals[i].x);
-                    shape.mesh.normals.push_back(normals[i].y);
-                    shape.mesh.normals.push_back(normals[i].z);
+                    memcpy(&lNormals[lIndicesVector[i] * 3], &normal, sizeof(float3));
+                    memcpy(&lNormals[lIndicesVector[i + 1] * 3], &normal, sizeof(float3));
+                    memcpy(&lNormals[lIndicesVector[i + 2] * 3], &normal, sizeof(float3));
                 }
             }
 
@@ -125,15 +127,15 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
             lFlags |= (shape.mesh.texcoords.size()) ? eGD_UV : 0;
 
             // Create the geometry of the object
-            const uint32 nVertices = shape.mesh.positions.size() / 3;
+            const uint32 lVertices = lVerticesVector.size() / 3;
 
-            std::vector< float > lGeometryData = mCopyFunctions[lFlags]( nVertices, shape.mesh );
+            std::vector< float > lGeometryData = mCopyFunctions[lFlags](lVertices, shape.mesh );
 
             lGeometry->Create( lFlags,
                                &lGeometryData[0],
                                &shape.mesh.indices[0],
-                               nVertices,
-                               shape.mesh.indices.size());
+                               lVertices,
+                               lIndexCount);
             aMesh.AddGeometry(lGeometry);
         }
     }

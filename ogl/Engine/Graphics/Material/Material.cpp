@@ -8,7 +8,6 @@ CMaterial::CMaterial()
 
 CMaterial::~CMaterial()
 {
-
 }
 
 uint32 CMaterial::GetSubMaterialsCount() const

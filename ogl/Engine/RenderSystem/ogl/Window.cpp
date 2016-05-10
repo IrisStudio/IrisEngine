@@ -73,22 +73,22 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         return 0;
 
                     case VK_DOWN:
-                        lCurrentCamera->ProcessKeyboard(BACKWARD, 1.0f / 30.0f);
+                        lCurrentCamera->ProcessKeyboard(BACKWARD, 1.0f / 100.0f);
                         return 0;
 
                     case VK_RIGHT:
                         //Cleanup();
-                        lCurrentCamera->ProcessKeyboard(RIGHT, 1.0f / 30.0f);
+                        lCurrentCamera->ProcessKeyboard(RIGHT, 1.0f / 100.0f);
                         return 0;
 
                     case VK_UP:
                         //Cleanup();
-                        lCurrentCamera->ProcessKeyboard(FORWARD, 1.0f / 30.0f);
+                        lCurrentCamera->ProcessKeyboard(FORWARD, 1.0f / 100.0f);
                         return 0;
 
                     case VK_LEFT:
                         //Cleanup();
-                        lCurrentCamera->ProcessKeyboard(LEFT, 1.0f / 30.0f);
+                        lCurrentCamera->ProcessKeyboard(LEFT, 1.0f / 100.0f);
                         return 0;
                         break;
                 }

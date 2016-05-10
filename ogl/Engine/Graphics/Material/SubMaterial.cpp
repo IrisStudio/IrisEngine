@@ -11,12 +11,11 @@ CSubMaterial::CSubMaterial( uint32 aProperties )
     : mEffect(CEffectLibrary::Instance().GetEffect(aProperties))
     , mColor( float4(1.0f) )
 {
-  mTextures.reserve(eTC_Count);
+    mTextures.reserve(eTC_Count);
 }
 
 CSubMaterial::~CSubMaterial()
 {
-  mTextures.clear();
 }
 
 void CSubMaterial::Apply()
@@ -40,10 +39,10 @@ const float4& CSubMaterial::GetDiffuseColor() const
 
 void CSubMaterial::SetTexture(TextureChanel aType, CTextureSPtr aTexture)
 {
-  mTextures[aType] = aTexture;
+    mTextures[aType] = aTexture;
 }
 
 CTextureSPtr CSubMaterial::GetTexture(TextureChanel aType) const
 {
-  return mTextures[aType];
+    return mTextures[aType];
 }
