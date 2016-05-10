@@ -2,6 +2,7 @@
 
 #include "Mesh/Mesh.h"
 #include "Logger/Logger.h"
+#include "rs.h"
 
 namespace
 {
@@ -86,7 +87,9 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
         {
             CGeometrySPtr lGeometry( new CGeometry() );
 
+            // We do not want data with out positions or normals
             assert(shape.mesh.positions.size());
+            assert(shape.mesh.normals.size());
 
             uint32 lFlags = eGD_Position;
             lFlags |= (shape.mesh.normals.size()) ? eGD_Normal : 0;
@@ -102,7 +105,7 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
                                &shape.mesh.indices[0],
                                nVertices,
                                shape.mesh.indices.size());
-            aMesh.SetGeometry(lGeometry);
+            aMesh.AddGeometry(lGeometry);
         }
     }
 

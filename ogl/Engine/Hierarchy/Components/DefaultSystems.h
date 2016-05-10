@@ -27,17 +27,9 @@ struct RenderSystem : public entityx::System<RenderSystem>
         es.each<Transform, Renderer>([dt](entityx::Entity entity, Transform &transform, Renderer &renderer)
         {
             ogl::CheckOGLError("Begin");
-            /*
-            renderer.mEffect->Bind();
-            ogl::CheckOGLError("before setting vao");
-            renderer.mGeom->Bind();
-            ogl::CheckOGLError("before draw");
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-            ogl::CheckOGLError("after draw");
-            */
             CCameraManager::Instance().GetCurrentCamera()->Update();
-			//renderer.mCubePrim.Render();
-            renderer.mSuzane.Render();
+            renderer.mMaterial.Apply(0);
+            renderer.mSuzane.Render(0);
             ogl::glBindVertexArray(0);
             ogl::CheckOGLError("End loop");
         });

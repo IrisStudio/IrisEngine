@@ -80,12 +80,14 @@ namespace Shaders
             end_main;
 
         const char* eGD_Position_Normal_Str =
-            in_3d_position
             in_model
             in_view
             in_projection
+            in_3d_position
+            in_out_normal
             begin_main
             compute_3d_position
+            interpolate_normal
             end_main;
     }
 
@@ -122,6 +124,13 @@ namespace Shaders
             begin_main
             return_normal
             end_main;
+
+        const char* eGD_Position_Normal_Str =
+            out_color
+            in_normal
+            begin_main
+            return_normal
+            end_main;
     }
 }
 
@@ -134,12 +143,8 @@ CEffectLibrary::CEffectLibrary()
 void CEffectLibrary::Init()
 {
     using namespace Shaders;
-    mEmbedded[eGD_ScreenPosition] = new CEffect(VS::eGD_ScreenPosition_Str, FS::eGD_Position_Str);
-    mEmbedded[eGD_Position] = new CEffect(VS::eGD_Position_Str, FS::eGD_Position_Str);
-    mEmbedded[eGD_Position | eGD_UV] = new CEffect(VS::eGD_Position_UV_Str, FS::eGD_Position_UV_Str);
-    mEmbedded[eGD_Position | eGD_UV | eGD_Normal] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
-    mEmbedded[eGD_Position | eGD_Normal] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
-    mEmbedded[eGD_ScreenPosition | eGD_UV] = new CEffect(VS::eGD_ScreenPosition_UV_Str, FS::eGD_Position_UV_Str);
+    //mEmbedded[eGD_Position | eGD_UV | eGD_Normal] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
+    mEmbedded[eRP_Default] = new CEffect(VS::eGD_Position_Normal_Str, FS::eGD_Position_Normal_Str);
 }
 
 CEffectLibrary::~CEffectLibrary()

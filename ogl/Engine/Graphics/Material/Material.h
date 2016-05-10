@@ -4,26 +4,18 @@
 
 #include "gph.h"
 
-class CEffect;
-class CTexture;
-
 class CMaterial
 {
     public:
         CMaterial();
         virtual ~CMaterial();
-        void Apply();
-
-        void SetDiffuseColor      (const float4& aColor);
-        void SetTexture           (TextureChanel aType, CTexture* aTexture);
-        
-        const float4& GetDiffuseColor() const;
-        CTexture*     GetTexture(TextureChanel aType) const;
+        uint32  GetSubMaterialsCount() const;
+        void    AddSubMaterial(CSubMaterialSPtr aSubMaterial);
+        void    Apply( uint32 aIdx );
 
     protected:
-        CEffect*                mEffect;
-        std::vector< CTexture*> mTextures;
-        float4                  mColor;
+        typedef std::vector< CSubMaterialSPtr > TSubMaterials;
+        TSubMaterials  mSubMaterials;
 
     private:
         DISALLOW_COPY_AND_ASSIGN(CMaterial);

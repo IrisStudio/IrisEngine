@@ -15,7 +15,7 @@ enum TextureChanel
 
 enum MeshResource
 {
-	eMR_Custom = 0,
+	eMR_Binary = 0,
 	eMR_Obj,
 	eMR_FBX,
 	eMR_Count
@@ -23,5 +23,8 @@ enum MeshResource
 
 class CMaterial;
 typedef std::shared_ptr< CMaterial > CMaterialSPtr;
+
+class CSubMaterial;
+typedef std::shared_ptr< CSubMaterial > CSubMaterialSPtr;
 
 #endif

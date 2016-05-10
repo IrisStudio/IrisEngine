@@ -13,6 +13,8 @@
 #include "io/Resource.h"
 
 #include "io/ObjLoader.h"
+#include "Material\Material.h"
+#include "Material\SubMaterial.h"
 
 struct Transform
 {
@@ -43,18 +45,13 @@ struct Renderer
     {
         CEffectLibrary::Instance().Init();
         CObjLoader lLoaderObj;
-        lLoaderObj.Load(CResource("models/cube/cube.obj"), mCube );
         lLoaderObj.Load(CResource("models/suzane/suzane.obj"), mSuzane);
-
-        mCubePrim.Init(5.0f, 5.0f, 5.0f);
-        //mQuad2.Init(5.0f, 5.0f, 5.0f);
+        CSubMaterialSPtr lSubMaterial( new CSubMaterial( eRP_Default ) );
+        mMaterial.AddSubMaterial(lSubMaterial);
     }
 
-    CMesh mCube;
     CMesh mSuzane;
-    CCube mCubePrim;
-    CFullScreenQuad mQuad;
-    CFullScreenQuad mQuad2;
+    CMaterial mMaterial;
 };
 
 #endif //__DEFAULT_COMPONENTS__

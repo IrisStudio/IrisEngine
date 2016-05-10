@@ -1,39 +1,27 @@
 #include "Material.h"
-#include "Effect.h"
-#include "Texture.h"
+#include "SubMaterial.h"
 
 CMaterial::CMaterial()
-    : mEffect(nullptr)
-    , mColor( float4(1.0f) )
 {
-  mTextures.reserve(eTC_Count);
+
 }
 
 CMaterial::~CMaterial()
 {
-  mTextures.clear();
+
 }
 
-void CMaterial::Apply()
+uint32 CMaterial::GetSubMaterialsCount() const
 {
+    return mSubMaterials.size();
 }
 
-void CMaterial::SetDiffuseColor(const float4& color)
+void CMaterial::Apply(uint32 aIdx)
 {
-    mColor = color;
+    mSubMaterials[aIdx]->Apply();
 }
 
-const float4& CMaterial::GetDiffuseColor() const
+void CMaterial::AddSubMaterial(CSubMaterialSPtr aSubMaterial)
 {
-    return mColor;
-}
-
-void CMaterial::SetTexture(TextureChanel aType, CTexture* aTexture)
-{
-  mTextures[aType] = aTexture;
-}
-
-CTexture* CMaterial::GetTexture(TextureChanel aType) const
-{
-  return mTextures[aType];
+    mSubMaterials.push_back(aSubMaterial);
 }

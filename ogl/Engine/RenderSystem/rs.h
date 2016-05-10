@@ -55,4 +55,22 @@ enum GeometryData
     eGeometryData_Count = 5
 };
 
+enum RenderableProperties
+{
+    eRP_Default = 0,
+    eRP_Color,
+    eRP_DiffuseMap,
+    eRP_NormalMap,
+    eRP_SelfIlumMap,
+    eRP_SpecularMap,
+    eRP_Count
+};
+
+
+class CTexture;
+typedef std::shared_ptr< CTexture > CTextureSPtr;
+
+class CEffect;
+typedef std::shared_ptr< CEffect > CEffectSPtr;
+
 #endif
