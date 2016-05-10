@@ -149,5 +149,6 @@ void CGeometry::Bind() const
     glEnable(GL_DEPTH_TEST);
     ogl::CheckOGLError("Before draw elements");
     glDrawElements(GL_TRIANGLES, mIndexCount, GL_UNSIGNED_INT, 0);
+    ogl::glBindVertexArray(0);
     ogl::CheckOGLError("After draw elements");
 }

@@ -4,6 +4,8 @@
 #include "Logger/Logger.h"
 #include "rs.h"
 
+#include <algorithm>
+
 namespace
 {
 }
@@ -89,7 +91,34 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
 
             // We do not want data with out positions or normals
             assert(shape.mesh.positions.size());
-            assert(shape.mesh.normals.size());
+
+            if (!shape.mesh.normals.size())
+            {
+                std::vector<float3> normals( (*std::max_element(shape.mesh.indices.begin(), shape.mesh.indices.end()))+1);
+
+                for ( uint32 i = 0; i < shape.mesh.indices.size(); i+=3 )
+                {
+                    float3 v1(shape.mesh.positions[shape.mesh.indices[i]], shape.mesh.positions[shape.mesh.indices[i]] + 1, shape.mesh.positions[shape.mesh.indices[i]] + 2);
+                    float3 v2(shape.mesh.positions[shape.mesh.indices[i + 1]], shape.mesh.positions[shape.mesh.indices[i + 1]] + 1, shape.mesh.positions[shape.mesh.indices[i + 1]] + 2);
+                    float3 v3(shape.mesh.positions[shape.mesh.indices[i + 2]], shape.mesh.positions[shape.mesh.indices[i + 2]] + 1, shape.mesh.positions[shape.mesh.indices[i + 2]] + 2);
+
+                    float3 v12 = v1 - v2;
+                    float3 v13 = v1 - v3;
+
+                    float3 normal = normalize( cross(v12, v13) );
+
+                    normals[shape.mesh.indices[i]] = normal;
+                    normals[shape.mesh.indices[i+1]] = normal;
+                    normals[shape.mesh.indices[i+2]] = normal;
+                }
+
+                for (uint32 i = 0; i < normals.size(); ++i)
+                {
+                    shape.mesh.normals.push_back(normals[i].x);
+                    shape.mesh.normals.push_back(normals[i].y);
+                    shape.mesh.normals.push_back(normals[i].z);
+                }
+            }
 
             uint32 lFlags = eGD_Position;
             lFlags |= (shape.mesh.normals.size()) ? eGD_Normal : 0;

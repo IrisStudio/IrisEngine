@@ -28,9 +28,14 @@ struct RenderSystem : public entityx::System<RenderSystem>
         {
             ogl::CheckOGLError("Begin");
             CCameraManager::Instance().GetCurrentCamera()->Update();
-            renderer.mMaterial.Apply(0);
-            renderer.mSuzane.Render(0);
-            ogl::glBindVertexArray(0);
+            uint32 lCount = renderer.mMaterial.GetSubMaterialsCount();
+
+            for (uint32 i = 0; i < lCount; ++i)
+            {
+                renderer.mMaterial.Apply(i);
+                renderer.mMesh.Render(i);
+            }
+
             ogl::CheckOGLError("End loop");
         });
     };

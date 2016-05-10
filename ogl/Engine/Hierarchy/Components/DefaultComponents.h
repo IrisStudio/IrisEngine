@@ -41,16 +41,21 @@ struct Velocity
 extern uint32 flags = 0;
 struct Renderer
 {
-    Renderer()
+    Renderer( std::string aObj, RenderableProperties aMat )
     {
         CEffectLibrary::Instance().Init();
         CObjLoader lLoaderObj;
-        lLoaderObj.Load(CResource("models/suzane/suzane.obj"), mSuzane);
-        CSubMaterialSPtr lSubMaterial( new CSubMaterial( eRP_Default ) );
-        mMaterial.AddSubMaterial(lSubMaterial);
+        lLoaderObj.Load(CResource( aObj ), mMesh);
+        uint32 lCount = mMesh.GetGeometryCount();
+
+        for (uint32 i = 0; i < lCount; ++i)
+        {
+            CSubMaterialSPtr lSubMaterial(new CSubMaterial(aMat));
+            mMaterial.AddSubMaterial(lSubMaterial);
+        }
     }
 
-    CMesh mSuzane;
+    CMesh mMesh;
     CMaterial mMaterial;
 };
 
