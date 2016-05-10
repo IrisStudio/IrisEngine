@@ -51,7 +51,7 @@ void CCube::Init( float aLenght, float aWidht, float aHeight )
         6, 7, 3,
     };
 
-    mGeometry->Create(eGD_Position|eGD_UV, &vertices, &indices, 8, 36 );
-    mTex.Create(eTT_2D, "../data/tex/uv.jpg" );
-    mEffect = CEffectLibrary::Instance().GetEffect(eGD_Position | eGD_UV);
+    CGeometrySPtr lGeometry(new CGeometry());
+    lGeometry->Create(eGD_Position | eGD_UV, &vertices, &indices, 8, 36);
+    mGeometry.push_back(lGeometry);
 }

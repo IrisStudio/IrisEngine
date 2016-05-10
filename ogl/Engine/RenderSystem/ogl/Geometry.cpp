@@ -98,6 +98,7 @@ CGeometry::CGeometry()
     , mIB(0)
     , mVertexCount(0)
     , mIndexCount(0)
+    , mFlags(0)
 {
 }
 
@@ -112,9 +113,10 @@ CGeometry::~CGeometry()
 
 void CGeometry::Create(const uint32 aFlags, void* aVertexBuffer, void* aIndexBuffer, uint32 aVertexCount, uint32 aIndexCount)
 {
-    ogl::CheckOGLError("Create geom end");
+    ogl::CheckOGLError("Create geom begin");
     mVertexCount = aVertexCount;
     mIndexCount = aIndexCount;
+    mFlags = aFlags;
 
     // Generate the VAO of this geometry
     ogl::glGenVertexArrays(1, &mVAO);

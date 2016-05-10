@@ -5,31 +5,27 @@
 #include "Types.h"
 #include "gph.h"
 #include "Geometry.h"
-#include "Texture.h"
 
 class CEffect;
 
 class CMesh
 {
-    public:
-        CMesh();
-        virtual ~CMesh();
-        void Render();
+public:
+  CMesh();
+  virtual         ~CMesh();
 
-        void          SetColor(const float4& color);
-        const float4& GetColor() const;
+  void            Render( uint32 aIdx );
+  void            Clear();
+  uint32          GetGeometryCount() const;
+  void            AddGeometry(CGeometrySPtr aGeometry);
+  CGeometrySPtr   GetGeometry(uint32 aIdx) const;
 
-		void		  SetGeometry( CGeometrySPtr aGeometry);
+protected:
+  typedef std::vector< CGeometrySPtr > TGeometryVector;
+  TGeometryVector mGeometry;
 
-    protected:
-        CGeometrySPtr mGeometry;
-        CEffect*      mEffect;
-        CTexture      mTex;
-
-        float4 mColor;
-
-    private:
-        DISALLOW_COPY_AND_ASSIGN(CMesh);
+private:
+  DISALLOW_COPY_AND_ASSIGN(CMesh);
 };
 
 typedef std::shared_ptr< CMesh > CMeshSPtr;

@@ -1,12 +1,6 @@
 #include "Mesh.h"
-#include "Effect.h"
-#include "Camera\CameraManager.h"
-#include "EffectLibrary.h"
 
 CMesh::CMesh()
-    : mGeometry( new CGeometry() )
-    , mEffect(nullptr)
-    , mColor( float4(1.0f) )
 {
 }
 
@@ -14,30 +8,29 @@ CMesh::~CMesh()
 {
 }
 
-void CMesh::Render()
+void CMesh::Render( uint32 aIdx )
 {
-    CCameraSPtr lCam = CCameraManager::Instance().GetCurrentCamera();
-    float4x4 M, V, P;
-    lCam->GetMatrices(P, V, M);
-    mEffect->Bind();
-    mEffect->BindMatrices(M, V, P);
-    //mEffect->BindFragment(mColor, "in_color");
-    //mTex.Bind();
-    mGeometry->Bind();
+	assert(mGeometry.size() > aIdx && aIdx >= 0);
+	mGeometry[aIdx]->Bind();
 }
 
-void CMesh::SetColor(const float4& color)
+void CMesh::Clear()
 {
-    mColor = color;
+	mGeometry.clear();
 }
 
-const float4& CMesh::GetColor() const
+uint32 CMesh::GetGeometryCount() const
 {
-    return mColor;
+	return mGeometry.size();
 }
 
-void CMesh::SetGeometry(CGeometrySPtr aGeometry)
+void CMesh::AddGeometry(CGeometrySPtr aGeometry)
 {
-	mGeometry = aGeometry;
-	mEffect = CEffectLibrary::Instance().GetEffect(eGD_Position | eGD_UV | eGD_Normal );
+	mGeometry.push_back(aGeometry);
+}
+
+CGeometrySPtr CMesh::GetGeometry(uint32 aIdx) const
+{
+    assert(mGeometry.size() > aIdx && aIdx > -1);
+	return mGeometry[aIdx];
 }
