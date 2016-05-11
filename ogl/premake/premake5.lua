@@ -87,6 +87,7 @@ project "Hierarchy"
 group "3rdParty"
 project "ChaiScript"
     kind "SharedLib"
+    buildoptions "/bigobj"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
     
