@@ -13,7 +13,6 @@
 
 #include "EffectLibrary.h"
 
-
 static HWND   mHandle;
 static HDC    mhDC;
 static HGLRC  mhRC;

@@ -13,6 +13,11 @@
 
 #include "StringUtils.h"
 
+#include <QOpenglWidget>
+#include <QMainWindow>
+#include <QWidget>
+#include <QApplication>
+
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
 static const float sUpdateInterval = 1.0f / sMaximumFrameRate;
@@ -25,6 +30,33 @@ static int       mSampleCount;
 static float     mTimeScale;
 static float     mActualElapsedTimeSec;
 static float     mFrameTimes[sMaxSamples];
+
+class QOGLWidget : public QOpenGLWidget
+{
+public:
+	QOGLWidget(QWidget *parent = 0);
+	void initializeGL();
+	void resizeGL(int w, int h);
+	void paintGL();
+
+private:
+};
+
+QOGLWidget::QOGLWidget(QWidget *parent) : QOpenGLWidget(parent)
+{
+}
+
+void QOGLWidget::initializeGL()
+{
+}
+
+void QOGLWidget::resizeGL(int w, int h)
+{
+}
+
+void QOGLWidget::paintGL()
+{
+}
 
 IApplication::IApplication()
     : mCyclesLeft(0.0f)
@@ -48,6 +80,14 @@ void IApplication::Run()
     #endif
 
     float lUpdateIterations = 0.0f;
+
+	QGuiApplication app();
+
+	QMainWindow mMainWindow;
+
+	QOGLWidget mOGLWidget(&mMainWindow);
+
+	mMainWindow.show();
 
     CWindow& lMainWindow = CWindow::Instance();
     CTimer&  lTimer = CTimer::Instance(10);
