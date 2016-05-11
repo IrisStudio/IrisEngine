@@ -10,25 +10,25 @@ class CTexture;
 
 class CSubMaterial
 {
-public:
-    CSubMaterial( uint32 aProperties );
-    virtual ~CSubMaterial();
-    void Apply();
+    public:
+        CSubMaterial( uint32 aProperties );
+        virtual ~CSubMaterial();
+        void Apply();
 
-    void SetDiffuseColor(const float4& aColor);
-    void SetTexture(TextureChanel aType, CTextureSPtr aTexture);
+        void SetDiffuseColor(const float4& aColor);
+        void SetTexture(TextureChanel aType, CTextureSPtr aTexture);
 
-    const float4& GetDiffuseColor() const;
-    CTextureSPtr  GetTexture(TextureChanel aType) const;
+        const float4& GetDiffuseColor() const;
+        CTextureSPtr  GetTexture(TextureChanel aType) const;
 
-protected:
-    CEffectSPtr             mEffect;
-    typedef std::vector< CTextureSPtr > TTextures;
-    TTextures         mTextures;
-    float4                  mColor;
+    protected:
+        CEffect*             mEffect;
+        typedef std::vector< CTextureSPtr > TTextures;
+        TTextures         mTextures;
+        float4                  mColor;
 
-private:
-    DISALLOW_COPY_AND_ASSIGN(CSubMaterial);
+    private:
+        DISALLOW_COPY_AND_ASSIGN(CSubMaterial);
 };
 
 #endif

@@ -70,7 +70,7 @@ CObjLoader::~CObjLoader()
 }
 
 bool
-CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
+CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
 {
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -134,7 +134,7 @@ CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
                                &shape.mesh.indices[0],
                                nVertices,
                                shape.mesh.indices.size());
-            aMesh.AddGeometry(lGeometry);
+            aMesh->AddGeometry(lGeometry);
         }
     }
 

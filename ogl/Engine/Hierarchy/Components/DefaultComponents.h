@@ -43,20 +43,28 @@ struct Renderer
 {
     Renderer( std::string aObj, RenderableProperties aMat )
     {
+        mMesh = new CMesh;
+        mMaterial = new CMaterial;
         CEffectLibrary::Instance().Init();
         CObjLoader lLoaderObj;
         lLoaderObj.Load(CResource( aObj ), mMesh);
-        uint32 lCount = mMesh.GetGeometryCount();
+        uint32 lCount = mMesh->GetGeometryCount();
 
         for (uint32 i = 0; i < lCount; ++i)
         {
             CSubMaterialSPtr lSubMaterial(new CSubMaterial(aMat));
-            mMaterial.AddSubMaterial(lSubMaterial);
+            mMaterial->AddSubMaterial(lSubMaterial);
         }
     }
 
-    CMesh mMesh;
-    CMaterial mMaterial;
+    ~Renderer()
+    {
+        CHECKED_DELETE(mMesh);
+        CHECKED_DELETE(mMaterial);
+    }
+
+    CMesh* mMesh;
+    CMaterial* mMaterial;
 };
 
 #endif //__DEFAULT_COMPONENTS__
