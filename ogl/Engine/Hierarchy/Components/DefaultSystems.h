@@ -28,12 +28,12 @@ struct RenderSystem : public entityx::System<RenderSystem>
         {
             ogl::CheckOGLError("Begin");
             CCameraManager::Instance().GetCurrentCamera()->Update();
-            uint32 lCount = renderer.mMaterial.GetSubMaterialsCount();
+            uint32 lCount = renderer.mMaterial->GetSubMaterialsCount();
 
             for (uint32 i = 0; i < lCount; ++i)
             {
-                renderer.mMaterial.Apply(i);
-                renderer.mMesh.Render(i);
+                renderer.mMaterial->Apply(i);
+                renderer.mMesh->Render(i);
             }
 
             ogl::CheckOGLError("End loop");

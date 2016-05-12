@@ -70,7 +70,7 @@ CObjLoader::~CObjLoader()
 }
 
 bool
-CObjLoader::Load( const CResource& aResource, CMesh& aMesh )
+CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
 {
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;

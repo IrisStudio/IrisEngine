@@ -1,4 +1,11 @@
 -- premake5.lua
+
+include( "premake-qt/qt.lua" )
+
+-- this line is optional, but it avoids writting premake.extensions.qt to
+-- call the plugin's methods.
+local qt = premake.extensions.qt
+
 workspace "IrisEditor"
    configurations { "Debug", "Release", "Final" }
    platforms { "x32", "x64" }
@@ -8,6 +15,7 @@ workspace "IrisEditor"
    filter "configurations:Debug"
       defines { "DEBUG" }
       flags { "Symbols" }
+	  qtsuffix "d"
 
    filter "configurations:Release"
       defines { "NO_DEBUG", "NO_LOG" }
@@ -26,6 +34,10 @@ project "IrisEditor"
    includedirs { "../3rdParty/tinyobjloader/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32") }
+   qt.enable()
+   qtpath "C:/Qt/Qt5.6.0/5.6/msvc2015_64"
+   qtmodules{"core", "gui", "opengl", "widgets"}
+   qtprefix "Qt5"
 
 group "FileSystem"
 project "effects"
@@ -42,6 +54,10 @@ project "User"
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
     includedirs { "../3rdParty/entityx/" }
+	qt.enable()
+	qtpath "C:/Qt/Qt5.6.0/5.6/msvc2015_64"
+	qtmodules{"core", "gui", "opengl", "widgets"}
+    qtprefix "Qt5"
 	
 project "Script"
     kind "StaticLib"
@@ -87,6 +103,7 @@ project "Hierarchy"
 group "3rdParty"
 project "ChaiScript"
     kind "SharedLib"
+    buildoptions "/bigobj"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
     
