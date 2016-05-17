@@ -18,7 +18,7 @@ static HDC    mhDC;
 static HGLRC  mhRC;
 static MSG    msg;
 
-HWND CWindow::GetHandle()
+void* CWindow::GetHandle()
 {
 	return mHandle;
 }

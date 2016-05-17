@@ -90,7 +90,7 @@ void IApplication::Run()
             while (lMainWindow.Update())
             {
 				MSG msg;
-				while (PeekMessage(&msg, lMainWindow.GetHandle(), 0, 0, PM_REMOVE))
+				while (PeekMessage(&msg, (HWND)lMainWindow.GetHandle(), 0, 0, PM_REMOVE))
 				{
 					TranslateMessage(&msg);
 					DispatchMessage(&msg);
