@@ -1,44 +1,33 @@
 -- premake5.lua
 
-include( "premake-qt/qt.lua" )
-
--- this line is optional, but it avoids writting premake.extensions.qt to
--- call the plugin's methods.
-local qt = premake.extensions.qt
-
 workspace "IrisEditor"
    configurations { "Debug", "Release", "Final" }
-   platforms { "x32", "x64" }
+   platforms { "x64" }
    location "../vs2015"
    language "C++"
    
    filter "configurations:Debug"
       defines { "DEBUG" }
       flags { "Symbols" }
-	  qtsuffix "d"
 
    filter "configurations:Release"
       defines { "NO_DEBUG", "NO_LOG" }
       optimize "On"
 
 project "IrisEditor"
-   kind "ConsoleApp"
+   kind "WindowedApp"
    targetdir "../bin/%{cfg.buildcfg}"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "tinyobjloader", "winmm" }
+   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "tinyobjloader", "winmm", "gainput" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
-   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy"}
+   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Graphics"}
    includedirs { "../3rdParty/ChaiScript/include/" }
    includedirs { "../3rdParty/entityx/" }
    includedirs { "../3rdParty/tinyobjloader/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32") }
-   qt.enable()
-   qtpath "C:/Qt/Qt5.6.0/5.6/msvc2015_64"
-   qtmodules{"core", "gui", "opengl", "widgets"}
-   qtprefix "Qt5"
-
+   
 group "FileSystem"
 project "effects"
     kind "None"
@@ -54,10 +43,8 @@ project "User"
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
     includedirs { "../3rdParty/entityx/" }
-	qt.enable()
-	qtpath "C:/Qt/Qt5.6.0/5.6/msvc2015_64"
-	qtmodules{"core", "gui", "opengl", "widgets"}
-    qtprefix "Qt5"
+	includedirs { "../3rdParty/Xinput/" }
+	includedirs { "../3rdParty/gainput-master/lib/include/" }
 	
 project "Script"
     kind "StaticLib"
@@ -81,6 +68,7 @@ project "RenderSystem"
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
 	includedirs { "../3rdParty/" }
+	includedirs { "../3rdParty/gainput-master/lib/include/" }
 
 project "Graphics"
     kind "StaticLib"
@@ -107,6 +95,11 @@ project "ChaiScript"
     files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
 	includedirs { "../3rdParty/ChaiScript/include/" }
     
+project "gainput"
+    kind "StaticLib"
+    files { "../3rdParty/gainput-master/lib/source/gainput/**.cpp", "../3rdParty/gainput-master/lib/source/gainput/**.h", "../3rdParty/gainput-master/lib/include/gainput/**.h" }
+	includedirs { "../3rdParty/gainput-master/lib/include" }
+	
 project "entityx"
     kind "StaticLib"
     files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }

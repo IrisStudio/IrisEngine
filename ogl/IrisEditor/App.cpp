@@ -8,21 +8,19 @@
 
 #include "Application.h"
 
-int main()
+#include "Time\Timer.h"
+
+#include "GameObjectManager.h"
+#include "Camera\CameraManager.h"
+
+#include "StringUtils.h"
+
+
+int main(int argc, char **argv )
 {
-  /*CScriptManager::Instance().Init();
-
-  int32 lResult = CScriptManager::Instance().ExecuteInstructionAndGet("TestFunc(20)");
-
-  std::string file_str("../data/scripts/test.chai");
-
-  CScriptManager::Instance().ExecuteFile(file_str);
-  int32 lResult2 = CScriptManager::Instance().ExecuteInstructionAndGet("c");
-  */
-
   IApplication *app = new IApplication();;
   app->Run();
   CHECKED_DELETE(app);
 
-  return 0;
+  return 1;//qapp.exec();
 }

@@ -76,7 +76,7 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
     std::vector<tinyobj::material_t> materials;
     std::string err;
 
-    bool ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str());
+    bool ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str(), "", tinyobj::calculate_normals | tinyobj::triangulation );
 
     if (!err.empty())   // `err` may contain warning message.
     {
@@ -91,43 +91,14 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
 
             // We do not want data without positions
             assert(shape.mesh.positions.size());
-
-            const uint32 lIndexCount = shape.mesh.indices.size();
-
-            const std::vector< float >& lVerticesVector = shape.mesh.positions;
-            std::vector< float >& lNormals = shape.mesh.normals;
-
-            //if (!shape.mesh.normals.size())
-            {
-                // The size of the normals must be the same size as the vertices, because we want one normal for each vertex
-                lNormals.resize(lVerticesVector.size());
-
-                const std::vector< uint32 >& lIndicesVector = shape.mesh.indices;
-
-                for ( register uint32 i = 0; i < lIndexCount; i+=3 )
-                {
-                    float3 v1, v2, v3;
-                    memcpy(&v1, &lVerticesVector[lIndicesVector[i] * 3], sizeof(float3));
-                    memcpy(&v2, &lVerticesVector[lIndicesVector[i + 1] * 3], sizeof(float3));
-                    memcpy(&v3, &lVerticesVector[lIndicesVector[i + 2] * 3], sizeof(float3));
-
-                    float3 v12 = v1 - v2;
-                    float3 v13 = v1 - v3;
-
-                    float3 normal = normalize( cross(v12, v13) );
-
-                    memcpy(&lNormals[lIndicesVector[i] * 3], &normal, sizeof(float3));
-                    memcpy(&lNormals[lIndicesVector[i + 1] * 3], &normal, sizeof(float3));
-                    memcpy(&lNormals[lIndicesVector[i + 2] * 3], &normal, sizeof(float3));
-                }
-            }
+			//assert(shape.mesh.normals.size());
 
             uint32 lFlags = eGD_Position;
             lFlags |= (shape.mesh.normals.size()) ? eGD_Normal : 0;
             lFlags |= (shape.mesh.texcoords.size()) ? eGD_UV : 0;
 
             // Create the geometry of the object
-            const uint32 lVertices = lVerticesVector.size() / 3;
+            const uint32 lVertices = shape.mesh.positions.size() / 3;
 
             std::vector< float > lGeometryData = mCopyFunctions[lFlags](lVertices, shape.mesh );
 
@@ -135,8 +106,9 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
                                &lGeometryData[0],
                                &shape.mesh.indices[0],
                                lVertices,
-                               lIndexCount);
-            aMesh.AddGeometry(lGeometry);
+							   shape.mesh.indices.size());
+
+            aMesh->AddGeometry(lGeometry);
         }
     }
 

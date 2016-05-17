@@ -13,10 +13,16 @@
 
 #include "StringUtils.h"
 
-#include <QOpenglWidget>
-#include <QMainWindow>
-#include <QWidget>
-#include <QApplication>
+#include <gainput\gainput.h>
+
+// Define your user buttons
+enum Button
+{
+	ButtonMenu,
+	ButtonConfirm,
+	MouseX,
+	MouseY
+};
 
 static const float sMaximumFrameRate = 60.0f;
 static const float sMinimumFrameRate = 15.0f;
@@ -30,33 +36,6 @@ static int       mSampleCount;
 static float     mTimeScale;
 static float     mActualElapsedTimeSec;
 static float     mFrameTimes[sMaxSamples];
-
-class QOGLWidget : public QOpenGLWidget
-{
-public:
-	QOGLWidget(QWidget *parent = 0);
-	void initializeGL();
-	void resizeGL(int w, int h);
-	void paintGL();
-
-private:
-};
-
-QOGLWidget::QOGLWidget(QWidget *parent) : QOpenGLWidget(parent)
-{
-}
-
-void QOGLWidget::initializeGL()
-{
-}
-
-void QOGLWidget::resizeGL(int w, int h)
-{
-}
-
-void QOGLWidget::paintGL()
-{
-}
 
 IApplication::IApplication()
     : mCyclesLeft(0.0f)
@@ -81,14 +60,6 @@ void IApplication::Run()
 
     float lUpdateIterations = 0.0f;
 
-	QGuiApplication app();
-
-	QMainWindow mMainWindow;
-
-	QOGLWidget mOGLWidget(&mMainWindow);
-
-	mMainWindow.show();
-
     CWindow& lMainWindow = CWindow::Instance();
     CTimer&  lTimer = CTimer::Instance(10);
 
@@ -96,13 +67,6 @@ void IApplication::Run()
     {
         if (lMainWindow.Show())
         {
-            QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mFreq));
-            QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mLastTime));
-            mTimeScale = 1.0f / mFreq;
-
-            /*CEffectLibrary lLib;
-            CEffectSPtr lEffect = lLib.CreateEffect("../data/effects/effect01.xml");*/
-
             //Testing the EntityX construction
             CGameObjectManager& game_object_manager = CGameObjectManager::Instance();
 
@@ -110,12 +74,53 @@ void IApplication::Run()
             CCameraManager::Instance().AddCamera("current_cam", lCamera);
             CCameraManager::Instance().SetCurrentCamera(lCamera);
 
+			// Setup Gainput
+			gainput::InputManager manager;
+			const uint2& lSize = lMainWindow.GetSize();
+			manager.SetDisplaySize(lSize.x, lSize.y);
+			gainput::DeviceId mouseId = manager.CreateDevice<gainput::InputDeviceMouse>();
+			gainput::DeviceId keyboardId = manager.CreateDevice<gainput::InputDeviceKeyboard>();
+
+			gainput::InputMap map(manager);
+			map.MapBool(ButtonMenu, keyboardId, gainput::KeyA );
+			map.MapBool(ButtonConfirm, mouseId, gainput::MouseButtonLeft);
+			map.MapFloat(MouseX, mouseId, gainput::MouseAxisX);
+			map.MapFloat(MouseY, mouseId, gainput::MouseAxisY);
+
             while (lMainWindow.Update())
             {
+				MSG msg;
+				while (PeekMessage(&msg, lMainWindow.GetHandle(), 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+
+					// Forward any input messages to Gainput
+					manager.HandleMessage(msg);
+				}
+
+				manager.Update();
+
+				if (map.GetBoolWasDown(ButtonMenu))
+				{
+					LOG_APPLICATION("Open Menu!!\n");
+				}
+				if (map.GetBoolWasDown(ButtonConfirm))
+				{
+					LOG_APPLICATION("Confirmed!!\n");
+				}
+
+				if (map.GetFloatDelta(MouseX) != 0.0f || map.GetFloatDelta(MouseY) != 0.0f)
+				{
+					LOG_APPLICATION("Mouse: %f, %f\n", map.GetFloat(MouseX), map.GetFloat(MouseY));
+				}
+
                 ProccessInputs();
                 lTimer.Update();
                 lMainWindow.SetWindowTitle(iris::str_utils::Format("FPS: %f", lTimer.GetFPS()));
                 game_object_manager.update(lTimer.GetElapsedTime());
+
+
             }
         }
     }

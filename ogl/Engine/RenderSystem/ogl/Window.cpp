@@ -18,6 +18,11 @@ static HDC    mhDC;
 static HGLRC  mhRC;
 static MSG    msg;
 
+HWND CWindow::GetHandle()
+{
+	return mHandle;
+}
+
 using namespace iris;
 
 namespace
@@ -274,6 +279,11 @@ void CWindow::SetSize(const uint2& aSize)
     mSize = aSize;
 }
 
+const uint2& CWindow::GetSize() const
+{
+	return mSize;
+}
+
 bool CWindow::Update()
 {
     bool lUpdated = false;
@@ -281,12 +291,6 @@ bool CWindow::Update()
     if (msg.message != WM_QUIT)
     {
         UpdateWindow(mHandle);
-
-        while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
 
         lUpdated = true;
     }

@@ -14,7 +14,7 @@ CGameObjectManager::CGameObjectManager()
     entityx::Entity entity = entities.create();
     entity.assign<Transform>();
     entity.assign<Velocity>(float3(1.0f, 0.0f, 0.0f), 1.0f);
-    entity.assign<Renderer>( "models/deadpool/deadpool.obj", eRP_Default );
+    entity.assign<Renderer>( "models/head/head.obj", eRP_Default );
 }
 
 void CGameObjectManager::update(entityx::TimeDelta dt)

@@ -148,7 +148,7 @@ void CCamera::Update()
 
 void CCamera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 {
-    float velocity = 100.0f * deltaTime;
+    float velocity = 50.0f * deltaTime;
 
     if (direction == FORWARD)
     {
