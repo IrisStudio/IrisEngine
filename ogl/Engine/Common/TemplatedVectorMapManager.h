@@ -107,7 +107,7 @@ template <class T> class CTemplatedVectorMapManager
 
             if (mResMap.find(Name) == mResMap.end() )
             {
-                CMapResourceValue lRes(Resource, mResVec.size());
+                CMapResourceValue lRes(Resource, (uint32)mResVec.size());
                 mResVec.push_back(Resource);
                 mResMap[Name] = lRes;
                 lOk = true;
