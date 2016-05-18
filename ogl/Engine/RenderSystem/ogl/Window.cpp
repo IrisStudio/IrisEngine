@@ -9,7 +9,6 @@
 
 #include "Context.h"
 #include "Shader.h"
-#include "Camera/CameraManager.h"
 
 #include "EffectLibrary.h"
 
@@ -20,7 +19,7 @@ static MSG    msg;
 
 void* CWindow::GetHandle()
 {
-	return mHandle;
+    return mHandle;
 }
 
 using namespace iris;
@@ -67,32 +66,11 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
         case WM_KEYDOWN:
             {
-                CCameraSPtr lCurrentCamera = CCameraManager::Instance().GetCurrentCamera();
-
                 switch (wParam)
                 {
                     case VK_ESCAPE:
                         //Cleanup();
                         PostQuitMessage(0);
-                        return 0;
-
-                    case VK_DOWN:
-                        lCurrentCamera->ProcessKeyboard(BACKWARD, 1.0f / 100.0f);
-                        return 0;
-
-                    case VK_RIGHT:
-                        //Cleanup();
-                        lCurrentCamera->ProcessKeyboard(RIGHT, 1.0f / 100.0f);
-                        return 0;
-
-                    case VK_UP:
-                        //Cleanup();
-                        lCurrentCamera->ProcessKeyboard(FORWARD, 1.0f / 100.0f);
-                        return 0;
-
-                    case VK_LEFT:
-                        //Cleanup();
-                        lCurrentCamera->ProcessKeyboard(LEFT, 1.0f / 100.0f);
                         return 0;
                         break;
                 }
@@ -281,7 +259,7 @@ void CWindow::SetSize(const uint2& aSize)
 
 const uint2& CWindow::GetSize() const
 {
-	return mSize;
+    return mSize;
 }
 
 bool CWindow::Update()

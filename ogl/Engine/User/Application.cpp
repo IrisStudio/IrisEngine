@@ -42,24 +42,21 @@ void IApplication::Run()
     float lUpdateIterations = 0.0f;
 
     CWindow& lMainWindow = CWindow::Instance();
+
     if (lMainWindow.Create(eST_Windowed))
     {
         if (lMainWindow.Show())
         {
             //Testing the EntityX construction
             CGameObjectManager& game_object_manager = CGameObjectManager::Instance();
-			CTimer&  lTimer							= CTimer::Instance(10);
-			CInputManager& lInputManager		    = CInputManager::Instance();
-			lInputManager.Init(&lMainWindow);
-
-            CCameraSPtr lCamera(new CCamera());
-            CCameraManager::Instance().AddCamera("current_cam", lCamera);
-            CCameraManager::Instance().SetCurrentCamera(lCamera);
+            CTimer&  lTimer                         = CTimer::Instance(10);
+            CInputManager& lInputManager            = CInputManager::Instance();
+            lInputManager.Init(&lMainWindow);
 
             while (lMainWindow.Update())
             {
                 lTimer.Update();
-				lInputManager.ProcessInputs();
+                lInputManager.ProcessInputs();
                 lMainWindow.SetWindowTitle(iris::str_utils::Format("FPS: %f", lTimer.GetFPS()));
                 game_object_manager.update(lTimer.GetElapsedTime());
             }

@@ -145,30 +145,3 @@ void CCamera::Update()
     mModel = glm::mat4(1.0f);
     mMVP = mProjection * mView * mModel;
 }
-
-void CCamera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
-{
-    float velocity = 50.0f * deltaTime;
-
-    if (direction == FORWARD)
-    {
-        mPosition += mDirection * velocity;
-    }
-
-    if (direction == BACKWARD)
-    {
-        mPosition -= mDirection * velocity;
-    }
-
-    if (direction == LEFT)
-    {
-        mPosition -= mSide * velocity;
-    }
-
-    if (direction == RIGHT)
-    {
-        mPosition += mSide * velocity;
-    }
-
-    LOG_APPLICATION("Position %f, %f, %f", mPosition.x, mPosition.y, mPosition.z);
-}

@@ -20,7 +20,7 @@ CSubMaterial::~CSubMaterial()
 
 void CSubMaterial::Apply()
 {
-    CCameraSPtr lCam = CCameraManager::Instance().GetCurrentCamera();
+    CCamera* lCam = CCameraManager::Instance().GetCurrentCamera();
     float4x4 M, V, P;
     lCam->GetMatrices(P, V, M);
     mEffect->Bind();

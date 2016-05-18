@@ -8,13 +8,17 @@ class CWindow;
 
 enum Actions
 {
-	Exit,
-	Forward,
-	Left,
-	Right,
-	Backward,
-	MouseX,
-	MouseY
+    Exit,
+    Forward,
+    Left,
+    Right,
+    Backward,
+    Up,
+    Down,
+    Run,
+    MouseX,
+    MouseY,
+    Fire
 };
 
 class CInputManager : public Singleton< CInputManager >
@@ -22,13 +26,13 @@ class CInputManager : public Singleton< CInputManager >
     public:
         CInputManager();
         virtual ~CInputManager();
-		void Init( CWindow* aWindow );
-		bool DoAction( Actions aAction );
-		bool DoAction(Actions aAction, float& aAmount);
-		void ProcessInputs();
+        void Init( CWindow* aWindow );
+        bool DoAction( Actions aAction );
+        bool DoAction(Actions aAction, float& aAmount);
+        void ProcessInputs();
 
     private:
-		CWindow* mWindow;
+        CWindow* mWindow;
 };
 
 #endif

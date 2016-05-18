@@ -67,4 +67,7 @@ struct Renderer
     CMaterial* mMaterial;
 };
 
+struct Controllable
+{};
+
 #endif //__DEFAULT_COMPONENTS__
