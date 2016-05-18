@@ -8,29 +8,38 @@ CMesh::~CMesh()
 {
 }
 
+void CMesh::Resize(uint32 aSize)
+{
+    mGeometries.resize(aSize);
+}
+
 void CMesh::Render( uint32 aIdx )
 {
-    assert(mGeometry.size() > aIdx && aIdx >= 0);
-    mGeometry[aIdx]->Bind();
+    assert(mGeometries.size() > aIdx && aIdx >= 0);
+
+    for each ( CGeometrySPtr lGeometry in mGeometries[ aIdx ] )
+    {
+        lGeometry->Bind();
+    }
 }
 
 void CMesh::Clear()
 {
-    mGeometry.clear();
+    mGeometries.clear();
 }
 
 uint32 CMesh::GetGeometryCount() const
 {
-    return mGeometry.size();
+    return mGeometries.size();
 }
 
-void CMesh::AddGeometry(CGeometrySPtr aGeometry)
+void CMesh::AddGeometry(uint32 aMaterialId, CGeometrySPtr aGeometry)
 {
-    mGeometry.push_back(aGeometry);
+    mGeometries[aMaterialId].push_back(aGeometry);
 }
 
 CGeometrySPtr CMesh::GetGeometry(uint32 aIdx) const
 {
-    assert(mGeometry.size() > aIdx && aIdx > -1);
-    return mGeometry[aIdx];
+    assert(mGeometries.size() > aIdx && aIdx > -1);
+    return mGeometries[aIdx].front();
 }

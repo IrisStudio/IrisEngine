@@ -30,7 +30,7 @@ namespace Shaders
 #define interpolate_normal  "    Normal = normal;\n"
 
 #define in_out_uv           "layout(location = 2) in vec2 uv;\nout vec2 ftexcoord;\n"
-#define compute_uv          "    ftexcoord = uv;\n"
+#define compute_uv          "    ftexcoord = vec2(1.0,0) - uv;\n"
 
         const char* eGD_ScreenPosition_Str =
             in_2d_position
@@ -122,7 +122,7 @@ namespace Shaders
             in_uv
             in_normal
             begin_main
-            return_normal
+            return_uv
             end_main;
 
         const char* eGD_Position_Normal_Str =
@@ -143,7 +143,7 @@ CEffectLibrary::CEffectLibrary()
 void CEffectLibrary::Init()
 {
     using namespace Shaders;
-    //mEmbedded[eGD_Position | eGD_UV | eGD_Normal] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
+    mEmbedded[eRP_DiffuseMap] = new CEffect(VS::eGD_Position_UV_Normal_Str, FS::eGD_Position_UV_Normal_Str);
     mEmbedded[eRP_Default] = new CEffect(VS::eGD_Position_Normal_Str, FS::eGD_Position_Normal_Str);
 }
 

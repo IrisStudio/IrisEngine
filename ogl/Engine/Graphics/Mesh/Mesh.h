@@ -10,22 +10,24 @@ class CEffect;
 
 class CMesh
 {
-public:
-  CMesh();
-  virtual         ~CMesh();
+    public:
+        CMesh();
+        virtual         ~CMesh();
 
-  void            Render( uint32 aIdx );
-  void            Clear();
-  uint32          GetGeometryCount() const;
-  void            AddGeometry(CGeometrySPtr aGeometry);
-  CGeometrySPtr   GetGeometry(uint32 aIdx) const;
+        void            Resize( uint32 aSize );
+        void            Render( uint32 aIdx );
+        void            Clear();
+        uint32          GetGeometryCount() const;
+        void            AddGeometry(uint32 aMaterialId, CGeometrySPtr aGeometry);
+        CGeometrySPtr   GetGeometry(uint32 aIdx) const;
 
-protected:
-  typedef std::vector< CGeometrySPtr > TGeometryVector;
-  TGeometryVector mGeometry;
+    protected:
+        typedef std::vector< CGeometrySPtr > TGeometryVector;
+        typedef std::vector< TGeometryVector > TMaterialGeometries;
+        TMaterialGeometries mGeometries;
 
-private:
-  DISALLOW_COPY_AND_ASSIGN(CMesh);
+    private:
+        DISALLOW_COPY_AND_ASSIGN(CMesh);
 };
 
 typedef std::shared_ptr< CMesh > CMeshSPtr;

@@ -30,12 +30,11 @@ struct RenderSystem : public entityx::System<RenderSystem>
         {
             ogl::CheckOGLError("Begin");
             CCameraManager::Instance().GetCurrentCamera()->Update();
-            uint32 lCount = renderer.mMaterial->GetSubMaterialsCount();
 
-            for (uint32 i = 0; i < lCount; ++i)
+            for (uint32 iMat = 0, lMatCount = renderer.mMaterial->GetSubMaterialsCount(); iMat < lMatCount; ++iMat)
             {
-                renderer.mMaterial->Apply(i);
-                renderer.mMesh->Render(i);
+                renderer.mMaterial->Apply(iMat);
+                renderer.mMesh->Render(iMat);
             }
 
             ogl::CheckOGLError("End loop");

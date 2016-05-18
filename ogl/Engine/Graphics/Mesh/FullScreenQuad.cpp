@@ -33,5 +33,5 @@ void CFullScreenQuad::Init( float aLenght, float aWidht, float aHeight )
     CGeometrySPtr lGeometry( new CGeometry() );
 
     lGeometry->Create(eGD_ScreenPosition | eGD_UV, &vertices, &indices, 4, 6 );
-    mGeometry.push_back(lGeometry);
+    //mGeometry.push_back(lGeometry);
 }

@@ -1,14 +1,14 @@
 #include "ObjLoader.h"
 
-#include "Mesh/Mesh.h"
 #include "Logger/Logger.h"
 #include "rs.h"
 
 #include <algorithm>
 
-namespace
-{
-}
+#include "Mesh/Mesh.h"
+#include "Material/Material.h"
+#include "Material/SubMaterial.h"
+#include "Texture.h"
 
 CObjLoader::CObjLoader()
 {
@@ -70,13 +70,13 @@ CObjLoader::~CObjLoader()
 }
 
 bool
-CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
+CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial )
 {
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
     std::string err;
 
-    bool ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str(), "", tinyobj::calculate_normals | tinyobj::triangulation );
+    bool ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str(), aResource.GetDirectory().c_str(), tinyobj::calculate_normals | tinyobj::triangulation );
 
     if (!err.empty())   // `err` may contain warning message.
     {
@@ -85,6 +85,32 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
 
     if (ret)
     {
+        for each(tinyobj::material_t material in materials)
+        {
+            LOG_APPLICATION("material.name = %s\n", material.name.c_str());
+            LOG_APPLICATION("  material.Ka = (%f, %f ,%f)\n", material.ambient[0], material.ambient[1], material.ambient[2]);
+            LOG_APPLICATION("  material.Kd = (%f, %f ,%f)\n", material.diffuse[0], material.diffuse[1], material.diffuse[2]);
+            LOG_APPLICATION("  material.Ks = (%f, %f ,%f)\n", material.specular[0], material.specular[1], material.specular[2]);
+            LOG_APPLICATION("  material.Tr = (%f, %f ,%f)\n", material.transmittance[0], material.transmittance[1], material.transmittance[2]);
+            LOG_APPLICATION("  material.Ke = (%f, %f ,%f)\n", material.emission[0], material.emission[1], material.emission[2]);
+            LOG_APPLICATION("  material.Ns = %f\n", material.shininess);
+            LOG_APPLICATION("  material.Ni = %f\n", material.ior);
+            LOG_APPLICATION("  material.dissolve = %f\n", material.dissolve);
+            LOG_APPLICATION("  material.illum = %d\n", material.illum);
+            LOG_APPLICATION("  material.map_Ka = %s\n", material.ambient_texname.c_str());
+            LOG_APPLICATION("  material.map_Kd = %s\n", material.diffuse_texname.c_str());
+            LOG_APPLICATION("  material.map_Ks = %s\n", material.specular_texname.c_str());
+            LOG_APPLICATION("  material.map_Ns = %s\n", material.bump_texname.c_str());
+
+            CSubMaterialSPtr lSubMaterial(new CSubMaterial(eRP_DiffuseMap));
+            CTextureSPtr lTexture(new CTexture());
+            lTexture->Create(eTT_2D, aResource.GetDirectory() + material.diffuse_texname);
+            lSubMaterial->SetTexture(eTC_Diffuse, lTexture);
+            aMaterial->AddSubMaterial(lSubMaterial);
+        }
+
+        aMesh->Resize(aMaterial->GetSubMaterialsCount());
+
         for each (tinyobj::shape_t shape in shapes)
         {
             CGeometrySPtr lGeometry( new CGeometry() );
@@ -108,7 +134,7 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
                                lVertices,
                                shape.mesh.indices.size());
 
-            aMesh->AddGeometry(lGeometry);
+            aMesh->AddGeometry(glm::clamp((int)(shape.mesh.material_ids.front()), 0, (int)aMaterial->GetSubMaterialsCount()), lGeometry);
         }
     }
 

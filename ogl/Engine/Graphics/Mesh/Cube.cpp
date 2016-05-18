@@ -53,5 +53,5 @@ void CCube::Init( float aLenght, float aWidht, float aHeight )
 
     CGeometrySPtr lGeometry(new CGeometry());
     lGeometry->Create(eGD_Position | eGD_UV, &vertices, &indices, 8, 36);
-    mGeometry.push_back(lGeometry);
+    //mGeometry.push_back(lGeometry);
 }

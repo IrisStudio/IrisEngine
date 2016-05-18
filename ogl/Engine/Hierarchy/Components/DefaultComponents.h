@@ -47,20 +47,13 @@ struct Renderer
         mMaterial = new CMaterial;
         CEffectLibrary::Instance().Init();
         CObjLoader lLoaderObj;
-        lLoaderObj.Load(CResource( aObj ), mMesh);
-        uint32 lCount = mMesh->GetGeometryCount();
-
-        for (uint32 i = 0; i < lCount; ++i)
-        {
-            CSubMaterialSPtr lSubMaterial(new CSubMaterial(aMat));
-            mMaterial->AddSubMaterial(lSubMaterial);
-        }
+        lLoaderObj.Load(CResource( aObj ), mMesh, mMaterial);
     }
 
     ~Renderer()
     {
         CheckedDelete(mMesh);
-		CheckedDelete(mMaterial);
+        CheckedDelete(mMaterial);
     }
 
     CMesh* mMesh;

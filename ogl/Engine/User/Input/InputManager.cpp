@@ -63,6 +63,7 @@ void CInputManager::Init(CWindow* aWindow)
 
     map = new gainput::InputMap(*manager);
     map->MapBool(Forward, keyboardId, gainput::KeyW);
+    map->MapBool(Exit, keyboardId, gainput::KeyEscape);
     map->MapBool(Left, keyboardId, gainput::KeyA);
     map->MapBool(Right, keyboardId, gainput::KeyD);
     map->MapBool(Backward, keyboardId, gainput::KeyS);

@@ -11,7 +11,7 @@ CSubMaterial::CSubMaterial( uint32 aProperties )
     : mEffect(CEffectLibrary::Instance().GetEffect(aProperties))
     , mColor( float4(1.0f) )
 {
-    mTextures.reserve(eTC_Count);
+    mTextures.resize(eTC_Count);
 }
 
 CSubMaterial::~CSubMaterial()
@@ -25,6 +25,14 @@ void CSubMaterial::Apply()
     lCam->GetMatrices(P, V, M);
     mEffect->Bind();
     mEffect->BindMatrices(M, V, P);
+
+    for each ( CTextureSPtr lTexture in mTextures )
+    {
+        if(lTexture)
+        {
+            lTexture->Bind();
+        }
+    }
 }
 
 void CSubMaterial::SetDiffuseColor(const float4& color)
