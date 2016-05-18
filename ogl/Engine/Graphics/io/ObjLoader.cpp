@@ -91,7 +91,7 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
 
             // We do not want data without positions
             assert(shape.mesh.positions.size());
-			//assert(shape.mesh.normals.size());
+            assert(shape.mesh.normals.size());
 
             uint32 lFlags = eGD_Position;
             lFlags |= (shape.mesh.normals.size()) ? eGD_Normal : 0;
@@ -106,7 +106,7 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh )
                                &lGeometryData[0],
                                &shape.mesh.indices[0],
                                lVertices,
-							   shape.mesh.indices.size());
+                               shape.mesh.indices.size());
 
             aMesh->AddGeometry(lGeometry);
         }

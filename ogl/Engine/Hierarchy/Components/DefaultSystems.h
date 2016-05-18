@@ -70,7 +70,7 @@ struct CameraSystem : public entityx::System<CameraSystem>
                 transform.position -= transform.rotation * lSpeed * (float)dt;
             }
 
-            float3 lUp(0.0f, 0.0f, 1.0f);
+            float3 lUp(0.0f, 1.0f, 0.0f);
             float3 lSide = glm::cross(transform.rotation, lUp);
 
             if (lInput.DoAction(Right))
