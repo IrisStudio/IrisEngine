@@ -59,8 +59,8 @@ struct Renderer
 
     ~Renderer()
     {
-        CHECKED_DELETE(mMesh);
-        CHECKED_DELETE(mMaterial);
+        CheckedDelete(mMesh);
+		CheckedDelete(mMaterial);
     }
 
     CMesh* mMesh;

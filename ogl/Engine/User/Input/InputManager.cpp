@@ -16,8 +16,8 @@ CInputManager::CInputManager()
 
 CInputManager::~CInputManager()
 {
-    CHECKED_DELETE(manager);
-    CHECKED_DELETE(map);
+    CheckedDelete(manager);
+    CheckedDelete(map);
 }
 
 void CInputManager::ProcessInputs()
@@ -59,7 +59,7 @@ void CInputManager::Init(CWindow* aWindow)
     gainput::DeviceId mouseId = manager->CreateDevice<gainput::InputDeviceMouse>();
     gainput::DeviceId keyboardId = manager->CreateDevice<gainput::InputDeviceKeyboard>();
 
-    CHECKED_DELETE(map);
+    CheckedDelete(map);
 
     map = new gainput::InputMap(*manager);
     map->MapBool(Forward, keyboardId, gainput::KeyW);

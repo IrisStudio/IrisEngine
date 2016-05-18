@@ -18,9 +18,8 @@
 
 int main(int argc, char **argv )
 {
-  IApplication *app = new IApplication();;
-  app->Run();
-  CHECKED_DELETE(app);
+  IApplication app;
+  app.Run();
 
   return 1;//qapp.exec();
 }

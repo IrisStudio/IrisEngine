@@ -43,7 +43,6 @@ project "User"
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
     includedirs { "../3rdParty/entityx/" }
-	includedirs { "../3rdParty/Xinput/" }
 	includedirs { "../3rdParty/gainput-master/lib/include/" }
 	
 project "Script"

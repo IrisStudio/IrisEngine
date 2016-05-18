@@ -56,7 +56,7 @@ bool CShader::Compile()
 
     if (mShaderID)
     {
-        GLint lSizeCode = mCode.length();
+        GLint lSizeCode = (GLint) mCode.length();
         const GLchar* lShaderSrc = mCode.c_str();
         glShaderSource(mShaderID, 1, &lShaderSrc, &lSizeCode);
         glCompileShader(mShaderID);

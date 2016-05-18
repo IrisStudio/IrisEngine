@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <map>
+#include <list>
 #include <set>
 #include <string.h>
 
@@ -50,11 +51,40 @@ typedef glm::quat            quaternion;
     TypeName(const TypeName&);   \
     void operator=(const TypeName&)
 
-#define CHECKED_DELETE(Ptr) \
-    if( Ptr )                 \
-    {                         \
-        delete Ptr;             \
-        Ptr = nullptr;          \
-    }                         \
+template < class T > void CheckedDelete(std::set< T > & ar_set)
+{
+	for (std::set< T >::iterator itb = ar_set.begin(), ite = ar_set.end(); itb != ite; ++itb)
+		delete *itb;
+	ar_set.clear();
+}
+
+template < class T > void CheckedDelete(std::list< T > & ar_list)
+{
+	for (std::list< T >::iterator itb = ar_list.begin(), ite = ar_list.end(); itb != ite; ++itb)
+		delete *itb;
+	ar_list.clear();
+}
+
+template < class T > void CheckedDelete(std::vector< T > & ar_vec)
+{
+	for (size_t i = 0; i < ar_vec.size(); ++i)
+		delete ar_vec[i];
+	ar_vec.clear();
+}
+
+template< class T > inline void CheckedDelete(T*& p_ptr)
+{
+	if (p_ptr)
+	{
+		delete p_ptr;
+		p_ptr = nullptr;
+	}
+}
+
+template< class T > inline void DeleteArray(T*& p_ptr)
+{
+	delete[] p_ptr;
+	p_ptr = nullptr;
+}                      \
 
 #endif
