@@ -16,16 +16,10 @@ public:
 public:
   IApplication();
   virtual ~IApplication();
-  void ProccessInputs();
-  void Update( const float dt );
-  void Render();
   void Run();
 
 private:
   DISALLOW_COPY_AND_ASSIGN(IApplication);
-  
-  static float dt();
-  float        mCyclesLeft;
 };
 
 #endif
