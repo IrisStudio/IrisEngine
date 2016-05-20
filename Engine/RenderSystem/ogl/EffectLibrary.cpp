@@ -30,7 +30,7 @@ namespace Shaders
 #define interpolate_normal  "    Normal = normal;\n"
 
 #define in_out_uv           "layout(location = 2) in vec2 uv;\nout vec2 ftexcoord;\n"
-#define compute_uv          "    ftexcoord = vec2(1.0,0) - uv;\n"
+#define compute_uv          "    ftexcoord = uv;\n"
 
         const char* eGD_ScreenPosition_Str =
             in_2d_position

@@ -4,6 +4,10 @@
 #include "rs.h"
 
 #include <algorithm>
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+
 
 #include "Mesh/Mesh.h"
 #include "Material/Material.h"
@@ -12,6 +16,7 @@
 
 CObjLoader::CObjLoader()
 {
+	/*
     mCopyFunctions[eGD_Position] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
         std::vector< float > lGeometryData(nVertices * 3, 0); // Positions
@@ -63,89 +68,91 @@ CObjLoader::CObjLoader()
 
         return lGeometryData;
     };
+	*/
 }
 
 CObjLoader::~CObjLoader()
 {
 }
 
+struct SObjVertex
+{
+	aiVector3D pos;
+	aiVector3D normal;
+	aiVector2D uv;
+};
+
 bool
 CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial )
 {
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string err;
+	// Create an instance of the Importer class
+	Assimp::Importer importer;
+	const aiScene* scene= importer.ReadFile(aResource.GetFullFilename(), aiProcess_Triangulate | aiProcess_FlipUVs );
 
-    bool ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str(), aResource.GetDirectory().c_str(), tinyobj::calculate_normals | tinyobj::triangulation );
+	// If the import failed, report it
+	if (!scene)
+	{
+		LOG_ERROR(importer.GetErrorString());
+		return false;
+	}
 
-    if (!err.empty())   // `err` may contain warning message.
-    {
-        LOG_WARNING(err.c_str());
-    }
+	
+	for (uint32 iMaterial = 0, lMaterialsCount = scene->mNumMaterials; iMaterial < lMaterialsCount; ++iMaterial)
+	{
+		const aiMaterial* lCurrentMaterial = scene->mMaterials[iMaterial];
+		int a = 5;
+		int texIndex = 0;
+		aiString path;
+		
+		CSubMaterialSPtr lSubMaterial(new CSubMaterial(eRP_DiffuseMap));
+		if (lCurrentMaterial->GetTexture(aiTextureType_DIFFUSE, texIndex, &path) == AI_SUCCESS)
+		{
+			CTextureSPtr lTexture(new CTexture());
+			lTexture->Create(eTT_2D, aResource.GetDirectory() + path.data);
+			lSubMaterial->SetTexture(eTC_Diffuse, lTexture);
+		}
 
-    if (ret)
-    {
-        for each(tinyobj::material_t material in materials)
-        {
-            LOG_APPLICATION("material.name = %s\n", material.name.c_str());
-            LOG_APPLICATION("  material.Ka = (%f, %f ,%f)\n", material.ambient[0], material.ambient[1], material.ambient[2]);
-            LOG_APPLICATION("  material.Kd = (%f, %f ,%f)\n", material.diffuse[0], material.diffuse[1], material.diffuse[2]);
-            LOG_APPLICATION("  material.Ks = (%f, %f ,%f)\n", material.specular[0], material.specular[1], material.specular[2]);
-            LOG_APPLICATION("  material.Tr = (%f, %f ,%f)\n", material.transmittance[0], material.transmittance[1], material.transmittance[2]);
-            LOG_APPLICATION("  material.Ke = (%f, %f ,%f)\n", material.emission[0], material.emission[1], material.emission[2]);
-            LOG_APPLICATION("  material.Ns = %f\n", material.shininess);
-            LOG_APPLICATION("  material.Ni = %f\n", material.ior);
-            LOG_APPLICATION("  material.dissolve = %f\n", material.dissolve);
-            LOG_APPLICATION("  material.illum = %d\n", material.illum);
-            LOG_APPLICATION("  material.map_Ka = %s\n", material.ambient_texname.c_str());
-            LOG_APPLICATION("  material.map_Kd = %s\n", material.diffuse_texname.c_str());
-            LOG_APPLICATION("  material.map_Ks = %s\n", material.specular_texname.c_str());
-            LOG_APPLICATION("  material.map_Ns = %s\n", material.bump_texname.c_str());
+		aMaterial->AddSubMaterial(lSubMaterial);
 
-            CSubMaterialSPtr lSubMaterial(new CSubMaterial(eRP_DiffuseMap));
-            CTextureSPtr lTexture(new CTexture());
-			const size_t last_slash_idx = material.diffuse_texname.find_last_of("\\/");
-			if (std::string::npos != last_slash_idx)
+	}
+
+	aMesh->Resize( aMaterial->GetSubMaterialsCount() );
+
+	for (uint32 iMeshes = 0, lMeshesCount = scene->mNumMeshes; iMeshes < lMeshesCount; ++iMeshes)
+	{
+		aiMesh* lCurrentMesh = scene->mMeshes[iMeshes];
+
+		uint32 lFlags	          = eGD_Position | eGD_Normal | eGD_UV;
+		uint32 lFacesCount        = lCurrentMesh->mNumFaces;
+		std::vector< SObjVertex > lGeometryData;
+		std::vector< uint32 > lIndices(lFacesCount * 3, 0);
+
+		for (uint32 iFaces = 0, iVertex = 0; iFaces < lFacesCount; ++iFaces)
+		{
+			const aiFace& lCurrentFace = lCurrentMesh->mFaces[iFaces];
+			// Copy the index buffer
+			memcpy(&lIndices[iFaces * 3], &(lCurrentFace.mIndices[0]), 3 * sizeof(uint32));
+
+			// Copy the vertex buffer
+			for (uint32 iTriangle = 0; iTriangle < 3; ++iTriangle, ++iVertex)
 			{
-				material.diffuse_texname.erase(0, last_slash_idx + 1);
+				SObjVertex lVertex;
+				lVertex.pos = lCurrentMesh->mVertices[lCurrentFace.mIndices[iTriangle]];
+				lVertex.normal = lCurrentMesh->HasNormals() ? lCurrentMesh->mNormals[lCurrentFace.mIndices[iTriangle]] : aiVector3D(1.0f, 1.0f, 1.0f);
+				memcpy(&(lVertex.uv), &lCurrentMesh->mTextureCoords[0][lCurrentFace.mIndices[iTriangle]], sizeof(aiVector2D));
+				lGeometryData.push_back(lVertex);
 			}
+		}
 
-            lTexture->Create(eTT_2D, aResource.GetDirectory() + material.diffuse_texname);
-            lSubMaterial->SetTexture(eTC_Diffuse, lTexture);
-            aMaterial->AddSubMaterial(lSubMaterial);
-        }
+		CGeometrySPtr lGeometry(new CGeometry());
+		lGeometry->Create(lFlags,
+						  &lGeometryData[0],
+						  &lIndices[0],
+						  lGeometryData.size(),
+						  lIndices.size());
+		aMesh->AddGeometry(lCurrentMesh->mMaterialIndex, lGeometry);
+	}
 
-		const uint32 lSubMaterialsCount = aMaterial->GetSubMaterialsCount();
-        aMesh->Resize(lSubMaterialsCount);
-
-        for each (tinyobj::shape_t shape in shapes)
-        {
-            CGeometrySPtr lGeometry( new CGeometry() );
-
-            // We do not want data without positions
-            assert(shape.mesh.positions.size());
-            assert(shape.mesh.normals.size());
-
-            uint32 lFlags = eGD_Position;
-            lFlags |= (shape.mesh.normals.size()) ? eGD_Normal : 0;
-            lFlags |= (shape.mesh.texcoords.size()) ? eGD_UV : 0;
-
-            // Create the geometry of the object
-            const uint32 lVertices = shape.mesh.positions.size() / 3;
-
-            std::vector< float > lGeometryData = mCopyFunctions[lFlags](lVertices, shape.mesh );
-
-            lGeometry->Create( lFlags,
-                               &lGeometryData[0],
-                               &shape.mesh.indices[0],
-                               lVertices,
-                               shape.mesh.indices.size());
-
-			LOG_APPLICATION("%u", shape.mesh.material_ids.front() );
-
-            aMesh->AddGeometry(glm::clamp((int)(shape.mesh.material_ids.front()), 0, (int)lSubMaterialsCount), lGeometry);
-        }
-    }
-
-    return false;
+	
+	return true;
 }
