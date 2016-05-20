@@ -1,0 +1,4 @@
+{
+	type:"Vertex",
+	filename:"shaders/VertexShader01.vs"
+}

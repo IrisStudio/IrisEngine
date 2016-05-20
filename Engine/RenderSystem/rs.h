@@ -1,0 +1,76 @@
+#ifndef __IRIS_RS__
+#define __IRIS_RS__
+
+#include "Types.h"
+#include "EnumString.h"
+
+enum WindowSize
+{
+    eST_Windowed = 0,
+    eST_FitDesktop,
+    eST_FullScreen
+};
+
+enum Extension
+{
+};
+
+Begin_Enum_String(Extension)
+{
+}
+End_Enum_String;
+
+enum TextureType
+{
+  eTT_1D = 0x0DE0,
+  eTT_2D = 0x0DE1,
+  eTT_3D = 0
+};
+
+
+enum ShaderType
+{
+    eST_Vertex    = 0x8B31,
+    eST_Fragment  = 0x8B30,
+    eST_Geometry  = 0x8DD9,
+};
+
+Begin_Enum_String(ShaderType)
+{
+    Enum_String_Id(eST_Vertex, "Vertex");
+    Enum_String_Id(eST_Fragment, "Fragment");
+    Enum_String_Id(eST_Geometry, "Geometry");
+}
+End_Enum_String;
+
+enum GeometryData
+{
+    eGD_Position        = 1 << 0,
+    eGD_ScreenPosition  = 1 << 1,
+    eGD_Normal          = 1 << 2,
+    eGD_Tangent         = 1 << 3,
+    eGD_Binormal        = 1 << 4,
+    eGD_UV              = 1 << 6,
+    eGD_UV2             = 1 << 7,
+    eGeometryData_Count = 5
+};
+
+enum RenderableProperties
+{
+    eRP_Default = 0,
+    eRP_Color,
+    eRP_DiffuseMap,
+    eRP_NormalMap,
+    eRP_SelfIlumMap,
+    eRP_SpecularMap,
+    eRP_Count
+};
+
+
+class CTexture;
+typedef std::shared_ptr< CTexture > CTextureSPtr;
+
+class CEffect;
+typedef std::shared_ptr< CEffect > CEffectSPtr;
+
+#endif

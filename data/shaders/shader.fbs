@@ -1,0 +1,12 @@
+// Example IDL file for our monster's schema.
+
+enum Type:byte { Vertex = 0, Fragment, Geometry, Tesselation }
+
+table Shader
+{
+  name:string;
+  type:Type = Vertex;
+  filename:string;
+}
+
+root_type Shader;

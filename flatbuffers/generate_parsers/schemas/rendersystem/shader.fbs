@@ -1,0 +1,8 @@
+// Example IDL file for our monster's schema.
+table Shader
+{
+  type:string;
+  filename:string;
+}
+
+root_type Shader;
