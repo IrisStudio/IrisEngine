@@ -7,9 +7,12 @@
 class CMaterial
 {
     public:
+        typedef std::vector< CSubMaterialSPtr > TSubMaterials;
+    public:
         CMaterial();
         virtual ~CMaterial();
         uint32  GetSubMaterialsCount() const;
+        void    SetSubMaterials(TSubMaterials aSubMaterials);
         void    AddSubMaterial(CSubMaterialSPtr aSubMaterial);
         void    Apply( uint32 aIdx );
 

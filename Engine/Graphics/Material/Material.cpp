@@ -24,3 +24,8 @@ void CMaterial::AddSubMaterial(CSubMaterialSPtr aSubMaterial)
 {
     mSubMaterials.push_back(aSubMaterial);
 }
+
+void CMaterial::SetSubMaterials(TSubMaterials aSubMaterials)
+{
+    mSubMaterials = aSubMaterials;
+}

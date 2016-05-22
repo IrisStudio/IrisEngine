@@ -4,31 +4,35 @@
 
 #include "gph.h"
 #include "rs.h"
+#include "Named.h"
 
 class CEffect;
 class CTexture;
 
-class CSubMaterial
+class CSubMaterial : public CNamed
 {
     public:
-        CSubMaterial( uint32 aProperties );
+        CSubMaterial();
         virtual ~CSubMaterial();
         void Apply();
 
-        void SetDiffuseColor(const float4& aColor);
-        void SetTexture(TextureChanel aType, CTextureSPtr aTexture);
+        void SetRenderProperties(uint32 aRenderProperties);
 
-        const float4& GetDiffuseColor() const;
-        CTextureSPtr  GetTexture(TextureChanel aType) const;
-
-    protected:
-        CEffect*             mEffect;
-        typedef std::vector< CTextureSPtr > TTextures;
-        TTextures         mTextures;
-        float4                  mColor;
+    public:
+        TTextures           mTextures;
+        float3              mAmbientColor;
+        float3              mSpecularColor;
+        float3              mDiffuseColor;
+        float3              mTransmittance;
+        float3              mEmission;
+        float               mShininess;
+        float               mRoughness;
+        float               mTransparency;
 
     private:
         DISALLOW_COPY_AND_ASSIGN(CSubMaterial);
+
+        CEffect*             mEffect;
 };
 
 #endif

@@ -19,14 +19,13 @@ project "IrisEditor"
    targetdir "../bin/%{cfg.buildcfg}"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput",  "assimp" }
+   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Graphics"}
    includedirs { "../3rdParty/ChaiScript/include/" }
    includedirs { "../3rdParty/entityx/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32") }
-   libdirs { "../3rdParty/assimp/lib64" }
    
 group "FileSystem"
 project "effects"
@@ -71,12 +70,11 @@ project "RenderSystem"
 
 project "Graphics"
     kind "StaticLib"
-    files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp" }
+    files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp", "../Engine/Graphics/**.cc" }
 	includedirs { "../Engine/Common/" }
     includedirs { "../Engine/RenderSystem/" }
     includedirs { "../Engine/Graphics/" }
 	includedirs { "../3rdParty/" }
-	includedirs { "../3rdParty/assimp/include/" }
     
 project "Hierarchy"
     kind "StaticLib"

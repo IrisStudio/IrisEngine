@@ -1,13 +1,15 @@
 # File produced by Open Asset Import Library (http://www.assimp.sf.net)
 # (assimp v3.1.76522261)
 
-newmtl DefaultMaterial
-Kd 0.6 0.6 0.6
-Ka 0 0 0
+newmtl Material1
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
 Ks 0 0 0
 Ke 0 0 0
 d 1
-illum 1
+Ns 508
+illum 2
+map_Kd DPROP_DeadpoolSword_TEXSET_Color_NormX.jpg
 
 newmtl Material2
 Kd 0.8 0.8 0.8
@@ -29,16 +31,6 @@ Ns 508
 illum 2
 map_Kd CHR_Deadpool_Misc_TEXTSET_Color_NormX.jpg
 
-newmtl Material1
-Kd 0.8 0.8 0.8
-Ka 0.8 0.8 0.8
-Ks 0 0 0
-Ke 0 0 0
-d 1
-Ns 508
-illum 2
-map_Kd DPROP_DeadpoolSword_TEXSET_Color_NormX.jpg
-
 newmtl Material4
 Kd 0.8 0.8 0.8
 Ka 0.8 0.8 0.8
@@ -48,4 +40,12 @@ d 1
 Ns 508
 illum 2
 map_Kd WEP_MP7_TEXTSET_Color_NormX.jpg
+
+newmtl DefaultMaterial
+Kd 0.6 0.6 0.6
+Ka 0 0 0
+Ks 0 0 0
+Ke 0 0 0
+d 1
+illum 1
 

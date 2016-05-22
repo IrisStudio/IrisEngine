@@ -6,6 +6,7 @@
 class CResource
 {
     public:
+        CResource();
         CResource(const std::string& aFilename);
         CResource(const std::string& aFilename, const std::string& aFileNameSchema);
 

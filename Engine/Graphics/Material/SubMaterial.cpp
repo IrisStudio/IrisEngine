@@ -7,9 +7,16 @@
 
 #include <functional>
 
-CSubMaterial::CSubMaterial( uint32 aProperties )
-    : mEffect(CEffectLibrary::Instance().GetEffect(aProperties))
-    , mColor( float4(1.0f) )
+CSubMaterial::CSubMaterial()
+    : CNamed()
+    , mEffect( nullptr )
+    , mDiffuseColor(float4(1.0f))
+    , mAmbientColor(float4(1.0f))
+    , mSpecularColor(float4(1.0f))
+    , mTransmittance(float4(1.0f))
+    , mShininess(1.0f)
+    , mRoughness(1.0f)
+    , mTransparency(1.0f)
 {
     mTextures.resize(eTC_Count);
 }
@@ -35,22 +42,7 @@ void CSubMaterial::Apply()
     }
 }
 
-void CSubMaterial::SetDiffuseColor(const float4& color)
+void CSubMaterial::SetRenderProperties(uint32 aRenderProperties)
 {
-    mColor = color;
-}
-
-const float4& CSubMaterial::GetDiffuseColor() const
-{
-    return mColor;
-}
-
-void CSubMaterial::SetTexture(TextureChanel aType, CTextureSPtr aTexture)
-{
-    mTextures[aType] = aTexture;
-}
-
-CTextureSPtr CSubMaterial::GetTexture(TextureChanel aType) const
-{
-    return mTextures[aType];
+    mEffect = CEffectLibrary::Instance().GetEffect(aRenderProperties);
 }
