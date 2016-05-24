@@ -21,6 +21,7 @@ CObjLoader::CObjLoader()
     , mUVCount(0)
     , mTrianglesCount(0)
     , mFlags(0)
+	, mVertexSize(0)
 {
     mCopyFunctions[eGD_Position] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
@@ -164,11 +165,17 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial
     if(lFile)
     {
         GatherData(lFile);
+		BuildMesh(lFile);
     }
 
     fclose(lFile);
 
-    /*
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+
+	std::string err;
+	ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str() );
+	/*
     if( ret )
     {
         if (!err.empty())   // `err` may contain warning message.
@@ -176,23 +183,7 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial
             LOG_WARNING("%s", err.c_str());
         }
 
-        for each (tinyobj::material_t material in materials)
-        {
-            CSubMaterialSPtr lSubMaterial( new CSubMaterial( eRP_DiffuseMap ) );
-            CTextureSPtr lTexture( new CTexture() );
-            lTexture->Create(eTT_2D, aResource.GetDirectory() + material.diffuse_texname);
-            lSubMaterial->SetTexture(eTC_Diffuse, lTexture);
-            aMaterial->AddSubMaterial(lSubMaterial);
-        }
-
         const uint32 lMaterialsCount = aMaterial->GetSubMaterialsCount();
-
-        if( lMaterialsCount == 0 )
-        {
-            CSubMaterialSPtr lSubMaterial(new CSubMaterial(eRP_DiffuseMap));
-            lSubMaterial->SetDiffuseColor( float3(1.0, 0.0, 0.0) );
-            aMaterial->AddSubMaterial(lSubMaterial);
-        }
 
         aMesh->Resize(lMaterialsCount);
 
@@ -223,8 +214,7 @@ void CObjLoader::GatherData(FILE* aFile)
     int vt = 0;
     int vn = 0;
     char buffer[256] = { 0 };
-    std::string name;
-
+   
     while (fscanf(aFile, "%s", buffer) != EOF)
     {
         switch (buffer[0])
@@ -288,7 +278,6 @@ void CObjLoader::GatherData(FILE* aFile)
             case 'm':   // mtllib
                 fgets(buffer, sizeof(buffer), aFile);
                 sscanf(buffer, "%s %s", buffer, buffer);
-                name += buffer;
                 ImportMaterials( mResource.GetDirectory() + buffer );
                 break;
 
@@ -322,32 +311,259 @@ void CObjLoader::GatherData(FILE* aFile)
         }
     }
 
-    uint32 lVertexComponents = 0;
-
     if(mVertexCount > 0)
     {
         mFlags |= eGD_Position;
-        lVertexComponents += 3;
+		mVertexSize += 3;
     }
 
     if (mNormalsCount > 0)
     {
         mFlags |= eGD_Normal;
-        lVertexComponents += 3;
+		mVertexSize += 3;
     }
 
     if (mUVCount > 0)
     {
         mFlags |= eGD_UV;
-        lVertexComponents += 2;
+		mVertexSize += 2;
     }
 
     // Allocate memory for the OBJ model data.
     mPositions.resize(mVertexCount);
     mUVs.resize(mUVCount);
     mNormals.resize(mNormalsCount);
-    mVB.resize(mTrianglesCount * 3 * lVertexComponents);
+    mVB.resize(mTrianglesCount * 3 * mVertexSize);
     mIB.resize(mTrianglesCount * 3);
+
+	// Add a default material
+	if (mMaterial->GetSubMaterialsCount() == 0)
+	{
+		CSubMaterialSPtr lSubMaterial(new CSubMaterial());
+		lSubMaterial->SetId("default");
+		lSubMaterial->SetRenderProperties(eRP_DiffuseMap);
+		CTextureSPtr lTexture( new CTexture() );
+		lTexture->Create(eTT_2D, "../data/tex/uv.jpg");
+		lSubMaterial->mTextures[eTC_Diffuse] = lTexture;
+		mMaterial->AddSubMaterial(lSubMaterial);
+	}
+
+	mMesh->Resize(mMaterial->GetSubMaterialsCount());
+}
+
+void CObjLoader::AddVertex(uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32& aiVertex, uint32& aiTriangle)
+{
+	memcpy(&mVB[aiVertex], &mPositions[--aPosIdx], sizeof(float3));
+	aiVertex += 3;
+	memcpy(&mVB[aiVertex], &mNormals[--aNormalIdx], sizeof(float3));
+	aiVertex += 3;
+	memcpy(&mVB[aiVertex], &mUVs[--aUVIdx], sizeof(float2));
+	aiVertex += 2;
+	mIB[aiTriangle] = aiTriangle++;
+}
+
+void CObjLoader::BuildMesh(FILE* aFile)
+{
+	rewind(aFile);
+
+	int v[3] = { 0 };
+	int vt[3] = { 0 };
+	int vn[3] = { 0 };
+	int lPositionIdx = 0;
+	int lNormalIdx = 0;
+	int lUVIdx = 0;
+	int numVertices = 0;
+	int numTexCoords = 0;
+	int numNormals = 0;
+	int numTriangles = 0;
+	int activeMaterial = 0;
+	char buffer[256] = { 0 };
+	char vtx1[256] = { 0 };
+	char vtx2[256] = { 0 };
+	char vtx3[256] = { 0 };
+
+	uint32 iVertex = 0;
+	uint32 iTriangle = 0;
+
+	CGeometrySPtr lGeometry;
+	while (fscanf(aFile, "%s", buffer) != EOF)
+	{
+		switch (buffer[0])
+		{
+		case 'f': // v, v//vn, v/vt, or v/vt/vn.
+			v[0] = v[1] = v[2] = 0;
+			vt[0] = vt[1] = vt[2] = 0;
+			vn[0] = vn[1] = vn[2] = 0;
+
+			if (strstr(buffer, "//")) // v//vn
+			{
+				sscanf(buffer, "%d//%d", &v[0], &vn[0]);
+				fscanf(aFile, "%d//%d", &v[1], &vn[1]);
+				fscanf(aFile, "%d//%d", &v[2], &vn[2]);
+
+				v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
+				v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
+				v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+
+				vn[0] = (vn[0] < 0) ? vn[0] + numNormals - 1 : vn[0] - 1;
+				vn[1] = (vn[1] < 0) ? vn[1] + numNormals - 1 : vn[1] - 1;
+				vn[2] = (vn[2] < 0) ? vn[2] + numNormals - 1 : vn[2] - 1;
+
+				//addTrianglePosNormal(numTriangles++, activeMaterial, v[0], v[1], v[2], vn[0], vn[1], vn[2]);
+
+				v[1] = v[2];
+				vn[1] = vn[2];
+
+				while (fscanf(aFile, "%d//%d", &v[2], &vn[2]) > 0)
+				{
+					v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+					vn[2] = (vn[2] < 0) ? vn[2] + numNormals - 1 : vn[2] - 1;
+
+					//addTrianglePosNormal(numTriangles++, activeMaterial, v[0], v[1], v[2], vn[0], vn[1], vn[2]);
+
+					v[1] = v[2];
+					vn[1] = vn[2];
+				}
+			}
+			else
+			{
+				if( fscanf(aFile, "%s %s %s", vtx1, vtx2, vtx3) == 3  )
+				{
+					// v/vt/vn
+					sscanf(vtx1, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
+					AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle);
+					sscanf(vtx2, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
+					AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle);
+					sscanf(vtx3, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
+					AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle);
+					numTriangles += 3;
+				}
+				else if (sscanf(buffer, "%d/%d", &v[0], &vt[0]) == 2) // v/vt
+				{
+					fscanf(aFile, "%d/%d", &v[1], &vt[1]);
+					fscanf(aFile, "%d/%d", &v[2], &vt[2]);
+
+					v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
+					v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
+					v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+
+					vt[0] = (vt[0] < 0) ? vt[0] + numTexCoords - 1 : vt[0] - 1;
+					vt[1] = (vt[1] < 0) ? vt[1] + numTexCoords - 1 : vt[1] - 1;
+					vt[2] = (vt[2] < 0) ? vt[2] + numTexCoords - 1 : vt[2] - 1;
+
+					//addTrianglePosTexCoord(numTriangles++, activeMaterial, v[0], v[1], v[2], vt[0], vt[1], vt[2]);
+
+					v[1] = v[2];
+					vt[1] = vt[2];
+
+					while (fscanf(aFile, "%d/%d", &v[2], &vt[2]) > 0)
+					{
+						v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+						vt[2] = (vt[2] < 0) ? vt[2] + numTexCoords - 1 : vt[2] - 1;
+
+						//addTrianglePosTexCoord(numTriangles++, activeMaterial, v[0], v[1], v[2], vt[0], vt[1], vt[2]);
+
+						v[1] = v[2];
+						vt[1] = vt[2];
+					}
+				}
+				else // v
+				{
+					sscanf(buffer, "%d", &v[0]);
+					fscanf(aFile, "%d", &v[1]);
+					fscanf(aFile, "%d", &v[2]);
+
+					v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
+					v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
+					v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+
+					//addTrianglePos(numTriangles++, activeMaterial, v[0], v[1], v[2]);
+
+					v[1] = v[2];
+
+					while (fscanf(aFile, "%d", &v[2]) > 0)
+					{
+						v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+
+						//addTrianglePos(numTriangles++, activeMaterial, v[0], v[1], v[2]);
+
+						v[1] = v[2];
+					}
+				}
+			}
+
+			break;
+		case 'u': // usemtl
+			fgets(buffer, sizeof(buffer), aFile);
+			sscanf(buffer, "%s %s", buffer, buffer);
+			activeMaterial = mMaterialsIds[buffer];
+			break;
+		case 'g': // group
+			{
+			fgets(buffer, sizeof(buffer), aFile);
+			sscanf(buffer, "%s %s", buffer, buffer);
+			
+			if (lGeometry)
+			{
+				lGeometry->Create(mFlags,
+					&mVB[0],
+					&mIB[0],
+					numVertices,
+					numTriangles);
+				mMesh->AddGeometry(activeMaterial, lGeometry);
+			}
+			lGeometry = CGeometrySPtr( new CGeometry() );
+			}
+			break;
+			//*/
+		case 'v': // v, vn, or vt.
+			switch (buffer[1])
+			{
+			case '\0': // v
+				fscanf(aFile, "%f %f %f", 
+					&mPositions[numVertices][0],
+					&mPositions[numVertices][1],
+					&mPositions[numVertices][2]);
+				++numVertices;
+				break;
+
+			case 'n': // vn
+				fscanf(aFile, "%f %f %f",
+					&mNormals[numNormals][0],
+					&mNormals[numNormals][1],
+					&mNormals[numNormals][2]);
+				++numNormals;
+				break;
+
+			case 't': // vt
+				fscanf(aFile, "%f %f",
+					&mUVs[numTexCoords][0],
+					&mUVs[numTexCoords][1]);
+				++numTexCoords;		  
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+
+		default:
+			fgets(buffer, sizeof(buffer), aFile);
+			break;
+		}
+	}
+
+	// Add the last geometry
+	if (lGeometry)
+	{
+		lGeometry->Create(mFlags,
+			&mVB[0],
+			&mIB[0],
+			iVertex / mVertexSize,
+			numTriangles);
+		mMesh->AddGeometry(activeMaterial, lGeometry);
+	}
 }
 
 void CObjLoader::ImportMaterials(const std::string& aMaterialsFile)
@@ -496,6 +712,8 @@ void CObjLoader::ImportMaterials(const std::string& aMaterialsFile)
                         lSubMaterial = CSubMaterialSPtr(new CSubMaterial());
                         lSubMaterial->SetId(buffer);
                         lSubMaterials[lMaterialsCount] = lSubMaterial;
+						lSubMaterial->SetRenderProperties(eRP_Default);
+						mMaterialsIds[buffer] = lMaterialsCount;
                         ++lMaterialsCount;
                         break;
 
@@ -506,12 +724,6 @@ void CObjLoader::ImportMaterials(const std::string& aMaterialsFile)
             }
 
             mMaterial->SetSubMaterials( lSubMaterials );
-        }
-        else // Create a default material
-        {
-            CSubMaterialSPtr lSubMaterial(new CSubMaterial());
-            lSubMaterial->SetId("default");
-            mMaterial->AddSubMaterial(lSubMaterial);
         }
     }
 

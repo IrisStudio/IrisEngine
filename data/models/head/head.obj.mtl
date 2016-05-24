@@ -7,9 +7,9 @@ Ka 0 0 0
 Ks 0.0001 0.0001 0.0001
 Ke 0 0 0
 d 1
-Ns 20
+Ns 80
 illum 2
-map_Kd lambertian.jpg
-bump bump-lowRes.png
-map_bump bump-lowRes.png
+map_Kd ../../../../../../../../Program%20Files%20(x86)/open3mod/Open%203D%20Model%20Viewer/lambertian.jpg
+bump ../../../../../../../../Program%20Files%20(x86)/open3mod/Open%203D%20Model%20Viewer/bump-lowRes.png
+map_bump ../../../../../../../../Program%20Files%20(x86)/open3mod/Open%203D%20Model%20Viewer/bump-lowRes.png
 

@@ -32,6 +32,7 @@ class CObjLoader
         uint32 mUVCount;
         uint32 mTrianglesCount;
         uint32 mFlags;
+		uint32 mVertexSize;
 
 
         CResource  mResource;
@@ -39,8 +40,12 @@ class CObjLoader
         CMesh*     mMesh;
 
         void GatherData(FILE* aFile);
+		void BuildMesh(FILE* aFile);
         void ImportMaterials( const std::string& aMaterialsFile );
+		void AddVertex( uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32& aiVertex, uint32& aiTriangle );
 
+		typedef std::map< std::string, uint32 > TMaterialsCache;
+		TMaterialsCache mMaterialsIds;
         std::map< uint32, std::function<std::vector< float >(const uint32&, const tinyobj::mesh_t&) > > mCopyFunctions;
 };
 
