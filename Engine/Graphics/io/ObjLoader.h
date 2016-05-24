@@ -42,7 +42,7 @@ class CObjLoader
         void GatherData(FILE* aFile);
 		void BuildMesh(FILE* aFile);
         void ImportMaterials( const std::string& aMaterialsFile );
-		void AddVertex( uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32& aiVertex, uint32& aiTriangle );
+		void AddVertex(uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32 & aiVertex, uint32 & aiTriangle, uint32 & aiTriangleId);
 
 		typedef std::map< std::string, uint32 > TMaterialsCache;
 		TMaterialsCache mMaterialsIds;

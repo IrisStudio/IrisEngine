@@ -351,7 +351,7 @@ void CObjLoader::GatherData(FILE* aFile)
 	mMesh->Resize(mMaterial->GetSubMaterialsCount());
 }
 
-void CObjLoader::AddVertex(uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32& aiVertex, uint32& aiTriangle)
+void CObjLoader::AddVertex(uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32& aiVertex, uint32& aiTriangle, uint32& aiTriangleId)
 {
 	memcpy(&mVB[aiVertex], &mPositions[--aPosIdx], sizeof(float3));
 	aiVertex += 3;
@@ -359,7 +359,7 @@ void CObjLoader::AddVertex(uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uin
 	aiVertex += 3;
 	memcpy(&mVB[aiVertex], &mUVs[--aUVIdx], sizeof(float2));
 	aiVertex += 2;
-	mIB[aiTriangle] = aiTriangle++;
+	mIB[aiTriangle++] = aiTriangleId++;
 }
 
 void CObjLoader::BuildMesh(FILE* aFile)
@@ -375,7 +375,6 @@ void CObjLoader::BuildMesh(FILE* aFile)
 	int numVertices = 0;
 	int numTexCoords = 0;
 	int numNormals = 0;
-	int numTriangles = 0;
 	int activeMaterial = 0;
 	char buffer[256] = { 0 };
 	char vtx1[256] = { 0 };
@@ -383,8 +382,11 @@ void CObjLoader::BuildMesh(FILE* aFile)
 	char vtx3[256] = { 0 };
 
 	uint32 iVertex = 0;
+	uint32 iVertexId = 0;
 	uint32 iTriangle = 0;
-
+	uint32 iTriangleId = 0;
+	typedef std::map< std::string, uint32 > TIndicesMap;
+	TIndicesMap lIndicesCache;
 	CGeometrySPtr lGeometry;
 	while (fscanf(aFile, "%s", buffer) != EOF)
 	{
@@ -431,12 +433,35 @@ void CObjLoader::BuildMesh(FILE* aFile)
 				{
 					// v/vt/vn
 					sscanf(vtx1, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
-					AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle);
+
+					TIndicesMap::iterator lItfind = lIndicesCache.find(vtx1);
+					if (lItfind == lIndicesCache.end())
+					{
+						AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
+						lIndicesCache[vtx1] = iVertexId++;
+					}
+					else
+						mIB[iTriangle++] = lItfind->second;
+
 					sscanf(vtx2, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
-					AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle);
+					lItfind = lIndicesCache.find(vtx2);
+					if (lItfind == lIndicesCache.end())
+					{
+						AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
+						lIndicesCache[vtx2] = iVertexId++;
+					}
+					else
+						mIB[iTriangle++] = lItfind->second;
+
 					sscanf(vtx3, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
-					AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle);
-					numTriangles += 3;
+					lItfind = lIndicesCache.find(vtx3);
+					if (lItfind == lIndicesCache.end())
+					{
+						AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
+						lIndicesCache[vtx3] = iVertexId++;
+					}
+					else
+						mIB[iTriangle++] = lItfind->second;
 				}
 				else if (sscanf(buffer, "%d/%d", &v[0], &vt[0]) == 2) // v/vt
 				{
@@ -509,7 +534,7 @@ void CObjLoader::BuildMesh(FILE* aFile)
 					&mVB[0],
 					&mIB[0],
 					numVertices,
-					numTriangles);
+					mIB.size());
 				mMesh->AddGeometry(activeMaterial, lGeometry);
 			}
 			lGeometry = CGeometrySPtr( new CGeometry() );
@@ -561,7 +586,7 @@ void CObjLoader::BuildMesh(FILE* aFile)
 			&mVB[0],
 			&mIB[0],
 			iVertex / mVertexSize,
-			numTriangles);
+			mIB.size());
 		mMesh->AddGeometry(activeMaterial, lGeometry);
 	}
 }
