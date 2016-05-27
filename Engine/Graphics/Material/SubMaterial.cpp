@@ -33,13 +33,8 @@ void CSubMaterial::Apply()
     mEffect->Bind();
     mEffect->BindMatrices(M, V, P);
 
-    for each ( CTextureSPtr lTexture in mTextures )
-    {
-        if(lTexture)
-        {
-            lTexture->Bind();
-        }
-    }
+	for (uint32 i = 0; i < eTC_Count; ++i)
+		if (mTextures[i]) mTextures[i]->Bind(i);
 }
 
 void CSubMaterial::SetRenderProperties(uint32 aRenderProperties)

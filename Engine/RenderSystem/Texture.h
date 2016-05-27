@@ -10,7 +10,7 @@ public:
   CTexture();
   virtual ~CTexture();
   void Create(TextureType aType, const std::string& filename);
-  void Bind();
+  void Bind( uint32 aStageId );
 protected:
 private:
   DISALLOW_COPY_AND_ASSIGN(CTexture);
