@@ -1,16 +1,24 @@
 -- premake5.lua
 
 workspace "IrisEditor"
-   configurations { "Debug", "Release", "Final" }
+   configurations { "Debug_Render_Calls", "Debug", "Release", "Final" }
    platforms { "x64" }
    location "../EditorDevEnv"
    language "C++"
+   
+   filter "configurations:Debug_Render_Calls"
+      defines { "DEBUG", "DEBUG_RENDER_CALLS" }
+      flags { "Symbols" }
    
    filter "configurations:Debug"
       defines { "DEBUG" }
       flags { "Symbols" }
 
    filter "configurations:Release"
+      defines { "NO_DEBUG" }
+      optimize "On"
+	  
+	filter "configurations:Final"
       defines { "NO_DEBUG", "NO_LOG" }
       optimize "On"
 

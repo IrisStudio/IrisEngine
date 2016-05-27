@@ -14,6 +14,47 @@
 
 namespace ogl
 {
+#ifdef  DEBUG_RENDER_CALLS
+	void CheckOGLError(const char* aErrorMsg, ...)
+	{
+#define CASE_OGL_ERROR( enum ) case enum: lErrorStr = #enum; break;
+		GLenum lError = glGetError();
+
+		std::string lErrorStr = "GL_UNKNOWN_ERROR";
+
+		if (lError != GL_NO_ERROR)
+		{
+			switch (lError)
+			{
+				CASE_OGL_ERROR(GL_INVALID_ENUM)
+				CASE_OGL_ERROR(GL_INVALID_VALUE)
+				CASE_OGL_ERROR(GL_INVALID_OPERATION)
+				CASE_OGL_ERROR(GL_STACK_OVERFLOW)
+				CASE_OGL_ERROR(GL_STACK_UNDERFLOW)
+				CASE_OGL_ERROR(GL_OUT_OF_MEMORY)
+				CASE_OGL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION)
+				CASE_OGL_ERROR(GL_CONTEXT_LOST)
+
+			default:
+				break;
+			}
+
+			va_list args;
+			va_start(args, aErrorMsg);
+			int len = _vscprintf(aErrorMsg, args) + 1;
+			char* buffer = (char*)malloc(len * sizeof(char));
+			vsprintf_s(buffer, len, aErrorMsg, args);
+			LOG_ERROR((lErrorStr + ": " + buffer).c_str())
+				free(buffer);
+			va_end(args);
+		}
+
+#undef CASE_OGL_ERROR
+	}
+#else
+	void CheckOGLError(const char*, ...) {}
+#endif
+
     namespace
     {
         void *GetAnyGLFuncAddress(const char *name)
@@ -681,44 +722,6 @@ namespace ogl
         oglVertexArrayVertexBuffer = reinterpret_cast<void(APIENTRY*)(GLuint, GLuint, GLuint, GLintptr, GLsizei)>(GetAnyGLFuncAddress("glVertexArrayVertexBuffer"));
         oglVertexArrayVertexBuffers = reinterpret_cast<void(APIENTRY*)(GLuint, GLuint, GLsizei, const GLuint *, const GLintptr *, const GLsizei *)>(GetAnyGLFuncAddress("glVertexArrayVertexBuffers"));
     }
-
-    void CheckOGLError(const char* aErrorMsg, ...)
-    {
-#define CASE_OGL_ERROR( enum ) case enum: lErrorStr = #enum; break;
-        GLenum lError = glGetError();
-
-        std::string lErrorStr = "GL_UNKNOWN_ERROR";
-
-        if(lError != GL_NO_ERROR)
-        {
-            switch (lError)
-            {
-                    CASE_OGL_ERROR(GL_INVALID_ENUM)
-                    CASE_OGL_ERROR(GL_INVALID_VALUE)
-                    CASE_OGL_ERROR(GL_INVALID_OPERATION)
-                    CASE_OGL_ERROR(GL_STACK_OVERFLOW)
-                    CASE_OGL_ERROR(GL_STACK_UNDERFLOW)
-                    CASE_OGL_ERROR(GL_OUT_OF_MEMORY)
-                    CASE_OGL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION)
-                    CASE_OGL_ERROR(GL_CONTEXT_LOST)
-
-                default:
-                    break;
-            }
-
-            va_list args;
-            va_start(args, aErrorMsg);
-            int len = _vscprintf(aErrorMsg, args) + 1;
-            char* buffer = (char*)malloc(len * sizeof(char));
-            vsprintf_s(buffer, len, aErrorMsg, args);
-            LOG_ERROR( (lErrorStr + ": " + buffer).c_str() )
-            free(buffer);
-            va_end(args);
-        }
-
-#undef CASE_OGL_ERROR
-    }
-
 
     /* GL_VERSION_1_2 */
     void(APIENTRY *oglCopyTexSubImage3D)(GLenum, GLint, GLint, GLint, GLint, GLint, GLint, GLsizei, GLsizei) = nullptr;
