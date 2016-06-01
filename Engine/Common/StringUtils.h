@@ -19,6 +19,25 @@ namespace iris { namespace str_utils
 	  va_end(args);
     return output;
 	}
+
+  inline void OnlyFileName(std::string& strPath, bool aRemoveExtension = true )
+  {
+	  const size_t last_slash_idx = strPath.find_last_of("\\/");
+	  if (std::string::npos != last_slash_idx)
+	  {
+		  strPath.erase(0, last_slash_idx + 1);
+	  }
+
+	  if( aRemoveExtension )
+	  {
+		  // Remove extension if present.
+		  const size_t period_idx = strPath.rfind('.');
+		  if (std::string::npos != period_idx)
+		  {
+			  strPath.erase(period_idx);
+		  }
+	  }
+  }
 }}
 
 #endif

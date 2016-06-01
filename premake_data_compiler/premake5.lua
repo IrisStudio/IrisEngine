@@ -23,38 +23,21 @@ project "DataCompiler"
    targetdir "../bin/%{cfg.buildcfg}"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../DataCompiler/**.h", "../DataCompiler/**.cpp" }
-   links { "Common", "Graphics", "flatbuffers", "winmm" }
-   includedirs { "../Engine/Common/", "../Engine/Graphics", "RenderSystem" }
+   links { "Common", "flatbuffers",  "assimp" }
+   includedirs { "../Engine/Common/",}
    includedirs { "../3rdParty/" }
+   includedirs { "../DataCompiler/" }
+   includedirs { "../Engine/Graphics/" }
+   includedirs { "../Engine/Graphics/io/fbs/" }
+   includedirs { "../3rdParty/assimp/include/" }
+   libdirs { "../3rdParty/assimp/lib64/" }
    
-group "FileSystem"
-project "effects"
-    kind "None"
-    files { "../data/effects/**.xml", "../data/effects/**.xml" }
-   
-group "Engine"
 project "Common"
     kind "StaticLib"
     files { "../Engine/Common/**.h", "../Engine/Common/**.cpp", "../Engine/Common/**.hpp" }
 	includedirs { "../Engine/Common/" }
 	includedirs { "../3rdParty/" }
 
-project "RenderSystem"
-    kind "StaticLib"
-    files { "../Engine/RenderSystem/**.h", "../Engine/RenderSystem/**.cpp" }
-	includedirs { "../Engine/Common/" }
-    includedirs { "../Engine/Graphics/" }
-	includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
-	includedirs { "../3rdParty/" }
-
-project "Graphics"
-    kind "StaticLib"
-    files { "../Engine/Graphics/**.h", "../Engine/Graphics/**.cpp", "../Engine/Graphics/**.cc" }
-	includedirs { "../Engine/Common/" }
-    includedirs { "../Engine/RenderSystem/" }
-    includedirs { "../Engine/Graphics/" }
-	includedirs { "../3rdParty/" }
-    
 group "3rdParty"
 
 project "flatbuffers"

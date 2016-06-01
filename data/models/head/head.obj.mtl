@@ -1,9 +1,9 @@
 # File produced by Open Asset Import Library (http://www.assimp.sf.net)
 # (assimp v3.1.76522261)
 
-newmtl defaultMat
+newmtl papito
 Kd 0.6 0.6 0.6
-Ka 0 0 0
+Ka 0 1 1
 Ks 0.0001 0.0001 0.0001
 Ke 0 0 0
 d 1

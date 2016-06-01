@@ -1,7 +1,10 @@
 #include <stdio.h>
 
+#include "Compilers\Material\ObjectCompiler.h"
+
 int main(int argc, char **argv )
 {
-	printf("hioadafdad");
+	CObjectCompiler lObjectCompiler;
+	lObjectCompiler.Compile(CResource("models/head/head.obj"));
   return 1;
 }

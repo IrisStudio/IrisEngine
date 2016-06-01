@@ -8,6 +8,8 @@
 
 #include <string>
 
+#include "gph.h"
+
 namespace Shaders
 {
 
