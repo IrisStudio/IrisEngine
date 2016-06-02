@@ -43,6 +43,32 @@ Begin_Enum_String(ShaderType)
 }
 End_Enum_String;
 
+enum BlendEquation
+{
+	eBE_Add = 0x8006,
+	eBE_Subtract = 0x800A,
+	eBE_ReverseSubtract = 0x800B
+};
+
+enum BlendFunc
+{
+	eBF_ZERO = 0,
+	eBF_ONE = 1,
+	eBF_SRC_COLOR = 0x0300,
+	eBF_ONE_MINUS_SRC_COLOR = 0x0301,
+	eBF_DST_COLOR = 0x0306,
+	eBF_ONE_MINUS_DST_COLOR = 0x0307,
+	eBF_SRC_ALPHA = 0x0302,
+	eBF_ONE_MINUS_SRC_ALPHA = 0x0303,
+	eBF_DST_ALPHA = 0x0304,
+	eBF_ONE_MINUS_DST_ALPHA = 0x0305,
+	eBF_CONSTANT_COLOR = 0x8001,
+	eBF_ONE_MINUS_CONSTANT_COLOR = 0x8002,
+	eBF_CONSTANT_ALPHA = 0x8003,
+	eBF_ONE_MINUS_CONSTANT_ALPHA = 0x8004,
+	eBF_SRC_ALPHA_SATURATE = 0x0308,
+};
+
 class CTexture;
 typedef std::shared_ptr< CTexture > CTextureSPtr;
 typedef std::vector< CTextureSPtr > TTextures;
