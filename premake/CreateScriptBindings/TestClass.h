@@ -11,6 +11,7 @@ namespace Test
     {
         public:
             CTestClass();
+            CTestClass(int);
             ~CTestClass();
             
             void method_public_1();
