@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.pyc
 
 # Precompiled Headers
 *.gch
