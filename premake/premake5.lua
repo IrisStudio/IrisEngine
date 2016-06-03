@@ -27,7 +27,7 @@ project "IrisEditor"
    targetdir "../bin/%{cfg.buildcfg}"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput" }
+   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput", "imgui" }
    includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Graphics"}
    includedirs { "../3rdParty/ChaiScript/include/" }
@@ -51,6 +51,7 @@ project "User"
 	includedirs { "../3rdParty/" }
     includedirs { "../3rdParty/entityx/" }
 	includedirs { "../3rdParty/gainput-master/lib/include/" }
+	includedirs { "../3rdParty/imgui" }
 	
 project "Script"
     kind "StaticLib"
@@ -116,3 +117,9 @@ project "flatbuffers"
     kind "StaticLib"
     files { "../3rdParty/flatbuffers/**.h", "../3rdParty/flatbuffers/src/**.cpp" }
 	includedirs { "../3rdParty/" }
+	
+project "imgui"
+    kind "StaticLib"
+    files { "../3rdParty/imgui/**.h", "../3rdParty/imgui/**.cpp" }
+	includedirs { "../3rdParty/imgui" }
+	excludes { "../3rdParty/imgui/examples/**"  }
