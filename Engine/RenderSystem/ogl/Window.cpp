@@ -365,7 +365,7 @@ bool CWindow::Update()
 void CWindow::BeginRender()
 {
     RECT lRect;
-    GetWindowRect(mHandle, &lRect);
+    GetClientRect(mHandle, &lRect);
     mSize = uint2( uint32(lRect.right- lRect.left), uint32( lRect.bottom - lRect.top ) );
     ogl::CheckOGLError("before viewport");
     glViewport(0, 0, mSize.x, mSize.y);
