@@ -14,6 +14,8 @@
 #include "StringUtils.h"
 #include "Input\InputManager.h"
 
+#include "EditorGui\EditorGui.h"
+
 IApplication::IApplication()
 {
 }
@@ -37,6 +39,8 @@ void IApplication::Run()
     {
         if (lMainWindow.Show())
         {
+			ImGui_ImplGlfwGL3_Init(lMainWindow.GetHandle(), true);
+
             //Testing the EntityX construction
             CGameObjectManager& game_object_manager = CGameObjectManager::Instance();
             CTimer&  lTimer                         = CTimer::Instance(10);
