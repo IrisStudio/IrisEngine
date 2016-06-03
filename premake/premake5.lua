@@ -76,6 +76,7 @@ project "RenderSystem"
 	includedirs { "../Engine/RenderSystem/", "../Engine/RenderSystem/ogl/" }
 	includedirs { "../3rdParty/" }
 	includedirs { "../3rdParty/gainput-master/lib/include/" }
+	includedirs { "../3rdParty/imgui" }
 
 project "Graphics"
     kind "StaticLib"

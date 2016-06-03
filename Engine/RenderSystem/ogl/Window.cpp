@@ -11,6 +11,8 @@
 #include "Shader.h"
 
 #include "EffectLibrary.h"
+#include <imgui.h>
+
 
 static HWND   mHandle;
 static HDC    mhDC;
@@ -48,6 +50,8 @@ namespace
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    ImGuiIO& io = ImGui::GetIO();
+
     switch (msg)
     {
         case WM_SIZE:
@@ -66,6 +70,11 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
         case WM_KEYDOWN:
             {
+                if (wParam < 256)
+                {
+                    io.KeysDown[wParam] = 1;
+                }
+
                 switch (wParam)
                 {
                     case VK_ESCAPE:
@@ -76,6 +85,83 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 }
             }
             break;
+
+        case WM_LBUTTONDOWN:
+            if (io.WantCaptureMouse)
+            {
+                io.MouseDown[0] = true;
+            }
+
+            return true;
+
+        case WM_LBUTTONUP:
+            if (io.WantCaptureMouse)
+            {
+                io.MouseDown[0] = false;
+            }
+
+            return true;
+
+        case WM_RBUTTONDOWN:
+            if (io.WantCaptureMouse)
+            {
+                io.MouseDown[1] = true;
+            }
+
+            return true;
+
+        case WM_RBUTTONUP:
+            if (io.WantCaptureMouse)
+            {
+                io.MouseDown[1] = false;
+            }
+
+            return true;
+
+        case WM_MBUTTONDOWN:
+            if (io.WantCaptureMouse)
+            {
+                io.MouseDown[2] = true;
+            }
+
+            return true;
+
+        case WM_MBUTTONUP:
+            if (io.WantCaptureMouse)
+            {
+                io.MouseDown[2] = false;
+            }
+
+            return true;
+
+        case WM_MOUSEWHEEL:
+            io.MouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
+            return true;
+
+        case WM_MOUSEMOVE:
+            LOG_APPLICATION("mouse move");
+            io.MousePos.x = (signed short)(lParam);
+            io.MousePos.y = (signed short)(lParam >> 16);
+            return true;
+
+
+        case WM_KEYUP:
+            if (wParam < 256)
+            {
+                io.KeysDown[wParam] = 0;
+            }
+
+            return true;
+
+        case WM_CHAR:
+
+            // You can also use ToAscii()+GetKeyboardState() to retrieve characters.
+            if (wParam > 0 && wParam < 0x10000)
+            {
+                io.AddInputCharacter((unsigned short)wParam);
+            }
+
+            return true;
     }//end switch( msg )
 
     return DefWindowProc(hWnd, msg, wParam, lParam);

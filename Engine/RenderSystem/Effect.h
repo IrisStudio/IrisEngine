@@ -24,34 +24,44 @@
         BindUniform(lVertexShaderID, varLoc, in);                                   \
     }                                                                               \
 
-class CEffect
-{
-public:
-    CEffect(CShaderSPtr aVertexShader, CShaderSPtr aPixelShader);
-    CEffect(const char* aVertexShader, const char* aPixelShader);
-    virtual ~CEffect();
-    void    Bind();
-    uint32  GetID() const;
-    void    BindMatrices(const float4x4& M, const float4x4& V, const float4x4& P);
+    class CEffect
+    {
+        public:
+            CEffect(CShaderSPtr aVertexShader, CShaderSPtr aFragmentShader);
+            CEffect(const char* aVertexShader, const char* aFragmentShader);
+            virtual ~CEffect();
+            void    Bind();
+            uint32  GetID() const;
+            void    BindMatrices(const float4x4& M, const float4x4& V, const float4x4& P);
 
-    template <class T>
-    void BindFragment(const T& in, const std::string& name);
+            template <class T>
+            void BindFragment(const T& in, const std::string& name);
 
-    template <class T>
-    void BindVertex(const T& in, const std::string& name);
+            template <class T>
+            void BindVertex(const T& in, const std::string& name);
 
-    template <class T>
-    void BindUniform(const uint32& Id, const int& varLoc, const T& in);
+            template <class T>
+            void BindUniform(const uint32& Id, const int& varLoc, const T& in);
 
-private:
-    uint32 mID;
-    CShaderSPtr mVertexShader;
-    CShaderSPtr mFragmentShader;
-};
+            CShaderSPtr GetVertexShader()
+            {
+                return mVertexShader;
+            }
 
-inline uint32 CEffect::GetID() const
-{
-    return mID;
-}
+            CShaderSPtr GetFragmentShader()
+            {
+                return mFragmentShader;
+            }
+
+        private:
+            uint32 mID;
+            CShaderSPtr mVertexShader;
+            CShaderSPtr mFragmentShader;
+    };
+
+    inline uint32 CEffect::GetID() const
+    {
+        return mID;
+    }
 
 #endif

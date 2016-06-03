@@ -15,8 +15,8 @@ class CWindow : public Singleton< CWindow >
         bool Show();
         bool Update();
         void SetSize(const uint2& aSize);
-		const uint2& GetSize() const;
-		void* GetHandle();
+        const uint2& GetSize() const;
+        void* GetHandle();
         void BeginRender();
         void Clear( bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer );
         void EndRender();

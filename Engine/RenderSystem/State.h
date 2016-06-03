@@ -1,66 +1,37 @@
 #ifndef __IRIS_STATE__
 #define __IRIS_STATE__
 
-#include "Singleton.h"
 #include "rs.h"
 #include "Types.h"
 
-class CState : public Singleton< CState >
+class CState
 {
     public:
-        CState();
-        virtual ~CState();
+        static const bool            GetBlend();
+        static const BlendEquation   GetBlendEquation();
+        static const BlendFunc       GetBlendFuncSrc();
+        static const BlendFunc       GetBlendFuncDst();
+        static const bool            GetCullFace();
+        static const bool            GetDepthTest();
+        static const bool            GetScissorTest();
 
-		inline const bool GetBlend() const
-		{
-			return mBlend;
-		}
-		inline const BlendEquation GetBlendEquation() const
-		{
-			return mBlendEquation;
-		}
-		inline const BlendFunc GetBlendFuncSrc() const
-		{
-			return mBlendFuncSrc;
-		}
-		inline const BlendFunc GetBlendFuncDst() const
-		{
-			return mBlendFuncDst;
-		}
-		inline const bool GetCullFace() const
-		{
-			return mCullFace;
-		}
-		inline const bool GetDepthTest() const
-		{
-			return mDepthTest;
-		}
-		inline const bool GetScissorTest() const
-		{
-			return mScissorTest;
-		}
+        static void SetBlendEquation(const BlendEquation);
+        static void SetBlendFunc    (const BlendFunc, const BlendFunc);
 
-		void SetBlendEquation(const BlendEquation);
-		void SetBlendFunc(const BlendFunc, const BlendFunc);
+        static void EnableBlend();
+        static void EnableCullFace();
+        static void EnableDepthTest();
+        static void EnableScissorTest();
 
-		void EnableBlend();
-		void EnableCullFace();
-		void EnableDepthTest();
-		void EnableScissorTest();
+        static void DisableBlend();
+        static void DisableCullFace();
+        static void DisableDepthTest();
+        static void DisableScissorTest();
 
-		void DisableBlend();
-		void DisableCullFace();
-		void DisableDepthTest();
-		void DisableScissorTest();
+        static void ActivateTexture(uint32 aStageId);
+        static void BindTexture(TextureType aType, uint32 aId);
 
-    private:
-		bool mBlend;
-		BlendEquation mBlendEquation;
-		BlendFunc mBlendFuncSrc;
-		BlendFunc mBlendFuncDst;
-		bool mCullFace;
-		bool mDepthTest;
-		bool mScissorTest;
+        static void SetViewport(uint32 aX, uint32 aY, uint32 aWidth, uint32 aHeight);
 };
 
 #endif

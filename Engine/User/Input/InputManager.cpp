@@ -5,6 +5,8 @@
 #include <gainput\gainput.h>
 #include <Windows.h>
 
+#include <imgui.h>
+
 // Setup Gainput
 gainput::InputManager* manager = nullptr;
 gainput::InputMap* map = nullptr;
@@ -82,6 +84,11 @@ bool CInputManager::DoAction(Actions aAction)
 
 bool CInputManager::DoAction(Actions aAction, float& aAmount)
 {
+    if( ImGui::GetIO().WantCaptureMouse )
+    {
+        return false;
+    }
+
     aAmount = map->GetFloatDelta(aAction);
     return (map->GetFloatDelta(aAction) != 0.0f);
 }
