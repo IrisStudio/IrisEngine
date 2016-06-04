@@ -84,11 +84,13 @@ bool CInputManager::DoAction(Actions aAction)
 
 bool CInputManager::DoAction(Actions aAction, float& aAmount)
 {
-    if( ImGui::GetIO().WantCaptureMouse )
+    bool lActionActive = false;
+
+    if( !ImGui::GetIO().WantCaptureMouse )
     {
-        return false;
+        aAmount = map->GetFloatDelta(aAction);
+        lActionActive = aAmount != 0.0f;
     }
 
-    aAmount = map->GetFloatDelta(aAction);
-    return (map->GetFloatDelta(aAction) != 0.0f);
+    return lActionActive;
 }
