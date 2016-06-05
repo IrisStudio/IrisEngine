@@ -9,173 +9,315 @@ struct SubMaterial;
 
 struct Material;
 
-struct SubMaterial FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_NAME = 4,
-    VT_AMBIENT = 6,
-    VT_DIFFUSE = 8,
-    VT_SPECULAR = 10,
-    VT_TRANSMITTANCE = 12,
-    VT_SHININESS = 14,
-    VT_INDEXOFREFRACTION = 16,
-    VT_TRANSPARENT = 18,
-    VT_ILUM = 20,
-    VT_AMBIENT_MAP = 22,
-    VT_DIFFUSE_MAP = 24,
-    VT_SPECULAR_MAP = 26,
-    VT_SPECULAR_HIGHLIGHT_MAP = 28,
-    VT_BUMP_MAP = 30,
-    VT_DISPLACEMENT_MAP = 32,
-    VT_ALPHA_MAP = 34
-  };
-  const flatbuffers::String *name() const { return GetPointer<const flatbuffers::String *>(VT_NAME); }
-  const float3 *ambient() const { return GetStruct<const float3 *>(VT_AMBIENT); }
-  const float3 *diffuse() const { return GetStruct<const float3 *>(VT_DIFFUSE); }
-  const float3 *specular() const { return GetStruct<const float3 *>(VT_SPECULAR); }
-  const float3 *transmittance() const { return GetStruct<const float3 *>(VT_TRANSMITTANCE); }
-  float shininess() const { return GetField<float>(VT_SHININESS, 0); }
-  float indexofrefraction() const { return GetField<float>(VT_INDEXOFREFRACTION, 0); }
-  float transparent() const { return GetField<float>(VT_TRANSPARENT, 0); }
-  int8_t ilum() const { return GetField<int8_t>(VT_ILUM, 0); }
-  const flatbuffers::String *ambient_map() const { return GetPointer<const flatbuffers::String *>(VT_AMBIENT_MAP); }
-  const flatbuffers::String *diffuse_map() const { return GetPointer<const flatbuffers::String *>(VT_DIFFUSE_MAP); }
-  const flatbuffers::String *specular_map() const { return GetPointer<const flatbuffers::String *>(VT_SPECULAR_MAP); }
-  const flatbuffers::String *specular_highlight_map() const { return GetPointer<const flatbuffers::String *>(VT_SPECULAR_HIGHLIGHT_MAP); }
-  const flatbuffers::String *bump_map() const { return GetPointer<const flatbuffers::String *>(VT_BUMP_MAP); }
-  const flatbuffers::String *displacement_map() const { return GetPointer<const flatbuffers::String *>(VT_DISPLACEMENT_MAP); }
-  const flatbuffers::String *alpha_map() const { return GetPointer<const flatbuffers::String *>(VT_ALPHA_MAP); }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_NAME) &&
-           verifier.Verify(name()) &&
-           VerifyField<float3>(verifier, VT_AMBIENT) &&
-           VerifyField<float3>(verifier, VT_DIFFUSE) &&
-           VerifyField<float3>(verifier, VT_SPECULAR) &&
-           VerifyField<float3>(verifier, VT_TRANSMITTANCE) &&
-           VerifyField<float>(verifier, VT_SHININESS) &&
-           VerifyField<float>(verifier, VT_INDEXOFREFRACTION) &&
-           VerifyField<float>(verifier, VT_TRANSPARENT) &&
-           VerifyField<int8_t>(verifier, VT_ILUM) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_AMBIENT_MAP) &&
-           verifier.Verify(ambient_map()) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_DIFFUSE_MAP) &&
-           verifier.Verify(diffuse_map()) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_SPECULAR_MAP) &&
-           verifier.Verify(specular_map()) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_SPECULAR_HIGHLIGHT_MAP) &&
-           verifier.Verify(specular_highlight_map()) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_BUMP_MAP) &&
-           verifier.Verify(bump_map()) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_DISPLACEMENT_MAP) &&
-           verifier.Verify(displacement_map()) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_ALPHA_MAP) &&
-           verifier.Verify(alpha_map()) &&
-           verifier.EndTable();
-  }
+struct SubMaterial FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
+{
+    enum
+    {
+        VT_NAME = 4,
+        VT_AMBIENT = 6,
+        VT_DIFFUSE = 8,
+        VT_SPECULAR = 10,
+        VT_TRANSMITTANCE = 12,
+        VT_SHININESS = 14,
+        VT_INDEXOFREFRACTION = 16,
+        VT_TRANSPARENT = 18,
+        VT_ILUM = 20,
+        VT_AMBIENT_MAP = 22,
+        VT_DIFFUSE_MAP = 24,
+        VT_SPECULAR_MAP = 26,
+        VT_SPECULAR_HIGHLIGHT_MAP = 28,
+        VT_BUMP_MAP = 30,
+        VT_DISPLACEMENT_MAP = 32,
+        VT_SELF_ILUM_MAP = 34,
+        VT_ALPHA_MAP = 36
+    };
+    const flatbuffers::String *name() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_NAME);
+    }
+    const float3 *ambient() const
+    {
+        return GetStruct<const float3 *>(VT_AMBIENT);
+    }
+    const float3 *diffuse() const
+    {
+        return GetStruct<const float3 *>(VT_DIFFUSE);
+    }
+    const float3 *specular() const
+    {
+        return GetStruct<const float3 *>(VT_SPECULAR);
+    }
+    const float3 *transmittance() const
+    {
+        return GetStruct<const float3 *>(VT_TRANSMITTANCE);
+    }
+    float shininess() const
+    {
+        return GetField<float>(VT_SHININESS, 0);
+    }
+    float indexofrefraction() const
+    {
+        return GetField<float>(VT_INDEXOFREFRACTION, 0);
+    }
+    float transparent() const
+    {
+        return GetField<float>(VT_TRANSPARENT, 0);
+    }
+    int8_t ilum() const
+    {
+        return GetField<int8_t>(VT_ILUM, 0);
+    }
+    const flatbuffers::String *ambient_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_AMBIENT_MAP);
+    }
+    const flatbuffers::String *diffuse_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_DIFFUSE_MAP);
+    }
+    const flatbuffers::String *specular_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_SPECULAR_MAP);
+    }
+    const flatbuffers::String *specular_highlight_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_SPECULAR_HIGHLIGHT_MAP);
+    }
+    const flatbuffers::String *bump_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_BUMP_MAP);
+    }
+    const flatbuffers::String *displacement_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_DISPLACEMENT_MAP);
+    }
+    const flatbuffers::String *self_ilum_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_SELF_ILUM_MAP);
+    }
+    const flatbuffers::String *alpha_map() const
+    {
+        return GetPointer<const flatbuffers::String *>(VT_ALPHA_MAP);
+    }
+    bool Verify(flatbuffers::Verifier &verifier) const
+    {
+        return VerifyTableStart(verifier) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_NAME) &&
+               verifier.Verify(name()) &&
+               VerifyField<float3>(verifier, VT_AMBIENT) &&
+               VerifyField<float3>(verifier, VT_DIFFUSE) &&
+               VerifyField<float3>(verifier, VT_SPECULAR) &&
+               VerifyField<float3>(verifier, VT_TRANSMITTANCE) &&
+               VerifyField<float>(verifier, VT_SHININESS) &&
+               VerifyField<float>(verifier, VT_INDEXOFREFRACTION) &&
+               VerifyField<float>(verifier, VT_TRANSPARENT) &&
+               VerifyField<int8_t>(verifier, VT_ILUM) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_AMBIENT_MAP) &&
+               verifier.Verify(ambient_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_DIFFUSE_MAP) &&
+               verifier.Verify(diffuse_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_SPECULAR_MAP) &&
+               verifier.Verify(specular_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_SPECULAR_HIGHLIGHT_MAP) &&
+               verifier.Verify(specular_highlight_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_BUMP_MAP) &&
+               verifier.Verify(bump_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_DISPLACEMENT_MAP) &&
+               verifier.Verify(displacement_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_SELF_ILUM_MAP) &&
+               verifier.Verify(self_ilum_map()) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_ALPHA_MAP) &&
+               verifier.Verify(alpha_map()) &&
+               verifier.EndTable();
+    }
 };
 
-struct SubMaterialBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_name(flatbuffers::Offset<flatbuffers::String> name) { fbb_.AddOffset(SubMaterial::VT_NAME, name); }
-  void add_ambient(const float3 *ambient) { fbb_.AddStruct(SubMaterial::VT_AMBIENT, ambient); }
-  void add_diffuse(const float3 *diffuse) { fbb_.AddStruct(SubMaterial::VT_DIFFUSE, diffuse); }
-  void add_specular(const float3 *specular) { fbb_.AddStruct(SubMaterial::VT_SPECULAR, specular); }
-  void add_transmittance(const float3 *transmittance) { fbb_.AddStruct(SubMaterial::VT_TRANSMITTANCE, transmittance); }
-  void add_shininess(float shininess) { fbb_.AddElement<float>(SubMaterial::VT_SHININESS, shininess, 0); }
-  void add_indexofrefraction(float indexofrefraction) { fbb_.AddElement<float>(SubMaterial::VT_INDEXOFREFRACTION, indexofrefraction, 0); }
-  void add_transparent(float transparent) { fbb_.AddElement<float>(SubMaterial::VT_TRANSPARENT, transparent, 0); }
-  void add_ilum(int8_t ilum) { fbb_.AddElement<int8_t>(SubMaterial::VT_ILUM, ilum, 0); }
-  void add_ambient_map(flatbuffers::Offset<flatbuffers::String> ambient_map) { fbb_.AddOffset(SubMaterial::VT_AMBIENT_MAP, ambient_map); }
-  void add_diffuse_map(flatbuffers::Offset<flatbuffers::String> diffuse_map) { fbb_.AddOffset(SubMaterial::VT_DIFFUSE_MAP, diffuse_map); }
-  void add_specular_map(flatbuffers::Offset<flatbuffers::String> specular_map) { fbb_.AddOffset(SubMaterial::VT_SPECULAR_MAP, specular_map); }
-  void add_specular_highlight_map(flatbuffers::Offset<flatbuffers::String> specular_highlight_map) { fbb_.AddOffset(SubMaterial::VT_SPECULAR_HIGHLIGHT_MAP, specular_highlight_map); }
-  void add_bump_map(flatbuffers::Offset<flatbuffers::String> bump_map) { fbb_.AddOffset(SubMaterial::VT_BUMP_MAP, bump_map); }
-  void add_displacement_map(flatbuffers::Offset<flatbuffers::String> displacement_map) { fbb_.AddOffset(SubMaterial::VT_DISPLACEMENT_MAP, displacement_map); }
-  void add_alpha_map(flatbuffers::Offset<flatbuffers::String> alpha_map) { fbb_.AddOffset(SubMaterial::VT_ALPHA_MAP, alpha_map); }
-  SubMaterialBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
-  SubMaterialBuilder &operator=(const SubMaterialBuilder &);
-  flatbuffers::Offset<SubMaterial> Finish() {
-    auto o = flatbuffers::Offset<SubMaterial>(fbb_.EndTable(start_, 16));
-    return o;
-  }
+struct SubMaterialBuilder
+{
+    flatbuffers::FlatBufferBuilder &fbb_;
+    flatbuffers::uoffset_t start_;
+    void add_name(flatbuffers::Offset<flatbuffers::String> name)
+    {
+        fbb_.AddOffset(SubMaterial::VT_NAME, name);
+    }
+    void add_ambient(const float3 *ambient)
+    {
+        fbb_.AddStruct(SubMaterial::VT_AMBIENT, ambient);
+    }
+    void add_diffuse(const float3 *diffuse)
+    {
+        fbb_.AddStruct(SubMaterial::VT_DIFFUSE, diffuse);
+    }
+    void add_specular(const float3 *specular)
+    {
+        fbb_.AddStruct(SubMaterial::VT_SPECULAR, specular);
+    }
+    void add_transmittance(const float3 *transmittance)
+    {
+        fbb_.AddStruct(SubMaterial::VT_TRANSMITTANCE, transmittance);
+    }
+    void add_shininess(float shininess)
+    {
+        fbb_.AddElement<float>(SubMaterial::VT_SHININESS, shininess, 0);
+    }
+    void add_indexofrefraction(float indexofrefraction)
+    {
+        fbb_.AddElement<float>(SubMaterial::VT_INDEXOFREFRACTION, indexofrefraction, 0);
+    }
+    void add_transparent(float transparent)
+    {
+        fbb_.AddElement<float>(SubMaterial::VT_TRANSPARENT, transparent, 0);
+    }
+    void add_ilum(int8_t ilum)
+    {
+        fbb_.AddElement<int8_t>(SubMaterial::VT_ILUM, ilum, 0);
+    }
+    void add_ambient_map(flatbuffers::Offset<flatbuffers::String> ambient_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_AMBIENT_MAP, ambient_map);
+    }
+    void add_diffuse_map(flatbuffers::Offset<flatbuffers::String> diffuse_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_DIFFUSE_MAP, diffuse_map);
+    }
+    void add_specular_map(flatbuffers::Offset<flatbuffers::String> specular_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_SPECULAR_MAP, specular_map);
+    }
+    void add_specular_highlight_map(flatbuffers::Offset<flatbuffers::String> specular_highlight_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_SPECULAR_HIGHLIGHT_MAP, specular_highlight_map);
+    }
+    void add_bump_map(flatbuffers::Offset<flatbuffers::String> bump_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_BUMP_MAP, bump_map);
+    }
+    void add_displacement_map(flatbuffers::Offset<flatbuffers::String> displacement_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_DISPLACEMENT_MAP, displacement_map);
+    }
+    void add_self_ilum_map(flatbuffers::Offset<flatbuffers::String> self_ilum_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_SELF_ILUM_MAP, self_ilum_map);
+    }
+    void add_alpha_map(flatbuffers::Offset<flatbuffers::String> alpha_map)
+    {
+        fbb_.AddOffset(SubMaterial::VT_ALPHA_MAP, alpha_map);
+    }
+    SubMaterialBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb)
+    {
+        start_ = fbb_.StartTable();
+    }
+    SubMaterialBuilder &operator=(const SubMaterialBuilder &);
+    flatbuffers::Offset<SubMaterial> Finish()
+    {
+        auto o = flatbuffers::Offset<SubMaterial>(fbb_.EndTable(start_, 17));
+        return o;
+    }
 };
 
 inline flatbuffers::Offset<SubMaterial> CreateSubMaterial(flatbuffers::FlatBufferBuilder &_fbb,
-   flatbuffers::Offset<flatbuffers::String> name = 0,
-   const float3 *ambient = 0,
-   const float3 *diffuse = 0,
-   const float3 *specular = 0,
-   const float3 *transmittance = 0,
-   float shininess = 0,
-   float indexofrefraction = 0,
-   float transparent = 0,
-   int8_t ilum = 0,
-   flatbuffers::Offset<flatbuffers::String> ambient_map = 0,
-   flatbuffers::Offset<flatbuffers::String> diffuse_map = 0,
-   flatbuffers::Offset<flatbuffers::String> specular_map = 0,
-   flatbuffers::Offset<flatbuffers::String> specular_highlight_map = 0,
-   flatbuffers::Offset<flatbuffers::String> bump_map = 0,
-   flatbuffers::Offset<flatbuffers::String> displacement_map = 0,
-   flatbuffers::Offset<flatbuffers::String> alpha_map = 0) {
-  SubMaterialBuilder builder_(_fbb);
-  builder_.add_alpha_map(alpha_map);
-  builder_.add_displacement_map(displacement_map);
-  builder_.add_bump_map(bump_map);
-  builder_.add_specular_highlight_map(specular_highlight_map);
-  builder_.add_specular_map(specular_map);
-  builder_.add_diffuse_map(diffuse_map);
-  builder_.add_ambient_map(ambient_map);
-  builder_.add_transparent(transparent);
-  builder_.add_indexofrefraction(indexofrefraction);
-  builder_.add_shininess(shininess);
-  builder_.add_transmittance(transmittance);
-  builder_.add_specular(specular);
-  builder_.add_diffuse(diffuse);
-  builder_.add_ambient(ambient);
-  builder_.add_name(name);
-  builder_.add_ilum(ilum);
-  return builder_.Finish();
+        flatbuffers::Offset<flatbuffers::String> name = 0,
+        const float3 *ambient = 0,
+        const float3 *diffuse = 0,
+        const float3 *specular = 0,
+        const float3 *transmittance = 0,
+        float shininess = 0,
+        float indexofrefraction = 0,
+        float transparent = 0,
+        int8_t ilum = 0,
+        flatbuffers::Offset<flatbuffers::String> ambient_map = 0,
+        flatbuffers::Offset<flatbuffers::String> diffuse_map = 0,
+        flatbuffers::Offset<flatbuffers::String> specular_map = 0,
+        flatbuffers::Offset<flatbuffers::String> specular_highlight_map = 0,
+        flatbuffers::Offset<flatbuffers::String> bump_map = 0,
+        flatbuffers::Offset<flatbuffers::String> displacement_map = 0,
+        flatbuffers::Offset<flatbuffers::String> self_ilum_map = 0,
+        flatbuffers::Offset<flatbuffers::String> alpha_map = 0)
+{
+    SubMaterialBuilder builder_(_fbb);
+    builder_.add_alpha_map(alpha_map);
+    builder_.add_self_ilum_map(self_ilum_map);
+    builder_.add_displacement_map(displacement_map);
+    builder_.add_bump_map(bump_map);
+    builder_.add_specular_highlight_map(specular_highlight_map);
+    builder_.add_specular_map(specular_map);
+    builder_.add_diffuse_map(diffuse_map);
+    builder_.add_ambient_map(ambient_map);
+    builder_.add_transparent(transparent);
+    builder_.add_indexofrefraction(indexofrefraction);
+    builder_.add_shininess(shininess);
+    builder_.add_transmittance(transmittance);
+    builder_.add_specular(specular);
+    builder_.add_diffuse(diffuse);
+    builder_.add_ambient(ambient);
+    builder_.add_name(name);
+    builder_.add_ilum(ilum);
+    return builder_.Finish();
 }
 
-struct Material FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_SUBMATERIALS = 4
-  };
-  const flatbuffers::Vector<flatbuffers::Offset<SubMaterial>> *submaterials() const { return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SubMaterial>> *>(VT_SUBMATERIALS); }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<flatbuffers::uoffset_t>(verifier, VT_SUBMATERIALS) &&
-           verifier.Verify(submaterials()) &&
-           verifier.VerifyVectorOfTables(submaterials()) &&
-           verifier.EndTable();
-  }
+struct Material FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
+{
+    enum
+    {
+        VT_SUBMATERIALS = 4
+    };
+    const flatbuffers::Vector<flatbuffers::Offset<SubMaterial>> *submaterials() const
+    {
+        return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SubMaterial>> *>(VT_SUBMATERIALS);
+    }
+    bool Verify(flatbuffers::Verifier &verifier) const
+    {
+        return VerifyTableStart(verifier) &&
+               VerifyField<flatbuffers::uoffset_t>(verifier, VT_SUBMATERIALS) &&
+               verifier.Verify(submaterials()) &&
+               verifier.VerifyVectorOfTables(submaterials()) &&
+               verifier.EndTable();
+    }
 };
 
-struct MaterialBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_submaterials(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SubMaterial>>> submaterials) { fbb_.AddOffset(Material::VT_SUBMATERIALS, submaterials); }
-  MaterialBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
-  MaterialBuilder &operator=(const MaterialBuilder &);
-  flatbuffers::Offset<Material> Finish() {
-    auto o = flatbuffers::Offset<Material>(fbb_.EndTable(start_, 1));
-    return o;
-  }
+struct MaterialBuilder
+{
+    flatbuffers::FlatBufferBuilder &fbb_;
+    flatbuffers::uoffset_t start_;
+    void add_submaterials(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SubMaterial>>> submaterials)
+    {
+        fbb_.AddOffset(Material::VT_SUBMATERIALS, submaterials);
+    }
+    MaterialBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb)
+    {
+        start_ = fbb_.StartTable();
+    }
+    MaterialBuilder &operator=(const MaterialBuilder &);
+    flatbuffers::Offset<Material> Finish()
+    {
+        auto o = flatbuffers::Offset<Material>(fbb_.EndTable(start_, 1));
+        return o;
+    }
 };
 
 inline flatbuffers::Offset<Material> CreateMaterial(flatbuffers::FlatBufferBuilder &_fbb,
-   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SubMaterial>>> submaterials = 0) {
-  MaterialBuilder builder_(_fbb);
-  builder_.add_submaterials(submaterials);
-  return builder_.Finish();
+        flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SubMaterial>>> submaterials = 0)
+{
+    MaterialBuilder builder_(_fbb);
+    builder_.add_submaterials(submaterials);
+    return builder_.Finish();
 }
 
-inline const Material *GetMaterial(const void *buf) { return flatbuffers::GetRoot<Material>(buf); }
+inline const Material *GetMaterial(const void *buf)
+{
+    return flatbuffers::GetRoot<Material>(buf);
+}
 
-inline bool VerifyMaterialBuffer(flatbuffers::Verifier &verifier) { return verifier.VerifyBuffer<Material>(); }
+inline bool VerifyMaterialBuffer(flatbuffers::Verifier &verifier)
+{
+    return verifier.VerifyBuffer<Material>();
+}
 
-inline void FinishMaterialBuffer(flatbuffers::FlatBufferBuilder &fbb, flatbuffers::Offset<Material> root) { fbb.Finish(root); }
+inline void FinishMaterialBuffer(flatbuffers::FlatBufferBuilder &fbb, flatbuffers::Offset<Material> root)
+{
+    fbb.Finish(root);
+}
 
 
 #endif  // FLATBUFFERS_GENERATED_MATERIAL_H_

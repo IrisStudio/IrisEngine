@@ -20,16 +20,17 @@ table SubMaterial
   diffuse:float3;
   specular:float3;
   transmittance:float3;
-  shininess:float;
-  indexofrefraction:float;
-  transparent:float;
-  ilum:byte;
+  shininess:float = 0;
+  indexofrefraction:float = 0;
+  transparent:float = 0;
+  ilum:byte = 0;
   ambient_map:string;
   diffuse_map:string;
   specular_map:string;
   specular_highlight_map:string;
   bump_map:string;
   displacement_map:string;
+  self_ilum_map:string;
   alpha_map:string;
 }
 

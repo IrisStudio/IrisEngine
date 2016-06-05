@@ -407,6 +407,8 @@ MD5::MD5(char * Input, long length)
 
 std::string fileMD5( const std::string& aName )
 {
+    std::string Temp;
+
     //Start opening your file
     std::ifstream inBigArrayfile;
     inBigArrayfile.open(aName, std::ios::binary | std::ios::in);
@@ -416,15 +418,20 @@ std::string fileMD5( const std::string& aName )
     long Length = inBigArrayfile.tellg();
     inBigArrayfile.seekg(0, std::ios::beg);
 
-    //read in the data from your file
-    char * InFileData = new char[Length];
-    inBigArrayfile.read(InFileData, Length);
+    if( Length > 0 )
+    {
+        //read in the data from your file
+        char * InFileData = new char[Length];
+        inBigArrayfile.read(InFileData, Length);
 
-    //Calculate MD5 hash
-    std::string Temp = md5(InFileData, Length);
+        //Calculate MD5 hash
+        Temp = md5(InFileData, Length);
 
-    //Clean up
-    delete[] InFileData;
+        //Clean up
+        delete[] InFileData;
+    }
+
+    inBigArrayfile.close();
 
     return Temp;
 }

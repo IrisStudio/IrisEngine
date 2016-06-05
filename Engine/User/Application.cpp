@@ -17,6 +17,9 @@
 #include "EditorGui.h"
 #include <imgui.h>
 
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
+
 IApplication::IApplication()
 {
 }
@@ -71,6 +74,31 @@ void IApplication::Run()
                 // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
                 {
                     static float f = 0.0f;
+                    static float values[90] = { 0 };
+                    static int values_offset = 0;
+                    static int i = 0;
+
+                    static float refresh_time = ImGui::GetTime(); // Create dummy data at fixed 60 hz rate for the demo
+
+                    if (++i > 90)
+                    {
+                        i = 0;
+
+                        for (int x = 0; x < 89; ++x)
+                        {
+                            values[x] = values[x + 1];
+                        }
+
+                        values[89] = lTimer.GetFPS();
+                    }
+                    else
+                    {
+                        values[i] = lTimer.GetFPS();
+                    }
+
+
+
+                    ImGui::PlotLines("Lines", values, IM_ARRAYSIZE(values), values_offset, "FPS avg", -1.0f, 1.0f, ImVec2(0, 80));
                     ImGui::Text("Hello, world!");
                     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
                     ImGui::ColorEdit3("clear color", (float*)&clear_color);

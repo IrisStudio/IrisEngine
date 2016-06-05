@@ -3,6 +3,7 @@
 #include <fstream>
 #include <streambuf>
 #include "MD5.h"
+#include "StringUtils.h"
 
 CResource::CResource()
     : mFilename("")
@@ -26,7 +27,14 @@ CResource::CResource(const std::string& aFilename, const std::string& aFileNameS
 
 void CResource::Fill()
 {
-    mFullFilename           = "../data/" + mFilename;
+    if(mFilename.find("../data/") == std::string::npos )
+    {
+        mFullFilename           = "../data/" + mFilename;
+    }
+    else
+    {
+        mFullFilename = mFilename;
+    }
 
     if( !mFilenameSchema.empty() )
     {
@@ -37,6 +45,8 @@ void CResource::Fill()
     mDirectory = (mFullFilename.substr(0, found)) + "/";
 
     mHash = fileMD5(mFullFilename);
+
+    iris::str_utils::OnlyFileName(mFilename);
 }
 
 

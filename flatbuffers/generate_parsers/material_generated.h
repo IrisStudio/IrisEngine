@@ -30,7 +30,8 @@ struct SubMaterial FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_SPECULAR_HIGHLIGHT_MAP = 28,
     VT_BUMP_MAP = 30,
     VT_DISPLACEMENT_MAP = 32,
-    VT_ALPHA_MAP = 34
+    VT_SELF_ILUM_MAP = 34,
+    VT_ALPHA_MAP = 36
   };
   const flatbuffers::String *name() const { return GetPointer<const flatbuffers::String *>(VT_NAME); }
   const float3 *ambient() const { return GetStruct<const float3 *>(VT_AMBIENT); }
@@ -47,6 +48,7 @@ struct SubMaterial FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const flatbuffers::String *specular_highlight_map() const { return GetPointer<const flatbuffers::String *>(VT_SPECULAR_HIGHLIGHT_MAP); }
   const flatbuffers::String *bump_map() const { return GetPointer<const flatbuffers::String *>(VT_BUMP_MAP); }
   const flatbuffers::String *displacement_map() const { return GetPointer<const flatbuffers::String *>(VT_DISPLACEMENT_MAP); }
+  const flatbuffers::String *self_ilum_map() const { return GetPointer<const flatbuffers::String *>(VT_SELF_ILUM_MAP); }
   const flatbuffers::String *alpha_map() const { return GetPointer<const flatbuffers::String *>(VT_ALPHA_MAP); }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -72,6 +74,8 @@ struct SubMaterial FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.Verify(bump_map()) &&
            VerifyField<flatbuffers::uoffset_t>(verifier, VT_DISPLACEMENT_MAP) &&
            verifier.Verify(displacement_map()) &&
+           VerifyField<flatbuffers::uoffset_t>(verifier, VT_SELF_ILUM_MAP) &&
+           verifier.Verify(self_ilum_map()) &&
            VerifyField<flatbuffers::uoffset_t>(verifier, VT_ALPHA_MAP) &&
            verifier.Verify(alpha_map()) &&
            verifier.EndTable();
@@ -96,11 +100,12 @@ struct SubMaterialBuilder {
   void add_specular_highlight_map(flatbuffers::Offset<flatbuffers::String> specular_highlight_map) { fbb_.AddOffset(SubMaterial::VT_SPECULAR_HIGHLIGHT_MAP, specular_highlight_map); }
   void add_bump_map(flatbuffers::Offset<flatbuffers::String> bump_map) { fbb_.AddOffset(SubMaterial::VT_BUMP_MAP, bump_map); }
   void add_displacement_map(flatbuffers::Offset<flatbuffers::String> displacement_map) { fbb_.AddOffset(SubMaterial::VT_DISPLACEMENT_MAP, displacement_map); }
+  void add_self_ilum_map(flatbuffers::Offset<flatbuffers::String> self_ilum_map) { fbb_.AddOffset(SubMaterial::VT_SELF_ILUM_MAP, self_ilum_map); }
   void add_alpha_map(flatbuffers::Offset<flatbuffers::String> alpha_map) { fbb_.AddOffset(SubMaterial::VT_ALPHA_MAP, alpha_map); }
   SubMaterialBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
   SubMaterialBuilder &operator=(const SubMaterialBuilder &);
   flatbuffers::Offset<SubMaterial> Finish() {
-    auto o = flatbuffers::Offset<SubMaterial>(fbb_.EndTable(start_, 16));
+    auto o = flatbuffers::Offset<SubMaterial>(fbb_.EndTable(start_, 17));
     return o;
   }
 };
@@ -121,9 +126,11 @@ inline flatbuffers::Offset<SubMaterial> CreateSubMaterial(flatbuffers::FlatBuffe
    flatbuffers::Offset<flatbuffers::String> specular_highlight_map = 0,
    flatbuffers::Offset<flatbuffers::String> bump_map = 0,
    flatbuffers::Offset<flatbuffers::String> displacement_map = 0,
+   flatbuffers::Offset<flatbuffers::String> self_ilum_map = 0,
    flatbuffers::Offset<flatbuffers::String> alpha_map = 0) {
   SubMaterialBuilder builder_(_fbb);
   builder_.add_alpha_map(alpha_map);
+  builder_.add_self_ilum_map(self_ilum_map);
   builder_.add_displacement_map(displacement_map);
   builder_.add_bump_map(bump_map);
   builder_.add_specular_highlight_map(specular_highlight_map);
