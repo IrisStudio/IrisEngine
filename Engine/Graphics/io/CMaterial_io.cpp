@@ -1,6 +1,8 @@
 #include "io/io.h"
 #include "Logger/Logger.h"
 #include "Material/Material.h"
+#include "Material/SubMaterial.h"
+#include "Texture.h"
 #include "Types.h"
 
 #include <flatbuffers/idl.h>
@@ -8,41 +10,46 @@
 
 #include "fbs/material_generated.h" // Already includes "flatbuffers/flatbuffers.h".
 
-template <> bool Load( const CResource& aResource, CMaterial& aObject)
+namespace io
 {
-    bool lOk = false;
-    uint8* lBufferPtr = nullptr;
-
-    if (GetBufferPtr(aResource, lBufferPtr))
+    template <> bool Load(const CResource& aResource, CMaterial& aObject)
     {
-		/*
-        const Shader* lShader = GetShader(lBufferPtr);
+        bool lOk = false;
+        uint8* lBufferPtr = nullptr;
 
-        if (lShader)
+        if (GetBufferPtr(aResource, lBufferPtr))
         {
-            CResource lShaderCode(lShader->filename()->c_str());
+            auto lMaterial = GetMaterial(lBufferPtr);
 
-            aObject = CShaderSPtr(new CShader());
+            auto lSubmaterials = lMaterial->submaterials();
 
-            ShaderType lShaderType;
-
-            if(EnumString< ShaderType >::ToEnum( lShaderType, lShader->type()->c_str() ) )
+            for (unsigned int i = 0; i < lSubmaterials->size(); i++)
             {
-                if (aObject->Create(lShaderType, lShaderCode.GetFileContent().c_str()))
+                CSubMaterialSPtr lSubmaterial( new CSubMaterial() );
+                lSubmaterial->mAmbientColor  = *lSubmaterials->Get(i)->ambient();
+                lSubmaterial->mDiffuseColor  = *lSubmaterials->Get(i)->diffuse();
+                lSubmaterial->mSpecularColor = *lSubmaterials->Get(i)->specular();
+                lSubmaterial->mTransmittance = *lSubmaterials->Get(i)->transmittance();
+                lSubmaterial->mTransparency  = lSubmaterials->Get(i)->transparent();
+
+                const flatbuffers::String* lDiffuseMap = lSubmaterials->Get(i)->diffuse_map();
+
+                if( strcmp( lDiffuseMap->c_str(), "") == 0 )
                 {
-                    lOk = true;
+                    CTextureSPtr lTexture(new CTexture());
+                    lTexture->Create(eTT_2D, aResource.GetDirectory() + lDiffuseMap->str() );
+                    lSubmaterial->mTextures[eTC_Diffuse] = lTexture;
                 }
             }
+
+            free(lBufferPtr);
         }
-		*/
 
-        free(lBufferPtr);
+        if (!lOk)
+        {
+            //aObject = 0;
+        }
+
+        return lOk;
     }
-
-    if( !lOk )
-    {
-        //aObject = 0;
-    }
-
-    return lOk;
 }

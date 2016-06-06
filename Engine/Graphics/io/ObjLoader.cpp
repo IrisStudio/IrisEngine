@@ -11,6 +11,7 @@
 #include "Texture.h"
 
 #include "model_obj.h"
+#include "io/io.h"
 
 #include<fstream>
 
@@ -21,7 +22,7 @@ CObjLoader::CObjLoader()
     , mUVCount(0)
     , mTrianglesCount(0)
     , mFlags(0)
-	, mVertexSize(0)
+    , mVertexSize(0)
 {
     mCopyFunctions[eGD_Position] = [](const uint32& nVertices, const tinyobj::mesh_t& aMesh) -> std::vector< float >
     {
@@ -86,6 +87,7 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial
     mResource = aResource;
     mMaterial = aMaterial;
     mMesh = aMesh;
+
     /*
     // Create an instance of the Importer class
     Assimp::Importer importer;
@@ -157,6 +159,10 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial
     }
     */
 
+    CResource lMaterialResource( aResource.GetDirectory() + aResource.GetFilename() + ".mat" );
+    io::Load(lMaterialResource, *aMaterial);
+
+
     ModelOBJ importer;
     bool ret = importer.import(aResource.GetFullFilename().c_str());
 
@@ -165,44 +171,44 @@ CObjLoader::Load( const CResource& aResource, CMesh* aMesh, CMaterial* aMaterial
     if(lFile)
     {
         GatherData(lFile);
-		BuildMesh(lFile);
+        BuildMesh(lFile);
     }
 
     fclose(lFile);
 
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
 
-	std::string err;
-	ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str() );
-	/*
+    std::string err;
+    ret = tinyobj::LoadObj(shapes, materials, err, aResource.GetFullFilename().c_str() );
+    /*
     if( ret )
     {
-        if (!err.empty())   // `err` may contain warning message.
-        {
-            LOG_WARNING("%s", err.c_str());
-        }
+    if (!err.empty())   // `err` may contain warning message.
+    {
+    LOG_WARNING("%s", err.c_str());
+    }
 
-        const uint32 lMaterialsCount = aMaterial->GetSubMaterialsCount();
+    const uint32 lMaterialsCount = aMaterial->GetSubMaterialsCount();
 
-        aMesh->Resize(lMaterialsCount);
+    aMesh->Resize(lMaterialsCount);
 
-        for each (tinyobj::shape_t shape in shapes )
-        {
-            uint32 lFlags = eGD_Position | eGD_Normal;
-            lFlags |= (shape.mesh.texcoords.empty()) ? 0 : eGD_UV;
+    for each (tinyobj::shape_t shape in shapes )
+    {
+    uint32 lFlags = eGD_Position | eGD_Normal;
+    lFlags |= (shape.mesh.texcoords.empty()) ? 0 : eGD_UV;
 
-            const uint32 lVertices = shape.mesh.positions.size() / 3;
-            std::vector< float > lGeometryData = mCopyFunctions[lFlags]( lVertices, shape.mesh );
+    const uint32 lVertices = shape.mesh.positions.size() / 3;
+    std::vector< float > lGeometryData = mCopyFunctions[lFlags]( lVertices, shape.mesh );
 
-            CGeometrySPtr lGeometry(new CGeometry());
-            lGeometry->Create(lFlags,
-                              &lGeometryData[0],
-                              &shape.mesh.indices[0],
-                              lVertices,
-                              shape.mesh.indices.size());
-            aMesh->AddGeometry(0, lGeometry);
-        }
+    CGeometrySPtr lGeometry(new CGeometry());
+    lGeometry->Create(lFlags,
+    &lGeometryData[0],
+    &shape.mesh.indices[0],
+    lVertices,
+    shape.mesh.indices.size());
+    aMesh->AddGeometry(0, lGeometry);
+    }
     }*/
 
     return true;
@@ -214,7 +220,7 @@ void CObjLoader::GatherData(FILE* aFile)
     int vt = 0;
     int vn = 0;
     char buffer[256] = { 0 };
-   
+
     while (fscanf(aFile, "%s", buffer) != EOF)
     {
         switch (buffer[0])
@@ -314,19 +320,19 @@ void CObjLoader::GatherData(FILE* aFile)
     if(mVertexCount > 0)
     {
         mFlags |= eGD_Position;
-		mVertexSize += 3;
+        mVertexSize += 3;
     }
 
     if (mNormalsCount > 0)
     {
         mFlags |= eGD_Normal;
-		mVertexSize += 3;
+        mVertexSize += 3;
     }
 
     if (mUVCount > 0)
     {
         mFlags |= eGD_UV;
-		mVertexSize += 2;
+        mVertexSize += 2;
     }
 
     // Allocate memory for the OBJ model data.
@@ -336,259 +342,273 @@ void CObjLoader::GatherData(FILE* aFile)
     mVB.resize(mTrianglesCount * 3 * mVertexSize);
     mIB.resize(mTrianglesCount * 3);
 
-	// Add a default material
-	if (mMaterial->GetSubMaterialsCount() == 0)
-	{
-		CSubMaterialSPtr lSubMaterial(new CSubMaterial());
-		lSubMaterial->SetId("default");
-		lSubMaterial->SetRenderProperties(eRP_DiffuseMap);
-		CTextureSPtr lTexture( new CTexture() );
-		lTexture->Create(eTT_2D, "../data/tex/uv.jpg");
-		lSubMaterial->mTextures[eTC_Diffuse] = lTexture;
-		mMaterial->AddSubMaterial(lSubMaterial);
-	}
+    // Add a default material
+    if (mMaterial->GetSubMaterialsCount() == 0)
+    {
+        CSubMaterialSPtr lSubMaterial(new CSubMaterial());
+        lSubMaterial->SetId("default");
+        lSubMaterial->SetRenderProperties(eRP_DiffuseMap);
+        CTextureSPtr lTexture( new CTexture() );
+        lTexture->Create(eTT_2D, "../data/tex/uv.jpg");
+        lSubMaterial->mTextures[eTC_Diffuse] = lTexture;
+        mMaterial->AddSubMaterial(lSubMaterial);
+    }
 
-	mMesh->Resize(mMaterial->GetSubMaterialsCount());
+    mMesh->Resize(mMaterial->GetSubMaterialsCount());
 }
 
 void CObjLoader::AddVertex(uint32 aPosIdx, uint32 aNormalIdx, uint32 aUVIdx, uint32& aiVertex, uint32& aiTriangle, uint32& aiTriangleId)
 {
-	memcpy(&mVB[aiVertex], &mPositions[--aPosIdx], sizeof(float3));
-	aiVertex += 3;
-	memcpy(&mVB[aiVertex], &mNormals[--aNormalIdx], sizeof(float3));
-	aiVertex += 3;
-	memcpy(&mVB[aiVertex], &mUVs[--aUVIdx], sizeof(float2));
-	aiVertex += 2;
-	mIB[aiTriangle++] = aiTriangleId++;
+    memcpy(&mVB[aiVertex], &mPositions[--aPosIdx], sizeof(float3));
+    aiVertex += 3;
+    memcpy(&mVB[aiVertex], &mNormals[--aNormalIdx], sizeof(float3));
+    aiVertex += 3;
+    memcpy(&mVB[aiVertex], &mUVs[--aUVIdx], sizeof(float2));
+    aiVertex += 2;
+    mIB[aiTriangle++] = aiTriangleId++;
 }
 
 void CObjLoader::BuildMesh(FILE* aFile)
 {
-	rewind(aFile);
+    rewind(aFile);
 
-	int v[3] = { 0 };
-	int vt[3] = { 0 };
-	int vn[3] = { 0 };
-	int lPositionIdx = 0;
-	int lNormalIdx = 0;
-	int lUVIdx = 0;
-	int numVertices = 0;
-	int numTexCoords = 0;
-	int numNormals = 0;
-	int activeMaterial = 0;
-	char buffer[256] = { 0 };
-	char vtx1[256] = { 0 };
-	char vtx2[256] = { 0 };
-	char vtx3[256] = { 0 };
+    int v[3] = { 0 };
+    int vt[3] = { 0 };
+    int vn[3] = { 0 };
+    int lPositionIdx = 0;
+    int lNormalIdx = 0;
+    int lUVIdx = 0;
+    int numVertices = 0;
+    int numTexCoords = 0;
+    int numNormals = 0;
+    int activeMaterial = 0;
+    char buffer[256] = { 0 };
+    char vtx1[256] = { 0 };
+    char vtx2[256] = { 0 };
+    char vtx3[256] = { 0 };
 
-	uint32 iVertex = 0;
-	uint32 iVertexId = 0;
-	uint32 iTriangle = 0;
-	uint32 iTriangleId = 0;
-	typedef std::map< std::string, uint32 > TIndicesMap;
-	TIndicesMap lIndicesCache;
-	CGeometrySPtr lGeometry;
-	while (fscanf(aFile, "%s", buffer) != EOF)
-	{
-		switch (buffer[0])
-		{
-		case 'f': // v, v//vn, v/vt, or v/vt/vn.
-			v[0] = v[1] = v[2] = 0;
-			vt[0] = vt[1] = vt[2] = 0;
-			vn[0] = vn[1] = vn[2] = 0;
+    uint32 iVertex = 0;
+    uint32 iVertexId = 0;
+    uint32 iTriangle = 0;
+    uint32 iTriangleId = 0;
+    typedef std::map< std::string, uint32 > TIndicesMap;
+    TIndicesMap lIndicesCache;
+    CGeometrySPtr lGeometry;
 
-			if (strstr(buffer, "//")) // v//vn
-			{
-				sscanf(buffer, "%d//%d", &v[0], &vn[0]);
-				fscanf(aFile, "%d//%d", &v[1], &vn[1]);
-				fscanf(aFile, "%d//%d", &v[2], &vn[2]);
+    while (fscanf(aFile, "%s", buffer) != EOF)
+    {
+        switch (buffer[0])
+        {
+            case 'f': // v, v//vn, v/vt, or v/vt/vn.
+                v[0] = v[1] = v[2] = 0;
+                vt[0] = vt[1] = vt[2] = 0;
+                vn[0] = vn[1] = vn[2] = 0;
 
-				v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
-				v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
-				v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+                if (strstr(buffer, "//")) // v//vn
+                {
+                    sscanf(buffer, "%d//%d", &v[0], &vn[0]);
+                    fscanf(aFile, "%d//%d", &v[1], &vn[1]);
+                    fscanf(aFile, "%d//%d", &v[2], &vn[2]);
 
-				vn[0] = (vn[0] < 0) ? vn[0] + numNormals - 1 : vn[0] - 1;
-				vn[1] = (vn[1] < 0) ? vn[1] + numNormals - 1 : vn[1] - 1;
-				vn[2] = (vn[2] < 0) ? vn[2] + numNormals - 1 : vn[2] - 1;
+                    v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
+                    v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
+                    v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
 
-				//addTrianglePosNormal(numTriangles++, activeMaterial, v[0], v[1], v[2], vn[0], vn[1], vn[2]);
+                    vn[0] = (vn[0] < 0) ? vn[0] + numNormals - 1 : vn[0] - 1;
+                    vn[1] = (vn[1] < 0) ? vn[1] + numNormals - 1 : vn[1] - 1;
+                    vn[2] = (vn[2] < 0) ? vn[2] + numNormals - 1 : vn[2] - 1;
 
-				v[1] = v[2];
-				vn[1] = vn[2];
+                    //addTrianglePosNormal(numTriangles++, activeMaterial, v[0], v[1], v[2], vn[0], vn[1], vn[2]);
 
-				while (fscanf(aFile, "%d//%d", &v[2], &vn[2]) > 0)
-				{
-					v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
-					vn[2] = (vn[2] < 0) ? vn[2] + numNormals - 1 : vn[2] - 1;
+                    v[1] = v[2];
+                    vn[1] = vn[2];
 
-					//addTrianglePosNormal(numTriangles++, activeMaterial, v[0], v[1], v[2], vn[0], vn[1], vn[2]);
+                    while (fscanf(aFile, "%d//%d", &v[2], &vn[2]) > 0)
+                    {
+                        v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+                        vn[2] = (vn[2] < 0) ? vn[2] + numNormals - 1 : vn[2] - 1;
 
-					v[1] = v[2];
-					vn[1] = vn[2];
-				}
-			}
-			else
-			{
-				if( fscanf(aFile, "%s %s %s", vtx1, vtx2, vtx3) == 3  )
-				{
-					// v/vt/vn
-					sscanf(vtx1, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
+                        //addTrianglePosNormal(numTriangles++, activeMaterial, v[0], v[1], v[2], vn[0], vn[1], vn[2]);
 
-					TIndicesMap::iterator lItfind = lIndicesCache.find(vtx1);
-					if (lItfind == lIndicesCache.end())
-					{
-						AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
-						lIndicesCache[vtx1] = iVertexId++;
-					}
-					else
-						mIB[iTriangle++] = lItfind->second;
+                        v[1] = v[2];
+                        vn[1] = vn[2];
+                    }
+                }
+                else
+                {
+                    if( fscanf(aFile, "%s %s %s", vtx1, vtx2, vtx3) == 3  )
+                    {
+                        // v/vt/vn
+                        sscanf(vtx1, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
 
-					sscanf(vtx2, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
-					lItfind = lIndicesCache.find(vtx2);
-					if (lItfind == lIndicesCache.end())
-					{
-						AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
-						lIndicesCache[vtx2] = iVertexId++;
-					}
-					else
-						mIB[iTriangle++] = lItfind->second;
+                        TIndicesMap::iterator lItfind = lIndicesCache.find(vtx1);
 
-					sscanf(vtx3, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
-					lItfind = lIndicesCache.find(vtx3);
-					if (lItfind == lIndicesCache.end())
-					{
-						AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
-						lIndicesCache[vtx3] = iVertexId++;
-					}
-					else
-						mIB[iTriangle++] = lItfind->second;
-				}
-				else if (sscanf(buffer, "%d/%d", &v[0], &vt[0]) == 2) // v/vt
-				{
-					fscanf(aFile, "%d/%d", &v[1], &vt[1]);
-					fscanf(aFile, "%d/%d", &v[2], &vt[2]);
+                        if (lItfind == lIndicesCache.end())
+                        {
+                            AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
+                            lIndicesCache[vtx1] = iVertexId++;
+                        }
+                        else
+                        {
+                            mIB[iTriangle++] = lItfind->second;
+                        }
 
-					v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
-					v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
-					v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+                        sscanf(vtx2, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
+                        lItfind = lIndicesCache.find(vtx2);
 
-					vt[0] = (vt[0] < 0) ? vt[0] + numTexCoords - 1 : vt[0] - 1;
-					vt[1] = (vt[1] < 0) ? vt[1] + numTexCoords - 1 : vt[1] - 1;
-					vt[2] = (vt[2] < 0) ? vt[2] + numTexCoords - 1 : vt[2] - 1;
+                        if (lItfind == lIndicesCache.end())
+                        {
+                            AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
+                            lIndicesCache[vtx2] = iVertexId++;
+                        }
+                        else
+                        {
+                            mIB[iTriangle++] = lItfind->second;
+                        }
 
-					//addTrianglePosTexCoord(numTriangles++, activeMaterial, v[0], v[1], v[2], vt[0], vt[1], vt[2]);
+                        sscanf(vtx3, "%d/%d/%d", &lPositionIdx, &lUVIdx, &lNormalIdx);
+                        lItfind = lIndicesCache.find(vtx3);
 
-					v[1] = v[2];
-					vt[1] = vt[2];
+                        if (lItfind == lIndicesCache.end())
+                        {
+                            AddVertex(lPositionIdx, lNormalIdx, lUVIdx, iVertex, iTriangle, iTriangleId);
+                            lIndicesCache[vtx3] = iVertexId++;
+                        }
+                        else
+                        {
+                            mIB[iTriangle++] = lItfind->second;
+                        }
+                    }
+                    else if (sscanf(buffer, "%d/%d", &v[0], &vt[0]) == 2) // v/vt
+                    {
+                        fscanf(aFile, "%d/%d", &v[1], &vt[1]);
+                        fscanf(aFile, "%d/%d", &v[2], &vt[2]);
 
-					while (fscanf(aFile, "%d/%d", &v[2], &vt[2]) > 0)
-					{
-						v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
-						vt[2] = (vt[2] < 0) ? vt[2] + numTexCoords - 1 : vt[2] - 1;
+                        v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
+                        v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
+                        v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
 
-						//addTrianglePosTexCoord(numTriangles++, activeMaterial, v[0], v[1], v[2], vt[0], vt[1], vt[2]);
+                        vt[0] = (vt[0] < 0) ? vt[0] + numTexCoords - 1 : vt[0] - 1;
+                        vt[1] = (vt[1] < 0) ? vt[1] + numTexCoords - 1 : vt[1] - 1;
+                        vt[2] = (vt[2] < 0) ? vt[2] + numTexCoords - 1 : vt[2] - 1;
 
-						v[1] = v[2];
-						vt[1] = vt[2];
-					}
-				}
-				else // v
-				{
-					sscanf(buffer, "%d", &v[0]);
-					fscanf(aFile, "%d", &v[1]);
-					fscanf(aFile, "%d", &v[2]);
+                        //addTrianglePosTexCoord(numTriangles++, activeMaterial, v[0], v[1], v[2], vt[0], vt[1], vt[2]);
 
-					v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
-					v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
-					v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+                        v[1] = v[2];
+                        vt[1] = vt[2];
 
-					//addTrianglePos(numTriangles++, activeMaterial, v[0], v[1], v[2]);
+                        while (fscanf(aFile, "%d/%d", &v[2], &vt[2]) > 0)
+                        {
+                            v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+                            vt[2] = (vt[2] < 0) ? vt[2] + numTexCoords - 1 : vt[2] - 1;
 
-					v[1] = v[2];
+                            //addTrianglePosTexCoord(numTriangles++, activeMaterial, v[0], v[1], v[2], vt[0], vt[1], vt[2]);
 
-					while (fscanf(aFile, "%d", &v[2]) > 0)
-					{
-						v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
+                            v[1] = v[2];
+                            vt[1] = vt[2];
+                        }
+                    }
+                    else // v
+                    {
+                        sscanf(buffer, "%d", &v[0]);
+                        fscanf(aFile, "%d", &v[1]);
+                        fscanf(aFile, "%d", &v[2]);
 
-						//addTrianglePos(numTriangles++, activeMaterial, v[0], v[1], v[2]);
+                        v[0] = (v[0] < 0) ? v[0] + numVertices - 1 : v[0] - 1;
+                        v[1] = (v[1] < 0) ? v[1] + numVertices - 1 : v[1] - 1;
+                        v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
 
-						v[1] = v[2];
-					}
-				}
-			}
+                        //addTrianglePos(numTriangles++, activeMaterial, v[0], v[1], v[2]);
 
-			break;
-		case 'u': // usemtl
-			fgets(buffer, sizeof(buffer), aFile);
-			sscanf(buffer, "%s %s", buffer, buffer);
-			activeMaterial = mMaterialsIds[buffer];
-			break;
-		case 'g': // group
-			{
-			fgets(buffer, sizeof(buffer), aFile);
-			sscanf(buffer, "%s %s", buffer, buffer);
-			
-			if (lGeometry)
-			{
-				lGeometry->Create(mFlags,
-					&mVB[0],
-					&mIB[0],
-					numVertices,
-					mIB.size());
-				mMesh->AddGeometry(activeMaterial, lGeometry);
-			}
-			lGeometry = CGeometrySPtr( new CGeometry() );
-			}
-			break;
-			//*/
-		case 'v': // v, vn, or vt.
-			switch (buffer[1])
-			{
-			case '\0': // v
-				fscanf(aFile, "%f %f %f", 
-					&mPositions[numVertices][0],
-					&mPositions[numVertices][1],
-					&mPositions[numVertices][2]);
-				++numVertices;
-				break;
+                        v[1] = v[2];
 
-			case 'n': // vn
-				fscanf(aFile, "%f %f %f",
-					&mNormals[numNormals][0],
-					&mNormals[numNormals][1],
-					&mNormals[numNormals][2]);
-				++numNormals;
-				break;
+                        while (fscanf(aFile, "%d", &v[2]) > 0)
+                        {
+                            v[2] = (v[2] < 0) ? v[2] + numVertices - 1 : v[2] - 1;
 
-			case 't': // vt
-				fscanf(aFile, "%f %f",
-					&mUVs[numTexCoords][0],
-					&mUVs[numTexCoords][1]);
-				++numTexCoords;		  
-				break;
+                            //addTrianglePos(numTriangles++, activeMaterial, v[0], v[1], v[2]);
 
-			default:
-				break;
-			}
+                            v[1] = v[2];
+                        }
+                    }
+                }
 
-			break;
+                break;
 
-		default:
-			fgets(buffer, sizeof(buffer), aFile);
-			break;
-		}
-	}
+            case 'u': // usemtl
+                fgets(buffer, sizeof(buffer), aFile);
+                sscanf(buffer, "%s %s", buffer, buffer);
+                activeMaterial = mMaterialsIds[buffer];
+                break;
 
-	// Add the last geometry
-	if (lGeometry)
-	{
-		lGeometry->Create(mFlags,
-			&mVB[0],
-			&mIB[0],
-			iVertex / mVertexSize,
-			mIB.size());
-		mMesh->AddGeometry(activeMaterial, lGeometry);
-	}
+            case 'g': // group
+                {
+                    fgets(buffer, sizeof(buffer), aFile);
+                    sscanf(buffer, "%s %s", buffer, buffer);
+
+                    if (lGeometry)
+                    {
+                        lGeometry->Create(mFlags,
+                                          &mVB[0],
+                                          &mIB[0],
+                                          numVertices,
+                                          mIB.size());
+                        mMesh->AddGeometry(activeMaterial, lGeometry);
+                    }
+
+                    lGeometry = CGeometrySPtr( new CGeometry() );
+                }
+                break;
+
+            //*/
+            case 'v': // v, vn, or vt.
+                switch (buffer[1])
+                {
+                    case '\0': // v
+                        fscanf(aFile, "%f %f %f",
+                               &mPositions[numVertices][0],
+                               &mPositions[numVertices][1],
+                               &mPositions[numVertices][2]);
+                        ++numVertices;
+                        break;
+
+                    case 'n': // vn
+                        fscanf(aFile, "%f %f %f",
+                               &mNormals[numNormals][0],
+                               &mNormals[numNormals][1],
+                               &mNormals[numNormals][2]);
+                        ++numNormals;
+                        break;
+
+                    case 't': // vt
+                        fscanf(aFile, "%f %f",
+                               &mUVs[numTexCoords][0],
+                               &mUVs[numTexCoords][1]);
+                        ++numTexCoords;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                break;
+
+            default:
+                fgets(buffer, sizeof(buffer), aFile);
+                break;
+        }
+    }
+
+    // Add the last geometry
+    if (lGeometry)
+    {
+        lGeometry->Create(mFlags,
+                          &mVB[0],
+                          &mIB[0],
+                          iVertex / mVertexSize,
+                          mIB.size());
+        mMesh->AddGeometry(activeMaterial, lGeometry);
+    }
 }
 
 void CObjLoader::ImportMaterials(const std::string& aMaterialsFile)
@@ -737,8 +757,8 @@ void CObjLoader::ImportMaterials(const std::string& aMaterialsFile)
                         lSubMaterial = CSubMaterialSPtr(new CSubMaterial());
                         lSubMaterial->SetId(buffer);
                         lSubMaterials[lMaterialsCount] = lSubMaterial;
-						lSubMaterial->SetRenderProperties(eRP_Default);
-						mMaterialsIds[buffer] = lMaterialsCount;
+                        lSubMaterial->SetRenderProperties(eRP_Default);
+                        mMaterialsIds[buffer] = lMaterialsCount;
                         ++lMaterialsCount;
                         break;
 
