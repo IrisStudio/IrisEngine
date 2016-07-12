@@ -757,7 +757,7 @@ void CObjLoader::ImportMaterials(const std::string& aMaterialsFile)
                         lSubMaterial = CSubMaterialSPtr(new CSubMaterial());
                         lSubMaterial->SetId(buffer);
                         lSubMaterials[lMaterialsCount] = lSubMaterial;
-                        lSubMaterial->SetRenderProperties(eRP_Default);
+                        lSubMaterial->SetRenderProperties(eRP_DiffuseMap);
                         mMaterialsIds[buffer] = lMaterialsCount;
                         ++lMaterialsCount;
                         break;

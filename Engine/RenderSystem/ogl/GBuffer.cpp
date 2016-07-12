@@ -65,3 +65,8 @@ void CGBuffer::Create()
 
     ogl::glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void CGBuffer::Bind()
+{
+    ogl::glBindFramebuffer(GL_FRAMEBUFFER, mID);
+}

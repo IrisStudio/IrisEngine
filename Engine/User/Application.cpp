@@ -15,6 +15,9 @@
 #include "Input\InputManager.h"
 
 #include "EditorGui.h"
+#include "GBuffer.h"
+#include "FrameBuffer.h"
+
 #include <imgui.h>
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
@@ -55,6 +58,10 @@ void IApplication::Run()
             bool show_another_window = false;
             ImVec4 clear_color = ImColor(114, 144, 154);
 
+            CGBuffer& lGBuffer = CGBuffer::Instance();
+            CFrameBuffer& lFrameBuffer = CFrameBuffer::Instance();
+            lGBuffer.Create();
+
             while (!lInputManager.DoAction(Exit))
             {
                 CWindow& lMainWindow = CWindow::Instance();
@@ -63,62 +70,35 @@ void IApplication::Run()
                 lTimer.Update();
                 lInputManager.ProcessInputs();
                 lMainWindow.SetWindowTitle(iris::str_utils::Format("FPS: %f", lTimer.GetFPS()));
+                lGBuffer.Bind();
                 lMainWindow.BeginRender();
                 lMainWindow.Clear(true, true, true);
+                lFrameBuffer.Bind();
                 game_object_manager.update(lTimer.GetElapsedTime());
+                lMainWindow.Clear(true, true, true);
 
-                /*
                 ImGuiIO& io = ImGui::GetIO();
                 ImGui_ImplGlfwGL3_NewFrame(lTimer.GetElapsedTime());
 
                 // 1. Show a simple window
                 // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
                 {
-                    static float f = 0.0f;
-                    static float values[90] = { 0 };
-                    static int values_offset = 0;
-                    static int i = 0;
-
-                    static float refresh_time = ImGui::GetTime(); // Create dummy data at fixed 60 hz rate for the demo
-
-                    if (++i > 90)
-                    {
-                        i = 0;
-
-                        for (int x = 0; x < 89; ++x)
-                        {
-                            values[x] = values[x + 1];
-                        }
-
-                        values[89] = lTimer.GetFPS();
-                    }
-                    else
-                    {
-                        values[i] = lTimer.GetFPS();
-                    }
-
-
-
-                    ImGui::PlotLines("Lines", values, IM_ARRAYSIZE(values), values_offset, "FPS avg", -1.0f, 1.0f, ImVec2(0, 80));
-                    ImGui::Text("Hello, world!");
-                    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-                    ImGui::ColorEdit3("clear color", (float*)&clear_color);
-
-                    if (ImGui::Button("Test Window"))
-                    {
-                        show_test_window ^= 1;
-                    }
-
-                    if (ImGui::Button("Another Window"))
-                    {
-                        show_another_window ^= 1;
-                    }
-
-                    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                    bool show_g_buffer = true;
+                    ImGui::Begin("GBUFFER", &show_g_buffer);
+                    ImGui::SetWindowSize(ImVec2(250, 500));
+                    ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
+                    ImGui::SetWindowPos(ImVec2(0, 0));
+                    float tex_w = (float)200;
+                    float tex_h = (float)100;
+                    //ImTextureID tex_id = ImGui::GetIO().Fonts->TexID;
+                    ImGui::Image((ImTextureID)3, ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+                    ImGui::Image((ImTextureID)4, ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+                    ImGui::Image((ImTextureID)5, ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+                    ImGui::End();
                 }
 
                 // 2. Show another simple window, this time using an explicit Begin/End pair
-                if (show_another_window)
+                if (false)
                 {
                     ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
                     ImGui::Begin("Another Window", &show_another_window);
@@ -127,14 +107,14 @@ void IApplication::Run()
                 }
 
                 // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
-                if (show_test_window)
+                if (false)
                 {
                     ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
                     ImGui::ShowTestWindow(&show_test_window);
                 }
 
                 ImGui::Render();
-                */
+
                 lMainWindow.EndRender();
             }
         }
