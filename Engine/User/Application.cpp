@@ -60,7 +60,7 @@ void IApplication::Run()
 
             CGBuffer& lGBuffer = CGBuffer::Instance();
             CFrameBuffer& lFrameBuffer = CFrameBuffer::Instance();
-            lGBuffer.Create();
+            lGBuffer.Create(lMainWindow.GetSize().x, lMainWindow.GetSize().y);
 
             while (!lInputManager.DoAction(Exit))
             {
@@ -90,10 +90,14 @@ void IApplication::Run()
                     ImGui::SetWindowPos(ImVec2(0, 0));
                     float tex_w = (float)200;
                     float tex_h = (float)100;
-                    //ImTextureID tex_id = ImGui::GetIO().Fonts->TexID;
-                    ImGui::Image((ImTextureID)3, ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
-                    ImGui::Image((ImTextureID)4, ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
-                    ImGui::Image((ImTextureID)5, ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+
+                    const uint32* lRenderTargets = lGBuffer.GetRenderTargets();
+
+                    for (uint32 i = 0; i < CGBuffer::eGBT_Count; ++i )
+                    {
+                        ImGui::Image((ImTextureID)lRenderTargets[i], ImVec2(tex_w, tex_h), ImVec2(1, 1), ImVec2(0, 0), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+                    }
+
                     ImGui::End();
                 }
 
