@@ -15,6 +15,15 @@ enum Extension
 {
 };
 
+enum GBufferTarget
+{
+    eGBT_AlbedoSpec = 0,
+    eGBT_WorldSpacePosition,
+    eGBT_WorldSpaceNormal,
+    eGBT_Depth,
+    eGBT_Count
+};
+
 Begin_Enum_String(Extension)
 {
 }

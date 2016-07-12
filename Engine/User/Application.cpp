@@ -67,6 +67,7 @@ void IApplication::Run()
                 lMainWindow.Clear(true, true, true);
                 game_object_manager.update(lTimer.GetElapsedTime());
 
+                /*
                 ImGuiIO& io = ImGui::GetIO();
                 ImGui_ImplGlfwGL3_NewFrame(lTimer.GetElapsedTime());
 
@@ -133,7 +134,7 @@ void IApplication::Run()
                 }
 
                 ImGui::Render();
-
+                */
                 lMainWindow.EndRender();
             }
         }
