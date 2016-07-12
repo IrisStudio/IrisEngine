@@ -4,25 +4,34 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
-#include "material_generated.h"
-
-#include "flatbuffers/idl.h"
-#include "flatbuffers/util.h"
-
 #include "StringUtils.h"
 
 #include "gph.h"
 
-#define GET_TEXTURE_FILE( type, tex_filename ) \
+#include <iostream>
+#include <fstream>
+
+#include "io/json.h"
+
+// for convenience
+using json = nlohmann::json;
+
+#define GET_TEXTURE_FILE( type, tex_filename, flag ) \
     if (lSubMaterialPtr->GetTexture(type, 0, &tex_filename, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) \
     { \
         std::string filename(tex_filename.C_Str()); \
         OnlyFileName(filename, false); \
         tex_filename = filename;\
+        lFlags |= flag; \
+        writer["submaterials"][lName.C_Str()][EnumString< RenderableProperties >::ToStr( flag )] = filename; \
     }
 
-#define TO_FBB_STR( str ) builder.CreateString( str.C_Str() )
-#define CONVERT_COLOR( color ) new float3( color.r, color.g, color.b )
+struct SObjVertex
+{
+    aiVector3D pos;
+    aiVector3D normal;
+    aiVector2D uv;
+};
 
 using namespace iris;
 using namespace str_utils;
@@ -43,7 +52,7 @@ void CObjectCompiler::Compile(const CResource & aResource)
     Assimp::Importer importer;
     // And have it read the given file with some example postprocessing
     // Usually - if speed is not the most important aspect for you - you'll
-    // propably to request more postprocessing than we do in this example.
+    // probably to request more postprocessing than we do in this example.
     const aiScene* scene = importer.ReadFile(aResource.GetFullFilename(),
                            aiProcess_CalcTangentSpace |
                            aiProcess_Triangulate |
@@ -58,11 +67,7 @@ void CObjectCompiler::Compile(const CResource & aResource)
     if (scene)
     {
         aiString lName;
-        aiColor3D lAmbientColor;
         aiColor3D lDiffuseColor;
-        aiColor3D lSpecularColor;
-        uint8     lIlum;
-        float     lShiness;
         float     lTransparent;
         aiString  lAmbientMap;
         aiString  lDiffuseMap;
@@ -70,63 +75,92 @@ void CObjectCompiler::Compile(const CResource & aResource)
         aiString  lSelfIlumMap;
         aiString  lDisplacementMap;
         aiString  lSpecularMap;
-        aiString  lSpecularHighligthMap;
         aiString  lAlphaMap;
+        uint32    lFlags;
 
-        flatbuffers::FlatBufferBuilder builder;
-
-        std::vector<flatbuffers::Offset<SubMaterial>> lSubmaterials;
+        json writer;
 
         for (size_t i = 0; i < scene->mNumMaterials; ++i)
         {
             aiMaterial *lSubMaterialPtr = scene->mMaterials[i];
 
+            lFlags = 0;
+
             lSubMaterialPtr->Get(AI_MATKEY_NAME, lName);
-            lSubMaterialPtr->Get(AI_MATKEY_COLOR_AMBIENT, lAmbientColor);
-            lSubMaterialPtr->Get(AI_MATKEY_COLOR_DIFFUSE, lDiffuseColor);
-            lSubMaterialPtr->Get(AI_MATKEY_COLOR_SPECULAR, lSpecularColor);
-            lSubMaterialPtr->Get(AI_MATKEY_SHADING_MODEL, lIlum);
-            lSubMaterialPtr->Get(AI_MATKEY_SHININESS, lShiness);
-            lSubMaterialPtr->Get(AI_MATKEY_OPACITY, lTransparent);
 
-            if (lSubMaterialPtr->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+            if (strcmp(lName.C_Str(), "DefaultMaterial") != 0)
             {
-                GET_TEXTURE_FILE(aiTextureType_DIFFUSE, lDiffuseMap);
-                GET_TEXTURE_FILE(aiTextureType_AMBIENT, lAmbientMap);
-                GET_TEXTURE_FILE(aiTextureType_DISPLACEMENT, lDisplacementMap);
-                GET_TEXTURE_FILE(aiTextureType_NORMALS, lBumpMap);
-                GET_TEXTURE_FILE(aiTextureType_LIGHTMAP, lSelfIlumMap);
-                GET_TEXTURE_FILE(aiTextureType_OPACITY, lAlphaMap);
-            }
+                lSubMaterialPtr->Get(AI_MATKEY_COLOR_DIFFUSE, lDiffuseColor);
+                lFlags != eRP_DiffuseColor;
+                writer["submaterials"][lName.C_Str()]["diffuse_color"]["r"] = lDiffuseColor.r;
+                writer["submaterials"][lName.C_Str()]["diffuse_color"]["g"] = lDiffuseColor.g;
+                writer["submaterials"][lName.C_Str()]["diffuse_color"]["b"] = lDiffuseColor.b;
 
-            auto submaterial = CreateSubMaterial(
-                                   builder,
-                                   TO_FBB_STR(lName),
-                                   CONVERT_COLOR(lAmbientColor),
-                                   CONVERT_COLOR(lDiffuseColor),
-                                   CONVERT_COLOR(lSpecularColor),
-                                   CONVERT_COLOR(lSpecularColor), // TODO:Find transmitance
-                                   lShiness,
-                                   0.0,
-                                   lTransparent,
-                                   lIlum,
-                                   TO_FBB_STR(lAmbientMap),
-                                   TO_FBB_STR(lDiffuseMap),
-                                   TO_FBB_STR(lSpecularMap),
-                                   TO_FBB_STR(lSpecularMap),
-                                   TO_FBB_STR(lBumpMap),
-                                   TO_FBB_STR(lSelfIlumMap),
-                                   TO_FBB_STR(lAlphaMap)
-                               );
-            lSubmaterials.push_back(submaterial);
+                lSubMaterialPtr->Get(AI_MATKEY_OPACITY, lTransparent);
+
+                writer["submaterials"][lName.C_Str()]["transparent"] = bool(1 - lTransparent);
+
+                if (lSubMaterialPtr->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+                {
+                    GET_TEXTURE_FILE(aiTextureType_DIFFUSE, lDiffuseMap, eRP_DiffuseMap);
+                    GET_TEXTURE_FILE(aiTextureType_DISPLACEMENT, lDisplacementMap, eRP_DisplacementMap);
+                    GET_TEXTURE_FILE(aiTextureType_HEIGHT, lBumpMap, eRP_NormalMap);
+                    GET_TEXTURE_FILE(aiTextureType_LIGHTMAP, lSelfIlumMap, eRP_SelfIlumMap);
+                    GET_TEXTURE_FILE(aiTextureType_OPACITY, lAlphaMap, eRP_TransparentMap);
+                }
+
+                writer["submaterials"][lName.C_Str()]["renderable_properties"] = lFlags;
+            }
         }
 
-        builder.Finish(CreateMaterial(builder, builder.CreateVector(lSubmaterials)));
-
-        std::ofstream myfile;
         CResource lMaterialResource(aResource.GetDirectory() + aResource.GetFilename() + ".mat");
-        myfile.open(lMaterialResource.GetFullFilename().c_str(), std::ios::out | std::ios::app | std::ios::binary);
-        myfile.write((char*)builder.GetBufferPointer(), builder.GetSize());
-        myfile.close();
+        std::ofstream lMaterialFile(lMaterialResource.GetFullFilename().c_str());
+        lMaterialFile << writer;
+        lMaterialFile.close();
+
+        std::ofstream lMeshFile;
+        CResource lMeshResource(aResource.GetDirectory() + aResource.GetFilename() + ".mesh");
+        lMeshFile.open(lMeshResource.GetFullFilename(), std::ios::out | std::ios::app | std::ios::binary);
+
+        uint32 lMeshFlags = eGD_Position | eGD_Normal | eGD_UV;
+        lMeshFile << lMeshFlags;
+
+        lMeshFile << scene->mNumMeshes;
+
+        for (uint32 iMeshes = 0, lMeshesCount = scene->mNumMeshes; iMeshes < lMeshesCount; ++iMeshes)
+        {
+            aiMesh* lCurrentMesh = scene->mMeshes[iMeshes];
+
+            uint32 lFacesCount = lCurrentMesh->mNumFaces;
+            std::vector< SObjVertex > lGeometryData;
+            std::vector< uint32 > lIndices(lFacesCount * 3, 0);
+
+            lMeshFile << lCurrentMesh->mMaterialIndex;
+
+            for (uint32 iFaces = 0, iVertex = 0; iFaces < lFacesCount; ++iFaces)
+            {
+                const aiFace& lCurrentFace = lCurrentMesh->mFaces[iFaces];
+                // Copy the index buffer
+                memcpy(&lIndices[iFaces * 3], &(lCurrentFace.mIndices[0]), 3 * sizeof(uint32));
+
+                // Copy the vertex buffer
+                for (uint32 iTriangle = 0; iTriangle < 3; ++iTriangle, ++iVertex)
+                {
+                    SObjVertex lVertex;
+                    lVertex.pos = lCurrentMesh->mVertices[lCurrentFace.mIndices[iTriangle]];
+                    lVertex.normal = lCurrentMesh->HasNormals() ? lCurrentMesh->mNormals[lCurrentFace.mIndices[iTriangle]] : aiVector3D(1.0f, 1.0f, 1.0f);
+                    memcpy(&(lVertex.uv), &lCurrentMesh->mTextureCoords[0][lCurrentFace.mIndices[iTriangle]], sizeof(aiVector2D));
+                    lGeometryData.push_back(lVertex);
+                }
+            }
+
+            lMeshFile << lGeometryData.size();
+            lMeshFile.write((char*)&lGeometryData[0], lGeometryData.size() * sizeof(SObjVertex));
+
+            lMeshFile << lIndices.size();
+            lMeshFile.write((char*)&lIndices[0], lIndices.size() * sizeof(uint32));
+        }
+
+        lMeshFile.close();
     }
 }

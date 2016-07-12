@@ -5,51 +5,76 @@
 #include "Texture.h"
 #include "Types.h"
 
-#include <flatbuffers/idl.h>
-#include <flatbuffers/util.h>
+#include <iostream>
+#include <fstream>
 
-#include "fbs/material_generated.h" // Already includes "flatbuffers/flatbuffers.h".
+#include "io/json.h"
+using json = nlohmann::json;
+
+#define FETCH(name) (it->)
 
 namespace io
 {
     template <> bool Load(const CResource& aResource, CMaterial& aObject)
     {
         bool lOk = false;
-        uint8* lBufferPtr = nullptr;
 
-        if (GetBufferPtr(aResource, lBufferPtr))
+        std::ifstream lMaterialFile( aResource.GetFullFilename() );
+
+        if( lMaterialFile.is_open() )
         {
-            auto lMaterial = GetMaterial(lBufferPtr);
+            std::stringstream strStream;
+            strStream << lMaterialFile.rdbuf();//read the file
+            auto j = json::parse(strStream.str());
 
-            auto lSubmaterials = lMaterial->submaterials();
+            LOG_APPLICATION("%s", j.dump().c_str());
 
-            for (unsigned int i = 0; i < lSubmaterials->size(); i++)
+            json::iterator lItSubMaterials = j.find("submaterials");
+
+            if (lItSubMaterials != j.end() )
             {
-                CSubMaterialSPtr lSubmaterial( new CSubMaterial() );
-                lSubmaterial->mAmbientColor  = *lSubmaterials->Get(i)->ambient();
-                lSubmaterial->mDiffuseColor  = *lSubmaterials->Get(i)->diffuse();
-                lSubmaterial->mSpecularColor = *lSubmaterials->Get(i)->specular();
-                lSubmaterial->mTransmittance = *lSubmaterials->Get(i)->transmittance();
-                lSubmaterial->mTransparency  = lSubmaterials->Get(i)->transparent();
-
-                const flatbuffers::String* lDiffuseMap = lSubmaterials->Get(i)->diffuse_map();
-
-                if( strcmp( lDiffuseMap->c_str(), "") == 0 )
+                for (json::iterator it = lItSubMaterials->begin(); it != lItSubMaterials->end(); ++it)
                 {
-                    CTextureSPtr lTexture(new CTexture());
-                    lTexture->Create(eTT_2D, aResource.GetDirectory() + lDiffuseMap->str() );
-                    lSubmaterial->mTextures[eTC_Diffuse] = lTexture;
+                    json::iterator lItDiffColor;
+
+                    if( ( lItDiffColor =  it->find("diffuse_color") ) != it->end() )
+                    {
+                        lItDiffColor->find("r").value();
+                        lItDiffColor->find("g").value();
+                        lItDiffColor->find("b").value();
+                    }
                 }
             }
-
-            free(lBufferPtr);
         }
 
-        if (!lOk)
+        /*
+        if (GetBufferPtr(aResource, lBufferPtr))
         {
-            //aObject = 0;
-        }
 
-        return lOk;
+        auto lMaterial = GetMaterial(lBufferPtr);
+
+        auto lSubmaterials = lMaterial->submaterials();
+
+        for (unsigned int i = 0; i < lSubmaterials->size(); i++)
+        {
+        CSubMaterialSPtr lSubmaterial( new CSubMaterial() );
+        lSubmaterial->mAmbientColor  = *lSubmaterials->Get(i)->ambient();
+        lSubmaterial->mDiffuseColor  = *lSubmaterials->Get(i)->diffuse();
+        lSubmaterial->mSpecularColor = *lSubmaterials->Get(i)->specular();
+        lSubmaterial->mTransmittance = *lSubmaterials->Get(i)->transmittance();
+        lSubmaterial->mTransparency  = lSubmaterials->Get(i)->transparent();
+
+        const flatbuffers::String* lDiffuseMap = lSubmaterials->Get(i)->diffuse_map();
+
+        if( strcmp( lDiffuseMap->c_str(), "") == 0 )
+        {
+        CTextureSPtr lTexture(new CTexture());
+        lTexture->Create(eTT_2D, aResource.GetDirectory() + lDiffuseMap->str() );
+        lSubmaterial->mTextures[eTC_Diffuse] = lTexture;
+        }
+        }*/
+
+
+        return 1;
     }
 }
