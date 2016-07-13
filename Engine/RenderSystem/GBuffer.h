@@ -11,8 +11,8 @@ class CGBuffer : public Singleton< CGBuffer >
         enum ETarget
         {
             eGBT_AlbedoSpec = 0,
-            //eGBT_WorldSpacePosition,
-            //eGBT_WorldSpaceNormal,
+            eGBT_WorldSpacePosition,
+            eGBT_WorldSpaceNormal,
             eGBT_Count
         };
     public:

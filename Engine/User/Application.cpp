@@ -16,6 +16,7 @@
 
 #include "EditorGui.h"
 #include "GBuffer.h"
+#include "State.h"
 #include "FrameBuffer.h"
 
 #include <imgui.h>
@@ -70,12 +71,18 @@ void IApplication::Run()
                 lTimer.Update();
                 lInputManager.ProcessInputs();
                 lMainWindow.SetWindowTitle(iris::str_utils::Format("FPS: %f", lTimer.GetFPS()));
+				lMainWindow.BeginRender();
+
+				// Set the GBuffer and render the objects
                 lGBuffer.Bind();
-                lMainWindow.BeginRender();
-                lMainWindow.Clear(true, true, true);
-                lFrameBuffer.Bind();
+				CState::SetViewport(0, 0, lMainWindow.GetSize().x, lMainWindow.GetSize().y);
+				CState::ClearBuffers(float4(0.1f, 0.1f, 0.1f, 1.0f), true, true, true);
                 game_object_manager.update(lTimer.GetElapsedTime());
-                lMainWindow.Clear(true, true, true);
+
+				// Paint the frame buffer
+				lFrameBuffer.Bind();
+				CState::SetViewport(0, 0, lMainWindow.GetSize().x, lMainWindow.GetSize().y);
+				CState::ClearBuffers(float4(0.5f, 0.5f, 0.5f, 1.0f), true, true, true);
 
                 ImGuiIO& io = ImGui::GetIO();
                 ImGui_ImplGlfwGL3_NewFrame(lTimer.GetElapsedTime());

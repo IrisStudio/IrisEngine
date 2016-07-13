@@ -199,3 +199,27 @@ const bool           CState::GetScissorTest()
 {
     return mScissorTest;
 }
+
+void CState::ClearBuffers(const float4& aClearColor, bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
+{
+	GLbitfield clear_mask = 0;
+
+	if (aColorBuffer)
+	{
+		glClearColor(aClearColor.r, aClearColor.g, aClearColor.b, aClearColor.a);
+		clear_mask |= GL_COLOR_BUFFER_BIT;
+	}
+
+	if (aDepthBuffer)
+	{
+		clear_mask |= GL_DEPTH_BUFFER_BIT;
+	}
+
+	if (aStencilBuffer)
+	{
+		clear_mask |= GL_STENCIL_BUFFER_BIT;
+	}
+
+	glClear(clear_mask);
+	ogl::CheckOGLError("after clear");
+}

@@ -32,6 +32,7 @@ class CState
         static void BindTexture(TextureType aType, uint32 aId);
 
         static void SetViewport(uint32 aX, uint32 aY, uint32 aWidth, uint32 aHeight);
+		static void ClearBuffers(const float4& aClearColor, bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer);
 };
 
 #endif

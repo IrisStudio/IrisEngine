@@ -31,16 +31,18 @@ void CGBuffer::Create(uint32 aWindowWidth, uint32 aWindowHeight)
     {
         glBindTexture(GL_TEXTURE_2D, mRenderTargets[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, aWindowWidth, aWindowHeight, 0, GL_RGB, GL_FLOAT, NULL);
-        ogl::glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, mRenderTargets[i], 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        ogl::glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, mRenderTargets[i], 0);
     }
 
     // depth
-    glBindTexture(GL_TEXTURE_2D, mDepth);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, aWindowWidth, aWindowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
-                 NULL);
-    ogl::glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepth, 0);
+	ogl::glGenRenderbuffers(1, &mDepth);
+	ogl::glBindRenderbuffer(GL_RENDERBUFFER, mDepth);
+	ogl::glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, aWindowWidth, aWindowHeight);
+	ogl::glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepth);
 
-    GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	GLenum DrawBuffers[eGBT_Count] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
     ogl::glDrawBuffers(eGBT_Count, DrawBuffers);
 
     GLenum Status = ogl::glCheckFramebufferStatus(GL_FRAMEBUFFER);

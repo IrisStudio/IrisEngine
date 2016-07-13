@@ -367,33 +367,6 @@ void CWindow::BeginRender()
     RECT lRect;
     GetClientRect(mHandle, &lRect);
     mSize = uint2( uint32(lRect.right- lRect.left), uint32( lRect.bottom - lRect.top ) );
-    ogl::CheckOGLError("before viewport");
-    glViewport(0, 0, mSize.x, mSize.y);
-    ogl::CheckOGLError("after viewport %d, %d", mSize.x, mSize.x );
-}
-
-void CWindow::Clear(bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
-{
-    GLbitfield clear_mask = 0;
-
-    if( aColorBuffer )
-    {
-        glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
-        clear_mask |= GL_COLOR_BUFFER_BIT;
-    }
-
-    if(aDepthBuffer)
-    {
-        clear_mask |= GL_DEPTH_BUFFER_BIT;
-    }
-
-    if( aStencilBuffer )
-    {
-        clear_mask |= GL_STENCIL_BUFFER_BIT;
-    }
-
-    glClear(clear_mask);
-    ogl::CheckOGLError("after clear");
 }
 
 void CWindow::EndRender()

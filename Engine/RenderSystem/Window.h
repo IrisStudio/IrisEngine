@@ -18,7 +18,6 @@ class CWindow : public Singleton< CWindow >
         const uint2& GetSize() const;
         void* GetHandle();
         void BeginRender();
-        void Clear( bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer );
         void EndRender();
         void SetWindowTitle(const std::string& aWindowTitle);
 
