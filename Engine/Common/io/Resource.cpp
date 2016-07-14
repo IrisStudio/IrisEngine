@@ -44,7 +44,7 @@ void CResource::Fill()
     size_t found = mFullFilename.find_last_of("/\\");
     mDirectory = (mFullFilename.substr(0, found)) + "/";
 
-    mHash = fileMD5(mFullFilename);
+    //mHash = fileMD5(mFullFilename);
 
     iris::str_utils::OnlyFileName(mFilename);
 }

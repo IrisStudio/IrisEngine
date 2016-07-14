@@ -92,11 +92,11 @@ void IApplication::Run()
                 {
                     bool show_g_buffer = true;
                     ImGui::Begin("GBUFFER", &show_g_buffer);
-                    ImGui::SetWindowSize(ImVec2(250, 500));
+                    ImGui::SetWindowSize(ImVec2(500, 600));
                     ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
                     ImGui::SetWindowPos(ImVec2(0, 0));
-                    float tex_w = (float)200;
-                    float tex_h = (float)100;
+                    float tex_w = (float)400;
+                    float tex_h = (float)200;
 
                     const uint32* lRenderTargets = lGBuffer.GetRenderTargets();
 

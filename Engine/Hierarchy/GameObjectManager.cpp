@@ -16,7 +16,7 @@ CGameObjectManager::CGameObjectManager()
     entityx::Entity entity = entities.create();
     entity.assign<Transform>();
     entity.assign<Velocity>(float3(1.0f, 0.0f, 0.0f), 1.0f);
-    entity.assign<Renderer>( "models/head/head.obj", eRP_Default );
+    entity.assign<Renderer>( "models/dragon/dragon.ply", eRP_Default );
 
     //Create camera object
     entity = entities.create();

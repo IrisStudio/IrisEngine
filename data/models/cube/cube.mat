@@ -1,0 +1,14 @@
+{
+        "submaterials": {
+            "default": {
+                "diffuse_color": {
+                    "b": 1,
+                    "g": 1,
+                    "r": 1
+                },
+                "diffuse_map": "default.png",
+                "renderable_properties": 2,
+                "transparent": false
+            }
+        }
+    }

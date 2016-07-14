@@ -28,9 +28,9 @@ using json = nlohmann::json;
 
 struct SObjVertex
 {
-    aiVector3D pos;
-    aiVector3D normal;
-    aiVector2D uv;
+    float3 pos;
+	float3 normal;
+	float2 uv;
 };
 
 using namespace iris;
@@ -53,15 +53,14 @@ void CObjectCompiler::Compile(const CResource & aResource)
     // And have it read the given file with some example postprocessing
     // Usually - if speed is not the most important aspect for you - you'll
     // probably to request more postprocessing than we do in this example.
-    const aiScene* scene = importer.ReadFile(aResource.GetFullFilename(),
-                           aiProcess_CalcTangentSpace |
-                           aiProcess_Triangulate |
-                           aiProcess_JoinIdenticalVertices |
-                           aiProcess_GenSmoothNormals |
-                           aiProcess_SortByPType |
-                           aiProcess_OptimizeGraph |
-                           aiProcess_OptimizeMeshes |
-                           aiProcess_FlipUVs );
+	const aiScene* scene = importer.ReadFile(aResource.GetFullFilename(),
+		aiProcess_CalcTangentSpace |
+		aiProcess_GenNormals |
+		aiProcess_GenSmoothNormals |
+		aiProcess_Triangulate |
+		aiProcess_OptimizeGraph |
+		aiProcess_OptimizeMeshes |
+		aiProcess_FlipUVs);
 
     // If the import failed, report it
     if (scene)
@@ -118,49 +117,58 @@ void CObjectCompiler::Compile(const CResource & aResource)
         lMaterialFile << writer;
         lMaterialFile.close();
 
-        std::ofstream lMeshFile;
         CResource lMeshResource(aResource.GetDirectory() + aResource.GetFilename() + ".mesh");
-        lMeshFile.open(lMeshResource.GetFullFilename(), std::ios::out | std::ios::app | std::ios::binary);
+
+		std::FILE* lMeshFile = 0;
+		fopen_s(&lMeshFile, lMeshResource.GetFullFilename().c_str(), "wb");
 
         uint32 lMeshFlags = eGD_Position | eGD_Normal | eGD_UV;
-        lMeshFile << lMeshFlags;
+		std::fwrite(&lMeshFlags, sizeof(uint32), 1, lMeshFile);
 
-        lMeshFile << scene->mNumMeshes;
+		uint32 lNumMeshes = scene->mNumMeshes;
+		std::fwrite(&lNumMeshes, sizeof(uint32), 1, lMeshFile);
+
+		const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
         for (uint32 iMeshes = 0, lMeshesCount = scene->mNumMeshes; iMeshes < lMeshesCount; ++iMeshes)
         {
             aiMesh* lCurrentMesh = scene->mMeshes[iMeshes];
 
-            uint32 lFacesCount = lCurrentMesh->mNumFaces;
-            std::vector< SObjVertex > lGeometryData;
-            std::vector< uint32 > lIndices(lFacesCount * 3, 0);
+			uint32 lMaterialIdx = lCurrentMesh->mMaterialIndex;
+			std::fwrite(&lMaterialIdx, sizeof(uint32), 1, lMeshFile);
+			
+			if( lMaterialIdx > 0 )
+				--lMaterialIdx;
 
-            lMeshFile << lCurrentMesh->mMaterialIndex;
+			uint32 lNumVertices = lCurrentMesh->mNumVertices;
+			std::vector< SObjVertex > lGeometryData(lNumVertices);
+			for (uint32 i = 0; i < lCurrentMesh->mNumVertices; ++i)
+			{
+				const aiVector3D* pPos = &(lCurrentMesh->mVertices[i]);
+				const aiVector3D* pNormal = &(lCurrentMesh->mNormals[i]);
+				const aiVector3D* pTexCoord = lCurrentMesh->HasTextureCoords(0) ? &(lCurrentMesh->mTextureCoords[0][i]) : &Zero3D;
 
-            for (uint32 iFaces = 0, iVertex = 0; iFaces < lFacesCount; ++iFaces)
-            {
-                const aiFace& lCurrentFace = lCurrentMesh->mFaces[iFaces];
-                // Copy the index buffer
-                memcpy(&lIndices[iFaces * 3], &(lCurrentFace.mIndices[0]), 3 * sizeof(uint32));
+				lGeometryData[i] = { float3(pPos->x, pPos->y, pPos->z), float3(pNormal->x, pNormal->y, pNormal->z), float2(pTexCoord->x, pTexCoord->y) };
+			}
 
-                // Copy the vertex buffer
-                for (uint32 iTriangle = 0; iTriangle < 3; ++iTriangle, ++iVertex)
-                {
-                    SObjVertex lVertex;
-                    lVertex.pos = lCurrentMesh->mVertices[lCurrentFace.mIndices[iTriangle]];
-                    lVertex.normal = lCurrentMesh->HasNormals() ? lCurrentMesh->mNormals[lCurrentFace.mIndices[iTriangle]] : aiVector3D(1.0f, 1.0f, 1.0f);
-                    memcpy(&(lVertex.uv), &lCurrentMesh->mTextureCoords[0][lCurrentFace.mIndices[iTriangle]], sizeof(aiVector2D));
-                    lGeometryData.push_back(lVertex);
-                }
-            }
+			std::fwrite(&lNumVertices, sizeof(uint32), 1, lMeshFile);
+			std::fwrite(&lGeometryData[0], sizeof(SObjVertex), lNumVertices, lMeshFile);
 
-            lMeshFile << lGeometryData.size();
-            lMeshFile.write((char*)&lGeometryData[0], lGeometryData.size() * sizeof(SObjVertex));
-
-            lMeshFile << lIndices.size();
-            lMeshFile.write((char*)&lIndices[0], lIndices.size() * sizeof(uint32));
+			uint32 lNumFaces = lCurrentMesh->mNumFaces;
+			std::vector< uint32 > lIndices;
+			for (unsigned int i = 0; i < lCurrentMesh->mNumFaces; i++)
+			{
+				const aiFace& Face = lCurrentMesh->mFaces[i];
+				assert(Face.mNumIndices == 3);
+				lIndices.push_back(Face.mIndices[0]);
+				lIndices.push_back(Face.mIndices[1]);
+				lIndices.push_back(Face.mIndices[2]);
+			}
+			
+			std::fwrite(&lNumFaces, sizeof(uint32), 1, lMeshFile);
+			std::fwrite(&lIndices[0], sizeof(uint32), lNumFaces * 3, lMeshFile);
         }
 
-        lMeshFile.close();
+		std::fclose(lMeshFile);
     }
 }

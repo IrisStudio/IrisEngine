@@ -1,0 +1,13 @@
+{
+        "submaterials": {
+            "": {
+                "diffuse_color": {
+                    "b": 0.600000023841858,
+                    "g": 0.600000023841858,
+                    "r": 0.600000023841858
+                },
+                "renderable_properties": 0,
+                "transparent": true
+            }
+        }
+    }

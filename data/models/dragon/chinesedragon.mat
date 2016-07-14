@@ -1,0 +1,22 @@
+{
+        "submaterials": {
+            "m0_01___Default": {
+                "diffuse_color": {
+                    "b": 0.0,
+                    "g": 0.0,
+                    "r": 0.690195977687836
+                },
+                "renderable_properties": 0,
+                "transparent": false
+            },
+            "m1_03___Default": {
+                "diffuse_color": {
+                    "b": 0.133332997560501,
+                    "g": 0.133332997560501,
+                    "r": 0.133332997560501
+                },
+                "renderable_properties": 0,
+                "transparent": false
+            }
+        }
+    }

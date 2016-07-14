@@ -15,66 +15,47 @@ using json = nlohmann::json;
 
 namespace io
 {
-    template <> bool Load(const CResource& aResource, CMaterial& aObject)
-    {
-        bool lOk = false;
+	template <> bool Load(const CResource& aResource, CMaterial& aObject)
+	{
+		bool lOk = false;
 
-        std::ifstream lMaterialFile( aResource.GetFullFilename() );
+		std::ifstream lMaterialFile(aResource.GetFullFilename());
 
-        if( lMaterialFile.is_open() )
-        {
-            std::stringstream strStream;
-            strStream << lMaterialFile.rdbuf();//read the file
-            auto j = json::parse(strStream.str());
+		if (lMaterialFile.is_open())
+		{
+			std::stringstream strStream;
+			strStream << lMaterialFile.rdbuf();//read the file
+			auto j = json::parse(strStream.str());
 
-            LOG_APPLICATION("%s", j.dump().c_str());
+			LOG_APPLICATION("%s", j.dump().c_str());
 
-            json::iterator lItSubMaterials = j.find("submaterials");
+			json::iterator lItSubMaterials = j.find("submaterials");
+			size_t size = lItSubMaterials->size();
 
-            if (lItSubMaterials != j.end() )
-            {
-                for (json::iterator it = lItSubMaterials->begin(); it != lItSubMaterials->end(); ++it)
-                {
-                    json::iterator lItDiffColor;
+			if (lItSubMaterials != j.end())
+			{
+				for (json::iterator it = lItSubMaterials->begin(); it != lItSubMaterials->end(); ++it)
+				{
+					CSubMaterialSPtr lSubmaterial = std::make_shared<CSubMaterial>();
+					json::iterator itFind;
+					if ((itFind = it->find("diffuse_color")) != it->end())
+						lSubmaterial->mDiffuseColor = float3(itFind->find("r")->get<float>(), itFind->find("g")->get<float>(), itFind->find("b")->get<float>());
 
-                    if( ( lItDiffColor =  it->find("diffuse_color") ) != it->end() )
-                    {
-                        lItDiffColor->find("r").value();
-                        lItDiffColor->find("g").value();
-                        lItDiffColor->find("b").value();
-                    }
-                }
-            }
-        }
+					if ((itFind = it->find("diffuse_map")) != it->end())
+					{
+						CTextureSPtr lTexture(new CTexture());
+						lTexture->Create(eTT_2D, aResource.GetDirectory() + itFind->get<std::string>() );
+						lSubmaterial->mTextures[eTC_Diffuse] = lTexture;
+					}
+					
+					lSubmaterial->SetRenderProperties(eRP_DiffuseMap);
+					aObject.AddSubMaterial(lSubmaterial);
+				}
+			}
 
-        /*
-        if (GetBufferPtr(aResource, lBufferPtr))
-        {
+			lOk = true;
+		}
 
-        auto lMaterial = GetMaterial(lBufferPtr);
-
-        auto lSubmaterials = lMaterial->submaterials();
-
-        for (unsigned int i = 0; i < lSubmaterials->size(); i++)
-        {
-        CSubMaterialSPtr lSubmaterial( new CSubMaterial() );
-        lSubmaterial->mAmbientColor  = *lSubmaterials->Get(i)->ambient();
-        lSubmaterial->mDiffuseColor  = *lSubmaterials->Get(i)->diffuse();
-        lSubmaterial->mSpecularColor = *lSubmaterials->Get(i)->specular();
-        lSubmaterial->mTransmittance = *lSubmaterials->Get(i)->transmittance();
-        lSubmaterial->mTransparency  = lSubmaterials->Get(i)->transparent();
-
-        const flatbuffers::String* lDiffuseMap = lSubmaterials->Get(i)->diffuse_map();
-
-        if( strcmp( lDiffuseMap->c_str(), "") == 0 )
-        {
-        CTextureSPtr lTexture(new CTexture());
-        lTexture->Create(eTT_2D, aResource.GetDirectory() + lDiffuseMap->str() );
-        lSubmaterial->mTextures[eTC_Diffuse] = lTexture;
-        }
-        }*/
-
-
-        return 1;
-    }
+		return lOk;
+	}
 }

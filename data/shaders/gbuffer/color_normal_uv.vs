@@ -13,5 +13,5 @@ void main()
 {
      gl_Position = projection * view * model * vec4(position, 1.0f);
 	 Normal = normal;
-	 ftexcoord = vec2( uv.x, 1 - uv.y );
+	 ftexcoord = uv;
 }
