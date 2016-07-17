@@ -147,7 +147,7 @@ void CGeometry::Bind() const
 {
     ogl::CheckOGLError("Geometry bind begin");
     ogl::glBindVertexArray(mVAO);
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     ogl::CheckOGLError("Before draw elements");
     glDrawElements(GL_TRIANGLES, mIndexCount, GL_UNSIGNED_INT, 0);
     ogl::glBindVertexArray(0);

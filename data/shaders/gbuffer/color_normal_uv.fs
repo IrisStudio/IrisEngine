@@ -7,10 +7,11 @@ layout(location = 1) uniform sampler2D diffuse;
 
 in vec2 ftexcoord;
 in vec3 Normal;
+in vec4 WorldPos0; 
 
 void main() 
 { 
     gAlbedoSpec = texture(diffuse, ftexcoord).xyz;
-	gWorldSpacePosition = vec3(0.0, 1.0, 0.0);
+	gWorldSpacePosition = WorldPos0.xyz;
 	gWorldSpaceNormal = Normal;
 }

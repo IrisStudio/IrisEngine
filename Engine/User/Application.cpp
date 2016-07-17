@@ -19,6 +19,8 @@
 #include "State.h"
 #include "FrameBuffer.h"
 
+#include "Commands/Deferred/DeferredLightPassCmd.h"
+
 #include <imgui.h>
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
@@ -63,6 +65,9 @@ void IApplication::Run()
             CFrameBuffer& lFrameBuffer = CFrameBuffer::Instance();
             lGBuffer.Create(lMainWindow.GetSize().x, lMainWindow.GetSize().y);
 
+            gph::CDeferredLightPassCmd* lDeferredLightPass = new gph::CDeferredLightPassCmd();
+            lDeferredLightPass->Init();
+
             while (!lInputManager.DoAction(Exit))
             {
                 CWindow& lMainWindow = CWindow::Instance();
@@ -71,19 +76,23 @@ void IApplication::Run()
                 lTimer.Update();
                 lInputManager.ProcessInputs();
                 lMainWindow.SetWindowTitle(iris::str_utils::Format("FPS: %f", lTimer.GetFPS()));
-				lMainWindow.BeginRender();
+                lMainWindow.BeginRender();
 
-				// Set the GBuffer and render the objects
-                lGBuffer.Bind();
-				CState::SetViewport(0, 0, lMainWindow.GetSize().x, lMainWindow.GetSize().y);
-				CState::ClearBuffers(float4(0.1f, 0.1f, 0.1f, 1.0f), true, true, true);
-                game_object_manager.update(lTimer.GetElapsedTime());
+                // Set the GBuffer and render the objects
+                //lGBuffer.GeometryPass();
+                //CState::SetViewport(0, 0, lMainWindow.GetSize().x, lMainWindow.GetSize().y);
+                //CState::ClearBuffers(float4(0.1f, 0.1f, 0.1f, 1.0f), eBB_COLOR_BUFFER_BIT | eBB_DEPTH_BUFFER_BIT | eBB_STENCIL_BUFFER_BIT );
+                //game_object_manager.update(lTimer.GetElapsedTime());
 
-				// Paint the frame buffer
-				lFrameBuffer.Bind();
-				CState::SetViewport(0, 0, lMainWindow.GetSize().x, lMainWindow.GetSize().y);
-				CState::ClearBuffers(float4(0.5f, 0.5f, 0.5f, 1.0f), true, true, true);
+                // Paint the frame buffer
+                lFrameBuffer.Bind();
+                CState::SetViewport(0, 0, lMainWindow.GetSize().x, lMainWindow.GetSize().y);
+                CState::ClearBuffers(float4(0.5f, 0.5f, 0.5f, 1.0f), eBB_COLOR_BUFFER_BIT | eBB_DEPTH_BUFFER_BIT | eBB_STENCIL_BUFFER_BIT );
+                //lFrameBuffer.Blit(lGBuffer, lMainWindow.GetSize().x, lMainWindow.GetSize().y );*/
 
+                lDeferredLightPass->Execute();
+
+                /*
                 ImGuiIO& io = ImGui::GetIO();
                 ImGui_ImplGlfwGL3_NewFrame(lTimer.GetElapsedTime());
 
@@ -125,7 +134,7 @@ void IApplication::Run()
                 }
 
                 ImGui::Render();
-
+                */
                 lMainWindow.EndRender();
             }
         }

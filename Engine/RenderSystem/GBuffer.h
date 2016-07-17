@@ -19,7 +19,9 @@ class CGBuffer : public Singleton< CGBuffer >
         CGBuffer();
         virtual ~CGBuffer();
         void Create(uint32 aWindowWidth, uint32 aWindowHeight);
-        void Bind();
+        void GeometryPass();
+        void LightingPass();
+        void BindBuffer( ETarget aBufferTarget );
         const uint32* GetRenderTargets() const;
     protected:
     private:

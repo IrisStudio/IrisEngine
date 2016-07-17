@@ -200,26 +200,15 @@ const bool           CState::GetScissorTest()
     return mScissorTest;
 }
 
-void CState::ClearBuffers(const float4& aClearColor, bool aColorBuffer, bool aDepthBuffer, bool aStencilBuffer)
+void CState::ClearBuffers(const float4& aClearColor, uint32 aFlags )
 {
-	GLbitfield clear_mask = 0;
+    GLbitfield clear_mask = 0;
 
-	if (aColorBuffer)
-	{
-		glClearColor(aClearColor.r, aClearColor.g, aClearColor.b, aClearColor.a);
-		clear_mask |= GL_COLOR_BUFFER_BIT;
-	}
+    if (( aFlags & eBB_COLOR_BUFFER_BIT) == eBB_COLOR_BUFFER_BIT )
+    {
+        glClearColor(aClearColor.r, aClearColor.g, aClearColor.b, aClearColor.a);
+    }
 
-	if (aDepthBuffer)
-	{
-		clear_mask |= GL_DEPTH_BUFFER_BIT;
-	}
-
-	if (aStencilBuffer)
-	{
-		clear_mask |= GL_STENCIL_BUFFER_BIT;
-	}
-
-	glClear(clear_mask);
-	ogl::CheckOGLError("after clear");
+    glClear(aFlags);
+    ogl::CheckOGLError("after clear");
 }

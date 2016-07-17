@@ -4,6 +4,31 @@
 #include "Types.h"
 #include "EnumString.h"
 
+enum BufferBit
+{
+    eBB_CURRENT_BIT                    = 0x00000001,
+    eBB_POINT_BIT                      = 0x00000002,
+    eBB_LINE_BIT                       = 0x00000004,
+    eBB_POLYGON_BIT                    = 0x00000008,
+    eBB_POLYGON_STIPPLE_BIT            = 0x00000010,
+    eBB_PIXEL_MODE_BIT                 = 0x00000020,
+    eBB_LIGHTING_BIT                   = 0x00000040,
+    eBB_FOG_BIT                        = 0x00000080,
+    eBB_DEPTH_BUFFER_BIT               = 0x00000100,
+    eBB_ACCUM_BUFFER_BIT               = 0x00000200,
+    eBB_STENCIL_BUFFER_BIT             = 0x00000400,
+    eBB_VIEWPORT_BIT                   = 0x00000800,
+    eBB_TRANSFORM_BIT                  = 0x00001000,
+    eBB_ENABLE_BIT                     = 0x00002000,
+    eBB_COLOR_BUFFER_BIT               = 0x00004000,
+    eBB_HINT_BIT                       = 0x00008000,
+    eBB_EVAL_BIT                       = 0x00010000,
+    eBB_LIST_BIT                       = 0x00020000,
+    eBB_TEXTURE_BIT                    = 0x00040000,
+    eBB_SCISSOR_BIT                    = 0x00080000,
+    eBB_ALL_ATTRIB_BITS                = 0x000fffff
+};
+
 enum WindowSize
 {
     eST_Windowed = 0,
