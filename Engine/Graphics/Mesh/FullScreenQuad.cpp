@@ -16,22 +16,18 @@ CFullScreenQuad::~CFullScreenQuad()
 
 void CFullScreenQuad::Init( float aLenght, float aWidht, float aHeight )
 {
-    float vertices[] =
-    {
-        1.0f,  1.0f, /*UV*/ 0.0f, 0.0f,
-        -1.0f, 1.0f, /*UV*/ 0.0f, 1.0f,
-        1.0f, -1.0f, /*UV*/ 1.0f, 0.0f,
-        -1.0f,-1.0f, /*UV*/ 1.0f, 1.0f,
-    };
+    float vertices[] = { -1, -1,  // bottom left corner
+                         -1,  1, // top left corner
+                         1,  1,  // top right corner
+                         1, -1, // bottom right corner
+                       };
 
-    uint32 indices[] =
-    {
-        2,1,3, // second triangle
-        0,1,2, // first triangle
-    };
+    uint32 indices[] = { 0,1,2, // first triangle (bottom left - top left - top right)
+                         0,2,3  // second triangle (bottom left - top right - bottom right)
+                       };
 
     CGeometrySPtr lGeometry( new CGeometry() );
-
-    lGeometry->Create(eGD_ScreenPosition | eGD_UV, &vertices, &indices, 4, 6 );
-    //mGeometry.push_back(lGeometry);
+    lGeometry->Create(eGD_ScreenPosition, &vertices, &indices, 4, 6 );
+    Resize(1);
+    AddGeometry(0, lGeometry);
 }

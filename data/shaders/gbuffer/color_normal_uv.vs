@@ -8,10 +8,12 @@ layout(location = 2) in vec2 uv;
 
 out vec3 Normal;
 out vec2 ftexcoord;
+out vec4 WorldPos0; 
 
 void main()
 {
      gl_Position = projection * view * model * vec4(position, 1.0f);
 	 Normal = normal;
 	 ftexcoord = uv;
+	 WorldPos0 = (model * vec4(position, 1.0));
 }

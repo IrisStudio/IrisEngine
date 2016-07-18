@@ -19,6 +19,4 @@ class CFullScreenQuad : public CMesh
         DISALLOW_COPY_AND_ASSIGN(CFullScreenQuad);
 };
 
-typedef std::shared_ptr< CFullScreenQuad > CFullScreenQuadSPtr;
-
 #endif

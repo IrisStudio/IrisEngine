@@ -71,4 +71,7 @@ typedef std::shared_ptr< CMaterial > CMaterialSPtr;
 class CSubMaterial;
 typedef std::shared_ptr< CSubMaterial > CSubMaterialSPtr;
 
+class CFullScreenQuad;
+typedef std::shared_ptr< CFullScreenQuad > CFullScreenQuadSPtr;
+
 #endif

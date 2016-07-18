@@ -15,7 +15,7 @@ class CSubMaterial : public CNamed
         CSubMaterial();
         virtual ~CSubMaterial();
         void Apply();
-
+        void SetEffect( CEffect* aEffect );
         void SetRenderProperties(uint32 aRenderProperties);
 
     public:
