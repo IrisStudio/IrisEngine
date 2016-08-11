@@ -27,11 +27,8 @@ project "IrisEditor"
    targetdir "../bin/%{cfg.buildcfg}"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx", "ChaiScript", "opengl32", "Script", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput", "imgui" }
-   includedirs { "../Engine/RenderSystem/ogl", "../Engine/Script/chai" }
+   links {"RenderSystem", "Common", "User", "entityx", "opengl32", "Logic", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput", "imgui" }
    includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Graphics"}
-   includedirs { "../3rdParty/ChaiScript/include/" }
-   includedirs { "../3rdParty/entityx/" }
    includedirs { "../3rdParty/" }
    libdirs { os.findlib("opengl32") }
    
@@ -53,14 +50,11 @@ project "User"
 	includedirs { "../3rdParty/gainput-master/lib/include/" }
 	includedirs { "../3rdParty/imgui" }
 	
-project "Script"
+project "Logic"
     kind "StaticLib"
-    files { "../Engine/Script/**.h", "../Engine/Script/**.cpp", "../Engine/Script/**.inl" }
+    files { "../Engine/Logic/**.h", "../Engine/Logic/**.cpp", "../Engine/Logic/**.inl" }
 	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/Script/" }
-	includedirs { "../Engine/RenderSystem" }
-	includedirs { "../3rdParty/" }
-	includedirs { "../3rdParty/ChaiScript/include/" }
+	includedirs { "../Engine/Logic/" }
 	
 project "Common"
     kind "StaticLib"
@@ -97,12 +91,6 @@ project "Hierarchy"
     includedirs { "../3rdParty/" }
     
 group "3rdParty"
-project "ChaiScript"
-    kind "SharedLib"
-    buildoptions "/bigobj"
-    files { "../3rdParty/ChaiScript/src/**.cpp", "../3rdParty/ChaiScript/include/chaiscript/**.hpp" }
-	includedirs { "../3rdParty/ChaiScript/include/" }
-    
 project "gainput"
     kind "StaticLib"
     files { "../3rdParty/gainput-master/lib/source/gainput/**.cpp", "../3rdParty/gainput-master/lib/source/gainput/**.h", "../3rdParty/gainput-master/lib/include/gainput/**.h" }
