@@ -22,15 +22,16 @@ workspace "IrisEditor"
       defines { "NO_DEBUG", "NO_LOG" }
       optimize "On"
 
+	 targetdir "../bin/%{cfg.buildcfg}"
+	  
 project "IrisEditor"
-   kind "WindowedApp"
-   targetdir "../bin/%{cfg.buildcfg}"
+   kind "ConsoleApp"
    flags { "ExtraWarnings", "NoRTTI" }
    files { "../IrisEditor/**.h", "../IrisEditor/**.cpp" }
-   links {"RenderSystem", "Common", "User", "entityx", "opengl32", "Logic", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput", "imgui" }
-   includedirs { "../Engine/RenderSystem/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Graphics"}
+   links {"RenderSystem", "Common", "User", "entityx", "opengl32", "Scripting", "Graphics", "flatbuffers", "Hierarchy", "winmm", "gainput", "imgui", "lua"}
+   includedirs { "../Engine/RenderSystem/", "../Engine/Scripting/", "../Engine/Common/", "../Engine/User/", "../Engine/Hierarchy", "../Engine/Graphics"}
    includedirs { "../3rdParty/" }
-   libdirs { os.findlib("opengl32") }
+   libdirs { os.findlib("opengl32")  }
    
 group "FileSystem"
 project "effects"
@@ -49,12 +50,15 @@ project "User"
     includedirs { "../3rdParty/entityx/" }
 	includedirs { "../3rdParty/gainput-master/lib/include/" }
 	includedirs { "../3rdParty/imgui" }
+	includedirs { "../Engine/Scripting/" }
+	includedirs { "../3rdParty/lua/" }
 	
-project "Logic"
+project "Scripting"
     kind "StaticLib"
-    files { "../Engine/Logic/**.h", "../Engine/Logic/**.cpp", "../Engine/Logic/**.inl" }
+    files { "../Engine/Scripting/**.h", "../Engine/Scripting/**.cpp", "../Engine/Scripting/**.inl" }
 	includedirs { "../Engine/Common/" }
-	includedirs { "../Engine/Logic/" }
+	includedirs { "../Engine/Scripting/" }
+	includedirs { "../3rdParty/lua/" }
 	
 project "Common"
     kind "StaticLib"
@@ -78,6 +82,7 @@ project "Graphics"
 	includedirs { "../Engine/Common/" }
     includedirs { "../Engine/RenderSystem/" }
     includedirs { "../Engine/Graphics/" }
+	includedirs { "../Engine/Scripting/" }
 	includedirs { "../3rdParty/" }
     
 project "Hierarchy"
@@ -101,6 +106,12 @@ project "entityx"
     files { "../3rdParty/entityx/entityx/**.cpp", "../3rdParty/entityx/entityx/**.cc", "../3rdParty/entityx/entityx/**.hpp", "../3rdParty/entityx/entityx/**.h" }
     excludes { "../3rdParty/entityx/entityx/**test.cc" }
 	includedirs { "../3rdParty/entityx/" }
+
+project "lua"
+    kind "StaticLib"
+    files { "../3rdParty/lua/**.cpp", "../3rdParty/lua/**.c", "../3rdParty/lua/**.hpp", "../3rdParty/lua/**.h" }
+	includedirs { "../3rdParty/lua/" }
+
 
 project "flatbuffers"
     kind "StaticLib"
