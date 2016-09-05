@@ -23,9 +23,6 @@
 
 #include <imgui.h>
 
-#include "Scripting.h"
-#include "LuaScript.h"
-
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 
@@ -46,6 +43,7 @@ void IApplication::Run()
 
     float lUpdateIterations = 0.0f;
 
+	/*
 	CLuaScript script;
 	script.Open("../data/scripts/camera_test.lua");
 	double result = script.f(10,20);

@@ -7,19 +7,19 @@ workspace "IrisEditor"
    language "C++"
    
    filter "configurations:Debug_Render_Calls"
-      defines { "DEBUG", "DEBUG_RENDER_CALLS" }
+      defines { "DEBUG", "DEBUG_RENDER_CALLS" , "LUA_REAL_FLOAT"}
       flags { "Symbols" }
    
    filter "configurations:Debug"
-      defines { "DEBUG" }
+      defines { "DEBUG" , "LUA_REAL_FLOAT" }
       flags { "Symbols" }
 
    filter "configurations:Release"
-      defines { "NO_DEBUG" }
+      defines { "NO_DEBUG" , "LUA_REAL_FLOAT" }
       optimize "On"
 	  
 	filter "configurations:Final"
-      defines { "NO_DEBUG", "NO_LOG" }
+      defines { "NO_DEBUG", "NO_LOG", "LUA_REAL_FLOAT" }
       optimize "On"
 
 	 targetdir "../bin/%{cfg.buildcfg}"

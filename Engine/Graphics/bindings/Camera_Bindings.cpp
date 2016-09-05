@@ -1,4 +1,4 @@
-#include "Scripting.h"
+
 #include "Camera/Camera.h"
 
 namespace scripting

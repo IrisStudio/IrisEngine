@@ -135,10 +135,10 @@ void CObjectCompiler::Compile(const CResource & aResource)
             aiMesh* lCurrentMesh = scene->mMeshes[iMeshes];
 
 			uint32 lMaterialIdx = lCurrentMesh->mMaterialIndex;
-			std::fwrite(&lMaterialIdx, sizeof(uint32), 1, lMeshFile);
-			
-			if( lMaterialIdx > 0 )
+			if (lMaterialIdx > 0)
 				--lMaterialIdx;
+
+			std::fwrite(&lMaterialIdx, sizeof(uint32), 1, lMeshFile);
 
 			uint32 lNumVertices = lCurrentMesh->mNumVertices;
 			std::vector< SObjVertex > lGeometryData(lNumVertices);
