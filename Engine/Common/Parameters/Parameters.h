@@ -1,7 +1,11 @@
 #ifndef __PARAMETERS_H__
 #define __PARAMETERS_H__
 
-class CParameters
+#include <vector>
+#include "TemplatedVectorMap.h"
+
+class CParam;
+class CParameters : public CTemplatedVectorMap< CParam* >
 {
 public:
 	CParameters() {}

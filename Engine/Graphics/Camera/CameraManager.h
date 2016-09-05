@@ -2,7 +2,7 @@
 #define __CCameraManager__
 
 #include "Singleton.h"
-#include "TemplatedVectorMapManager.h"
+#include "TemplatedVectorMap.h"
 #include "Camera\Camera.h"
 
 class CCameraManager : public Singleton<CCameraManager>
@@ -13,12 +13,12 @@ class CCameraManager : public Singleton<CCameraManager>
 
         inline CCamera* GetCamera(const std::string& aCameraName) const
         {
-            return mCameras.GetConstResource(aCameraName);
+            return mCameras[aCameraName];
         }
 
         inline void AddCamera(const std::string& aName, CCamera* aCamera)
         {
-            mCameras.AddResource(aName, aCamera);
+            mCameras.PushBack(aName, aCamera);
         }
 
         inline void SetCurrentCamera(CCamera* aCamera)
@@ -33,7 +33,7 @@ class CCameraManager : public Singleton<CCameraManager>
 
     private:
 
-        typedef CTemplatedVectorMapManager< CCamera* > TCameras;
+        typedef CTemplatedVectorMap< CCamera* > TCameras;
         TCameras mCameras;
         CCamera* mCurrentCamera;
 };
