@@ -2,7 +2,7 @@
 
 workspace "IrisEditor"
    configurations { "Debug_Render_Calls", "Debug", "Release", "Final" }
-   platforms { "x64" }
+   platforms { "x32", "x64" }
    location "../EditorDevEnv"
    language "C++"
    

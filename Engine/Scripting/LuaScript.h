@@ -13,6 +13,8 @@ extern "C"
 #include <luabind/class.hpp>
 #include <luabind/operator.hpp>
 
+#include "selene.h"
+
 int LuaScriptLog(lua_State * aLS)
 {
 	size_t len;
@@ -20,6 +22,24 @@ int LuaScriptLog(lua_State * aLS)
 	printf("%s", cstr);
 	lua_pop(aLS, 1);
 	return 0;
+}
+
+struct Test
+{
+	float mVal;
+};
+
+struct Bar {
+	double x;
+	Bar(double x_) : x(x_) {}
+	void AddThis(double y)
+	{
+		x = x + y;
+	}
+};
+
+float my_multiply(float a, float b) {
+	return (a*b);
 }
 
 class CLuaScript
@@ -40,7 +60,12 @@ public:
 
 	inline bool CLuaScript::Open(const char* aFilename)
 	{
-		int status = luaL_dofile(mLS, aFilename);
+		mState["Bar"].SetClass<Bar, double>("add_this", &Bar::AddThis);
+		mState["c_multiply"] = &my_multiply;
+		mState.Load(aFilename);
+
+
+		int status = luaL_loadfile(mLS, aFilename);
 #if LUA_VERSION_NUM >= 502
 		auto const lua_ok = LUA_OK;
 #else
@@ -65,6 +90,8 @@ public:
 			printf("[dofile failed] %s", msg);
 		}
 
+		
+
 		return false;
 	}
 
@@ -74,6 +101,9 @@ public:
 		double z;
 
 		int var1 = 0, var2 = 0;
+		var1 = mState["var1"];
+		var2 = mState["var2"];
+		Bar lbar = mState["bar"];
 		lua_getglobal(mLS, "var1");
 		lua_getglobal(mLS, "var2");
 		if (!lua_isnumber(mLS, -2)) {
@@ -93,5 +123,6 @@ public:
 
 private:
 	lua_State* mLS;
+	sel::State mState;
 };
 #endif //__LUA_SCRIPT__H__
