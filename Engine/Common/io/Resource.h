@@ -2,22 +2,26 @@
 #define __IO_RESOURCE__
 
 #include <string>
+#include "ResourceNode.h"
 
 class CResource
 {
     public:
-        CResource();
         CResource(const std::string& aFilename);
-        CResource(const std::string& aFilename, const std::string& aFileNameSchema);
 
-        inline const std::string& GetFilename()       const;
-        inline const std::string& GetFullFilename()   const;
-        inline const std::string& GetFullFilenameSchema() const;
-        inline const std::string& GetDirectory()      const;
-        inline const std::string& GetExtension()      const;
-        inline const std::string& GetHash()      const;
+		virtual ~CResource();
+
+        const std::string& GetFilename()           const;
+        const std::string& GetFullFilename()       const;
+        const std::string& GetFullFilenameSchema() const;
+        const std::string& GetDirectory()          const;
+        const std::string& GetExtension()          const;
+        const std::string& GetHash()               const;
 
         const std::string GetFileContent() const;
+
+		bool Open();
+		CResourceNode GetRoot() const;
 
     private:
         std::string mFilename;
@@ -27,6 +31,9 @@ class CResource
         std::string mDirectory;
         std::string mExtension;
         std::string mHash;
+
+		tinyxml2::XMLDocument* mDoc;
+		tinyxml2::XMLElement* mRootNode;
 
         void Fill();
 };

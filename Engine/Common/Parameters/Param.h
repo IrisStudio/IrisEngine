@@ -20,9 +20,9 @@ class CTemplatedParam
 {
 public:
 	CTemplatedParam() {}
-	virtual ~CTemplatedParam();
-	void		SetValue(const T& aValue);
-	const T&	GetValue() const;
+	virtual ~CTemplatedParam() {}
+	void		SetValue(const T& aValue) { mValue = aValue; }
+	const T&	GetValue() const { return mValue; }
 	void *		GetValueAddr(int index = 0) const { return ((void*)&m_Value + index); }
 private:
 	T mValue;

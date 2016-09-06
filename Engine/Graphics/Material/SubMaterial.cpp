@@ -10,13 +10,7 @@
 CSubMaterial::CSubMaterial()
     : CNamed()
     , mEffect( nullptr )
-    , mDiffuseColor(float4(1.0f))
-    , mAmbientColor(float4(1.0f))
-    , mSpecularColor(float4(1.0f))
-    , mTransmittance(float4(1.0f))
-    , mShininess(1.0f)
-    , mRoughness(1.0f)
-    , mTransparency(1.0f)
+    , mParameters( nullptr )
 {
     mTextures.resize(eTC_Count);
 }

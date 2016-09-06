@@ -19,6 +19,26 @@ namespace io
 	{
 		bool lOk = false;
 
+		CResourceNode lMaterialNode = aResource.GetRoot();
+		if( lMaterialNode.GetName() == "material" )
+		{
+			for (size_t i = 0, lChildren = lMaterialNode.GetNumChildren(); i < lChildren; ++i)
+			{
+				CResourceNode lChild = lMaterialNode[i];
+				if (lChild.GetName() == "texture")
+				{
+					std::string lType     = lChild.GetAttribute<std::string>("type", "diffuse");
+					std::string lFileName = lChild.GetAttribute<std::string>("filename", "diffuse");
+				}
+				else if (lChild.GetName() == "parameter")
+				{
+
+				}
+
+			}
+		}
+
+		/*
 		std::ifstream lMaterialFile(aResource.GetFullFilename());
 
 		if (lMaterialFile.is_open())
@@ -55,6 +75,7 @@ namespace io
 
 			lOk = true;
 		}
+		*/
 
 		return lOk;
 	}

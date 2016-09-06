@@ -8,6 +8,7 @@
 
 class CEffect;
 class CTexture;
+class CParameters;
 
 class CSubMaterial : public CNamed
 {
@@ -20,14 +21,7 @@ class CSubMaterial : public CNamed
 
     public:
         TTextures           mTextures;
-        float3              mAmbientColor;
-        float3              mSpecularColor;
-        float3              mDiffuseColor;
-        float3              mTransmittance;
-        float3              mEmission;
-        float               mShininess;
-        float               mRoughness;
-        float               mTransparency;
+		CParameters*		mParameters;
 
     private:
         DISALLOW_COPY_AND_ASSIGN(CSubMaterial);

@@ -34,8 +34,6 @@ class CObjLoader
         uint32 mFlags;
 		uint32 mVertexSize;
 
-
-        CResource  mResource;
         CMaterial* mMaterial;
         CMesh*     mMesh;
 

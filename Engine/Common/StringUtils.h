@@ -38,6 +38,22 @@ namespace iris { namespace str_utils
 		  }
 	  }
   }
+
+  inline void FileNameExtension(std::string& strPath)
+  {
+	  std::string::size_type idx;
+
+	  idx = strPath.rfind('.');
+
+	  if (idx != std::string::npos)
+	  {
+		  std::string extension = strPath.substr(idx + 1);
+	  }
+	  else
+	  {
+		  // No extension found
+	  }
+  }
 }}
 
 #endif
